@@ -1,0 +1,20 @@
+.alternate-header {
+    background-color: #ff6600;
+    height: 27.5px;
+    line-height: 27.5px;
+    font-size: 13px;
+    padding-left: 2.5px;
+}
+
+.alternate-header img {
+    border: 1px white solid;
+    vertical-align: middle;
+    margin-right: 3px;
+    width: 18px;
+    height: 18px;
+}
+
+.alternate-header-label {
+    font-weight: bold;
+    vertical-align: middle;
+}
