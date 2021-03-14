@@ -1,0 +1,7 @@
+.error-wrapper {
+    padding: 5px;
+}
+
+.error-wrapper span {
+    font-family: monospace;
+}
