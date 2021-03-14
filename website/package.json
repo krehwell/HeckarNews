@@ -1,7 +1,7 @@
 {
   "name": "website",
   "version": "1.0.0",
-  "description": "",
+  "description": "hacker news clone",
   "main": "index.js",
   "scripts": {
     "dev": "next",
@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "keywords": [],
-  "author": "",
+  "author": "krehwell fahrimuham001@gmail.com",
   "license": "ISC",
   "dependencies": {
     "next": "^10.0.3",
