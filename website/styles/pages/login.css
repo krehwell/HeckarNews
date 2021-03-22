@@ -1,0 +1,108 @@
+.login-wrapper {
+  padding: 8px;
+  font-size: 15px;
+}
+
+.login-error-msg {
+  margin-bottom: 15px;
+  font-size: 13.5px;
+  color: #828282;
+}
+
+.login-header {
+  font-weight: bold;
+  margin-bottom: 25px
+}
+
+.login-input-item {
+  margin-top: 5px;
+}
+
+.login-input-item-label {
+  display: inline-block;
+  width: 90px;
+}
+
+.login-input-item-input {
+  display: inline-block;
+}
+
+.login-input-item-input input {
+  height: 20px;
+  -webkit-writing-mode: horizontal-tb;
+  text-rendering: auto;
+  color: initial;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  -webkit-appearance: textfield;
+  background-color: white;
+  -webkit-rtl-ordering: logical;
+  cursor: text;
+  padding: 1px;
+  border: 1px solid #a6a4a4;
+}
+
+.login-input-item-input input:-internal-autofill-selected {
+  background-color: rgb(232, 240, 254);
+  background-image: none;
+  color: rgb(0, 0, 0);
+}
+
+.login-submit-btn {
+  margin-top: 20px;
+}
+
+.login-submit-btn input {
+  -webkit-appearance: push-button;
+  user-select: none;
+  white-space: pre;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  box-sizing: border-box;
+  padding: 1px 6px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  border-image: initial;
+}
+
+.login-submit-btn input[type="submit"] {
+  font-family: monospace;
+  font-size: 13.5px;
+}
+
+.login-input-item-login-btn input[type="submit"]:active {
+  border-style: inset;
+}
+
+.login-input-item-forgot-text {
+  font-size: 13.5px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.login-input-item-forgot-text a,
+.login-input-item-forgot-text a:visited {
+  color: rgb(85, 26, 139);
+  text-decoration: underline;
+}
+
+.login-input-item-forgot-text a:active {
+  color: rgb(255, 0, 0);
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+  .login-input-item-input input {
+    height: 24px;
+    font-size: 16px;
+  }
+}
