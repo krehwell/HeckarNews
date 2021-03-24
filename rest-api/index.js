@@ -13,17 +13,17 @@ const app = express();
 
 
 /// DB CONNECTION
-const mongoString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@heckar-news.d3u83.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const mongoString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@heckar-news.d3u83.mongodb.net/heckarnewsdb?retryWrites=true&w=majority`;
 
 mongoose.connect(mongoString, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 
-mongoose.connection.on("error", function(error) {
+mongoose.connection.on("error", (error) => {
     if (process.env.NODE_ENV === "development") {
         console.log(error)
     }
 });
 
-mongoose.connection.on("open", function() {
+mongoose.connection.on("open", () => {
     console.log("Connected to MongoDB database.")
 });
 
@@ -45,9 +45,9 @@ app.use(cookieParser());
 
 
 /// ROUTES
-app.get("/", (_, res) => {
-    res.send("rest-api is working, kel!");
-});
+app.get("/", (_, res) => res.send("rest-api is working, kel!"));
+
+app.use(require("./routes/users/index.js"));
 
 
 /// RUN SERVER
