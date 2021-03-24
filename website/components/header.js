@@ -45,7 +45,7 @@ export default class Header extends Component {
                 </td>
                 <td className="header-right-nav-links">
                   <span className="header-right-nav-links-items">
-                    <a href="/login">
+                    <a href={`/login${this.props.goto ? "?goto=" + encodeURIComponent(this.props.goto) : ""}`}>
                       <span>login</span>
                     </a>
                   </span>

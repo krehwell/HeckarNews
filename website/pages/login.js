@@ -2,6 +2,8 @@ import { Component } from "react";
 
 import HeadMetadata from "../components/headMetadata.js";
 
+import createNewUser from "../api/users/createNewUser.js";
+
 export default class extends Component {
     constructor(props) {
         super(props);
@@ -40,11 +42,12 @@ export default class extends Component {
         this.setState({ createAcountPasswordInputValue: event.target.value });
     };
 
-    submitLogin = () => {
-    };
+    submitLogin = () => {};
 
     submitCreateAccount = () => {
-        if (this.state.loading) return;
+        if (this.state.loading) {
+            return;
+        }
 
         const username = this.state.createAccountUsernameInputValue;
         const password = this.state.createAcountPasswordInputValue;
@@ -68,7 +71,44 @@ export default class extends Component {
 
             const self = this;
 
-            // make request to the REST API here
+            createNewUser(username, password, function (response) {
+                if (response.usernameLengthError) {
+                    self.setState({
+                        loading: false,
+                        createAccountUsernameExistsError: false,
+                        createAccountUsernameLengthError: true,
+                        createAccountPasswordLengthError: false,
+                        createAccountSubmitError: false,
+                    });
+                } else if (response.passwordLengthError) {
+                    self.setState({
+                        loading: false,
+                        createAccountUsernameExistsError: false,
+                        createAccountUsernameLengthError: false,
+                        createAccountPasswordLengthError: true,
+                        createAccountSubmitError: false,
+                    });
+                } else if (response.alreadyExistsError) {
+                    self.setState({
+                        loading: false,
+                        createAccountUsernameExistsError: true,
+                        createAccountUsernameLengthError: false,
+                        createAccountPasswordLengthError: false,
+                        createAccountSubmitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    self.setState({
+                        loading: false,
+                        createAccountUsernameExistsError: false,
+                        createAccountUsernameLengthError: false,
+                        createAccountPasswordLengthError: false,
+                        createAccountSubmitError: true,
+                    });
+                } else {
+                    // refer most bottom below on `getServerSideProps`
+                    window.location.href = `/${self.props.goto}`
+                }
+            });
         }
     };
 
@@ -192,4 +232,12 @@ export default class extends Component {
             </div>
         );
     }
+}
+
+export async function getServerSideProps({query}) {
+  return {
+    props: {
+        goto: query.goto ? decodeURIComponent(query.goto) : ""
+    },
+  }
 }
