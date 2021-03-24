@@ -50,4 +50,24 @@ module.exports = {
             });
         }
     },
+
+    loginUser: (username, password, callback) => {
+        UserModel.findOne({ username }).exec((error, user) => {
+            if (error) {
+                callback({ submitError: true });
+            } else if (!user) {
+                callback({ credentialError: true });
+            } else {
+                user.comparePassword( password, user.password, (matchError, isMatch) => {
+                    if (matchError) {
+                        callback({ submitError: true });
+                    } else if (!isMatch) {
+                        callback({ credentialError: true });
+                    } else {
+                        // user found here, do something...
+                    }
+                });
+            }
+        });
+    },
 };
