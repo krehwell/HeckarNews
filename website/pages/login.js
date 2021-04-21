@@ -3,6 +3,7 @@ import { Component } from "react";
 import HeadMetadata from "../components/headMetadata.js";
 
 import createNewUser from "../api/users/createNewUser.js";
+import loginUser from "../api/users/loginUser.js";
 
 export default class extends Component {
     constructor(props) {
@@ -42,7 +43,44 @@ export default class extends Component {
         this.setState({ createAcountPasswordInputValue: event.target.value });
     };
 
-    submitLogin = () => {};
+    submitLogin = () => {
+        if (this.state.loading) return;
+
+        const username = this.state.loginUsernameInputValue;
+        const password = this.state.loginPasswordInputValue;
+
+        if (username.length === 0 || password.length === 0) {
+            this.setState({
+                loginCredentialError: true,
+                loginSubmitError: false,
+            });
+        } else {
+            this.setState({ loading: true });
+
+            const self = this;
+
+            loginUser(username, password, function (response) {
+
+                console.log("RESSS ISS", response);
+
+                if (response.credentialError) {
+                    self.setState({
+                        loading: false,
+                        loginCredentialError: true,
+                        loginSubmitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    self.setState({
+                        loading: false,
+                        loginCredentialError: false,
+                        loginSubmitError: true,
+                    });
+                } else {
+                    window.location.href = `/${self.props.goto}`;
+                }
+            });
+        }
+    };
 
     submitCreateAccount = () => {
         if (this.state.loading) {
@@ -106,7 +144,7 @@ export default class extends Component {
                     });
                 } else {
                     // refer most bottom below on `getServerSideProps`
-                    window.location.href = `/${self.props.goto}`
+                    window.location.href = `/${self.props.goto}`;
                 }
             });
         }
@@ -234,10 +272,10 @@ export default class extends Component {
     }
 }
 
-export async function getServerSideProps({query}) {
-  return {
-    props: {
-        goto: query.goto ? decodeURIComponent(query.goto) : ""
-    },
-  }
+export async function getServerSideProps({ query }) {
+    return {
+        props: {
+            goto: query.goto ? decodeURIComponent(query.goto) : "",
+        },
+    };
 }
