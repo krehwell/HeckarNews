@@ -4,6 +4,7 @@ import HeadMetadata from "../components/headMetadata.js";
 
 import createNewUser from "../api/users/createNewUser.js";
 import loginUser from "../api/users/loginUser.js";
+import authUser from "../api/users/authUser.js"
 
 export default class extends Component {
     constructor(props) {
@@ -60,7 +61,6 @@ export default class extends Component {
             const self = this;
 
             loginUser(username, password, function (response) {
-
                 console.log("RESSS ISS", response);
 
                 if (response.credentialError) {
@@ -272,7 +272,17 @@ export default class extends Component {
     }
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ req, res, query }) {
+    const authResult = await authUser(req);
+
+    if (authResult.success) {
+        res.writeHead(302, {
+            Location: "/",
+        });
+
+        res.end();
+    }
+
     return {
         props: {
             goto: query.goto ? decodeURIComponent(query.goto) : "",
