@@ -3,7 +3,16 @@
  */
 import { Component } from "react"
 
+import logoutUser from "../api/users/logoutUser";
+
 export default class Header extends Component {
+
+    requestLogout = () => {
+        logoutUser(() => {
+            window.location.reload();
+        });
+    }
+
     render() {
         return (
             <table className="header-wrapper">
@@ -54,7 +63,7 @@ export default class Header extends Component {
                                             <a href={`/user?id=${this.props.username}`}>{this.props.username}</a>
                                             <span> ({this.props.karma.toLocaleString()})</span>
                                             <span> | </span>
-                                            <span className="header-logout">logout</span>
+                                            <span className="header-logout" onClick={() => this.requestLogout()}>logout</span>
                                         </> :
                                         <>
                                             <a href={`/login${this.props.goto ? "?goto=" + encodeURIComponent(this.props.goto) : ""}`}>
