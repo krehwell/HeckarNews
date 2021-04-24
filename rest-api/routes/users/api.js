@@ -127,4 +127,21 @@ module.exports = {
                 }
             });
     },
+
+    removeUserAuthData: (authUser, callback) => {
+        UserModel.findOneAndUpdate(
+            { username: authUser.username },
+            { authToken: null, authTokenExpirationTimestamp: null }
+        )
+            .lean()
+            .exec((error, user) => {
+                if (error) {
+                    callback({ submitError: true });
+                } else if (!user) {
+                    callback({ success: false });
+                } else {
+                    callback({ success: true });
+                }
+            });
+    },
 };

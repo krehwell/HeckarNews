@@ -97,4 +97,38 @@ app.get("/users/authenticate", authUser, (req, res) => {
     }
 });
 
+app.put("/users/logout", authUser, (req, res) => {
+    const cookieSettings = {
+        path: "/",
+        domain:
+            process.env.NODE_ENV === "development"
+                ? ""
+                : utils.getDomainFromUrl(config.productionWebsiteURL),
+    };
+
+    res.clearCookie("user", cookieSettings);
+
+    if (!res.locals.userSignedIn) {
+        res.json({ success: false });
+    } else {
+        api.removeUserAuthData(res.locals, function (response) {
+            res.json(response);
+        });
+    }
+});
+
+app.put("/users/remove-user-cookie-data", (req, res) => {
+    const cookieSettings = {
+        path: "/",
+        domain:
+            process.env.NODE_ENV === "development"
+                ? ""
+                : utils.getDomainFromUrl(config.productionWebsiteURL),
+    }
+
+    res.cookieSettings("user", cookieSettings);
+
+    res.json({success: true});
+});
+
 module.exports = app;
