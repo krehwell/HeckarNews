@@ -60,7 +60,7 @@ export default class extends Component {
 
             const self = this;
 
-            loginUser(username, password, function (response) {
+            loginUser(username, password, (response) => {
                 console.log("RESSS ISS", response);
 
                 if (response.credentialError) {
@@ -109,7 +109,7 @@ export default class extends Component {
 
             const self = this;
 
-            createNewUser(username, password, function (response) {
+            createNewUser(username, password, (response) => {
                 if (response.usernameLengthError) {
                     self.setState({
                         loading: false,
