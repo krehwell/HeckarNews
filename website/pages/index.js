@@ -13,7 +13,7 @@ export default class Home extends Component {
         return (
             <div className="layout-wrapper">
                 <HeadMetadata
-                    title="Coder News"
+                    title="HeckarNews"
                     description="News and discussion for software engineers"
                 />
                 <Header

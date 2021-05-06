@@ -1,10 +1,10 @@
 const moment = require("moment");
 
 const utils = require("../utils.js");
-
 const config = require("../../config.js");
 
 const UserModel = require("../../models/user.js");
+const emailApi = require("../emails/api.js");
 
 // API FUNCTIONS
 module.exports = {
@@ -90,21 +90,20 @@ module.exports = {
         });
     },
 
-    // Step 1 - Query the database for any users that match the username function parameter.
-    // If the user is not found, an unsuccessful response will be sent back to the website.
-
-    // Step 2 - Compare the authentication token function parameter to what's stored in the database.
-    // If the tokens don't match, an unsuccessful response will be sent back to the website.
-
-    // Step 3 - Validate that the authentication token has not expired.
-    // If the token has expired, an unsuccessful response will be sent back to the website.
-
-    // Step 4 - If successful, return a success response to the website.
-    // The response should also include the following data about the user to be used on the website:
-    // 1. User's username.
-    // 2. User's karma count.
-    // 3. Boolean value representing whether or not the user has an email added to their account or not.
-    // 4. Boolean value representing whether or not the user wants to see dead submissions and comments.
+    /**
+     * Step 1 - Query the database for any users that match the username function parameter.
+     *          If the user is not found, an unsuccessful response will be sent back to the website.
+     * Step 2 - Compare the authentication token function parameter to what's stored in the database.
+     *          If the tokens don't match, an unsuccessful response will be sent back to the website.
+     * Step 3 - Validate that the authentication token has not expired.
+     *          If the token has expired, an unsuccessful response will be sent back to the website.
+     * Step 4 - If successful, return a success response to the website.
+     * The response should also include the following data about the user to be used on the website:
+     *          1. User's username.
+     *          2. User's karma count.
+     *          3. Boolean value representing whether or not the user has an email added to their account or not.
+     *          4. Boolean value representing whether or not the user wants to see dead submissions and comments.
+     */
     authenticateUser: (username, authToken, callback) => {
         UserModel.findOne({ username: username })
             .lean()
@@ -143,5 +142,53 @@ module.exports = {
                     callback({ success: true });
                 }
             });
+    },
+
+    /**
+     * Step 1 - Query the database for a user with the given username.
+     *          Return an error if the user is not found.
+     *          Return an error if the user doesn't have an email added to their account.
+     * Step 2 - Generate a reset password token and expiration date for the user.
+     *          The reset password token will be a randomly generated string with a length of 40 characters.
+     *          The expiration date will be a UNIX timestamp set to 1 hour in the future.
+     * Step 3 - Save the token and expiration date to the database.
+     * Step 4 - Send an email to the user with the reset password link.
+     * Step 5 - Send a success response back to the website.
+     */
+    requestPasswordResetLink: (username, callback) => {
+        UserModel.findOne({ username: username }).exec((error, user) => {
+            if (error) {
+                callback({ submitError: true });
+            } else if (!user) {
+                callback({ userNotFound: true });
+            } else if (!user.email) {
+                callback({ noEmailError: true });
+            } else {
+                const resetPasswordToken = utils.generateUniqueId(40);
+                const resetPasswordTokenExpiration = moment().unix() + 3600;
+
+                user.resetPasswordToken = resetPasswordToken;
+                user.resetPasswordTokenExpiration = resetPasswordTokenExpiration;
+
+                user.save(function (saveError) {
+                    if (saveError) {
+                        callback({ submitError: true });
+                    } else {
+                        emailApi.sendResetPasswordEmail(
+                            user.username,
+                            resetPasswordToken,
+                            user.email,
+                            (response) => {
+                                if (!response.success) {
+                                    callback({ submitError: true });
+                                } else {
+                                    callback({ success: true });
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+        });
     },
 };

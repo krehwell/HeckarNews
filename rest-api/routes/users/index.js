@@ -89,6 +89,7 @@ app.put("/users/login", (req, res) => {
     }
 });
 
+/* AUTHENTICATE USER */
 app.get("/users/authenticate", authUser, (req, res) => {
     if (!res.locals.userSignedIn) {
         res.json({ success: false, authUser: res.locals });
@@ -97,6 +98,7 @@ app.get("/users/authenticate", authUser, (req, res) => {
     }
 });
 
+/* LOGOUT USER */
 app.put("/users/logout", authUser, (req, res) => {
     const cookieSettings = {
         path: "/",
@@ -117,6 +119,7 @@ app.put("/users/logout", authUser, (req, res) => {
     }
 });
 
+/* LOGOUT USER - CLEAR COOKIES */
 app.put("/users/remove-user-cookie-data", (req, res) => {
     const cookieSettings = {
         path: "/",
@@ -124,11 +127,22 @@ app.put("/users/remove-user-cookie-data", (req, res) => {
             process.env.NODE_ENV === "development"
                 ? ""
                 : utils.getDomainFromUrl(config.productionWebsiteURL),
-    }
+    };
 
     res.cookieSettings("user", cookieSettings);
 
-    res.json({success: true});
+    res.json({ success: true });
+});
+
+/* RESET PASSWORD USER */
+app.put("/users/request-password-reset-link", (req, res) => {
+    if (!req.body.username) {
+        res.json({ submitError: true });
+    } else {
+        api.requestPasswordResetLink(req.body.username, (response) => {
+            res.json(response);
+        });
+    }
 });
 
 module.exports = app;
