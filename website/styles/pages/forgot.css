@@ -1,0 +1,94 @@
+.forgot-wrapper {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.forgot-error-msg {
+    margin-bottom: 15px;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+.forgot-header {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.forgot-input-item {
+    margin-top: 5px;
+}
+
+.forgot-input-item-label {
+    display: inline-block;
+    font-size: 13.5px;
+    margin-right: 10px;
+}
+
+.forgot-input-item-input {
+    display: inline-block;
+}
+
+.forgot-input-item-input input {
+    height: 22.5px;
+    font-size: 14px;
+    -webkit-writing-mode: horizontal-tb;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 1px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    margin: 0em;
+    font: 400 13.3333px Arial;
+    padding: 1px;
+    border: 1px solid #a6a4a4;
+}
+
+.forgot-input-item-input input:-internal-autofill-selected {
+    background-color: rgb(232, 240, 254);
+    background-image: none;
+    color: rgb(0, 0, 0);
+}
+
+.forgot-submit-btn {
+    margin-top: 20px;
+}
+
+.forgot-submit-btn input {
+    -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+}
+
+.forgot-submit-btn input[type="submit"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.forgot-submit-btn input[type="submit"]:active {
+    border-style: inset;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .forgot-input-item-input input {
+        font-size: 16px;
+    }
+}
