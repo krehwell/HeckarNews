@@ -133,7 +133,6 @@ export default class extends Component {
 }
 
 export async function getServerSideProps({ query }) {
-    console.log(query);
     return {
         props: {
             resetToken: query.token,
