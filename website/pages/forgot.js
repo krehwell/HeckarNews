@@ -1,6 +1,7 @@
 import { Component } from "react";
 
 import HeadMetadata from "../components/headMetadata.js";
+import AlternateHeader from "../components/alternateHeader.js";
 
 import requestPasswordResetLink from "../api/users/requestPasswordResetLink.js";
 
@@ -69,8 +70,9 @@ export default class extends Component {
 
     render() {
         return (
-            <div className="forgot-wrapper">
+            <div className="forgot-wrapper layout-wrapper">
                 <HeadMetadata title="Forgot Password | Coder News" />
+                <AlternateHeader displayMessage="Reset Password" />
                 {this.state.success ? (
                     <div className="forgot-success-msg">
                         <span>

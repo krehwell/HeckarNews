@@ -20,7 +20,7 @@ export default class Header extends Component {
                     <tr>
                         <td className="header-logo">
                             <a href="/">
-                                <img src="/coder-news-icon.png" />
+                                <img src="/favicon.ico" />
                             </a>
                         </td>
                         <td className="header-links">

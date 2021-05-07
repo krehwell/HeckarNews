@@ -1,10 +1,11 @@
 import { Component } from "react";
 
 import HeadMetadata from "../components/headMetadata.js";
+import AlternateHeader from "../components/alternateHeader.js";
 
 import createNewUser from "../api/users/createNewUser.js";
 import loginUser from "../api/users/loginUser.js";
-import authUser from "../api/users/authUser.js"
+import authUser from "../api/users/authUser.js";
 
 export default class extends Component {
     constructor(props) {
@@ -58,25 +59,23 @@ export default class extends Component {
         } else {
             this.setState({ loading: true });
 
-            const self = this;
-
             loginUser(username, password, (response) => {
                 console.log("RESSS ISS", response);
 
                 if (response.credentialError) {
-                    self.setState({
+                    this.setState({
                         loading: false,
                         loginCredentialError: true,
                         loginSubmitError: false,
                     });
                 } else if (response.submitError || !response.success) {
-                    self.setState({
+                    this.setState({
                         loading: false,
                         loginCredentialError: false,
                         loginSubmitError: true,
                     });
                 } else {
-                    window.location.href = `/${self.props.goto}`;
+                    window.location.href = `/${this.props.goto}`;
                 }
             });
         }
@@ -152,8 +151,9 @@ export default class extends Component {
 
     render() {
         return (
-            <div className="login-wrapper">
+            <div className="login-wrapper layout-wrapper">
                 <HeadMetadata title="Login | Coder News" />
+                <AlternateHeader displayMessage="Login | Signup" />
 
                 {/*LOGIN SECTION*/}
                 {this.state.loginCredentialError ? (
@@ -205,6 +205,8 @@ export default class extends Component {
                         <a href="/forgot">Forgot your Password?</a>
                     </span>
                 </div>
+
+                <div style={{borderTop: "2px solid #FF6600", paddingBottom: "20px"}}/>
 
                 {/*CREATE ACCOUNT SECTION*/}
                 {this.state.createAccountUsernameExistsError ? (
