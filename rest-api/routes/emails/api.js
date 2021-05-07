@@ -54,7 +54,7 @@ module.exports = {
         });
     },
 
-    sendResetPasswordEmail: (username, email, callback) => {
+    sendChangePasswordNotificationEmail: (username, email, callback) => {
         const template = handlebars.compile(changePasswordNotificationTemplate);
         const htmlToSend = template({ username: username });
 

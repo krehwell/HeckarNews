@@ -3,6 +3,8 @@ import { Component } from "react";
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
 
+import resetPassword from "../api/users/resetPassword.js";
+
 export default class extends Component {
     constructor() {
         super();
@@ -32,9 +34,48 @@ export default class extends Component {
         } else {
             this.setState({ loading: true });
 
-            const self = this;
-
-            // request to REST API goes here
+            resetPassword(
+                this.props.username,
+                this.state.passwordInputValue,
+                this.props.resetToken,
+                (response) => {
+                    if (response.invalidTokenError) {
+                        this.setState({
+                            loading: false,
+                            passwordLengthError: false,
+                            expiredTokenError: false,
+                            invalidTokenError: true,
+                            submitError: false,
+                        });
+                    } else if (response.expiredTokenError) {
+                        this.setState({
+                            loading: false,
+                            passwordLengthError: false,
+                            expiredTokenError: true,
+                            invalidTokenError: false,
+                            submitError: false,
+                        });
+                    } else if (response.passwordLengthError) {
+                        this.setState({
+                            loading: false,
+                            passwordLengthError: true,
+                            expiredTokenError: false,
+                            invalidTokenError: false,
+                            submitError: false,
+                        });
+                    } else if (response.submitError || !response.success) {
+                        this.setState({
+                            loading: false,
+                            passwordLengthError: false,
+                            expiredTokenError: false,
+                            invalidTokenError: false,
+                            submitError: true,
+                        });
+                    } else {
+                        window.location.href = "/login";
+                    }
+                }
+            );
         }
     };
 
