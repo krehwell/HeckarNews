@@ -1,0 +1,94 @@
+.reset-password-content-container {
+    padding: 25px 5px 25px 5px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+.reset-password-error-msg {
+    font-size: 13.5px;
+    color: #828282;
+    margin-bottom: 15px;
+}
+
+.reset-password-input-item-label {
+    display: inline-block;
+    width: 120px;
+}
+
+.reset-password-input-item-input {
+    display: inline-block;
+}
+
+.reset-password-input-item-input input {
+    height: 20px;
+    -webkit-writing-mode: horizontal-tb;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    margin: 0em;
+    font: 400 13.3333px Arial;
+    padding: 1px;
+    border: 1px solid #a6a4a4;
+}
+
+.reset-password-input-item-input input[type="text"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.reset-password-submit-btn {
+    margin-top: 7.5px;
+    margin-left: 120px;
+}
+
+.reset-password-submit-btn input {
+    -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+}
+
+.reset-password-submit-btn input[type="submit"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.reset-password-submit-btn input[type="submit"]:active {
+    border-style: inset;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .reset-password-input-item-label {
+        width: 110px;
+    }
+
+    .reset-password-input-item-input input[type="password"] {
+        height: 24px;
+        font-size: 16px;
+    }
+
+    .reset-password-submit-btn {
+        margin-left: 110px;
+    }
+}
