@@ -26,7 +26,7 @@ export default class Header extends Component {
                         <td className="header-links">
                             <span className="header-links-items">
                                 <b className="header-links-name">
-                                    <a href="/news">Coder News</a>
+                                    <a href="/news">HeckarNews</a>
                                 </b>
                                 <a className={this.props.pageName === "newest" ? "white-text" : null} href="/newest">new</a>
                                 <span> | </span>
