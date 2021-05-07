@@ -82,7 +82,7 @@ export default class extends Component {
     render() {
         return (
             <div className="layout-wrapper">
-                <HeadMetadata title="Reset Password | Coder News" />
+                <HeadMetadata title="Reset Password | HeckarNews" />
                 <AlternateHeader displayMessage="Reset Password" />
                 <div className="reset-password-content-container">
                     {this.state.passwordLengthError ? (

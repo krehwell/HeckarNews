@@ -152,7 +152,7 @@ export default class extends Component {
     render() {
         return (
             <div className="login-wrapper layout-wrapper">
-                <HeadMetadata title="Login | Coder News" />
+                <HeadMetadata title="Login | HeckarNews" />
                 <AlternateHeader displayMessage="Login | Signup" />
 
                 {/*LOGIN SECTION*/}

@@ -479,8 +479,7 @@ export default class extends Component {
 
 export async function getServerSideProps({ req, res, query }) {
     const apiResult = await getUserData(query.id, req);
-
-    console.log(apiResult);
+    // console.log(apiResult);
 
     return {
         props: {

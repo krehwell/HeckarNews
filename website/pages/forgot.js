@@ -71,7 +71,7 @@ export default class extends Component {
     render() {
         return (
             <div className="forgot-wrapper layout-wrapper">
-                <HeadMetadata title="Forgot Password | Coder News" />
+                <HeadMetadata title="Forgot Password | HeckarNews" />
                 <AlternateHeader displayMessage="Reset Password" />
                 {this.state.success ? (
                     <div className="forgot-success-msg">

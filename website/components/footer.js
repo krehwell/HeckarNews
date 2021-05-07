@@ -41,7 +41,7 @@ export default class Footer extends Component {
                         <span>|</span>
                     </div>
                     <div className="footer-link-list-item">
-                        <a href="mailto:support@codernews.com">
+                        <a href="me@krehwell.com">
                             <span>Contact</span>
                         </a>
                     </div>
