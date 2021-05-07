@@ -5,7 +5,7 @@ export default class AlternateHeader extends Component {
         return (
             <div className="alternate-header">
                 <a href="/">
-                    <img src="/coder-news-icon.png" />
+                    <img src="/favicon.ico" />
                 </a>
                 <span className="alternate-header-label">
                     {this.props.displayMessage}
