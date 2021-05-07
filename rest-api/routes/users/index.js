@@ -134,7 +134,7 @@ app.put("/users/remove-user-cookie-data", (req, res) => {
     res.json({ success: true });
 });
 
-/* RESET PASSWORD USER */
+/* REQUEST TO SEND RESET PASSWORD USER TOKEN */
 app.put("/users/request-password-reset-link", (req, res) => {
     if (!req.body.username) {
         res.json({ submitError: true });
@@ -142,6 +142,22 @@ app.put("/users/request-password-reset-link", (req, res) => {
         api.requestPasswordResetLink(req.body.username, (response) => {
             res.json(response);
         });
+    }
+});
+
+/* RESET PASSWORD USER */
+app.put("/users/reset-password", (req, res) => {
+    if (!req.body.username || !req.body.newPassword || !req.body.resetToken) {
+        res.json({ submitError: true });
+    } else {
+        api.resetPassword(
+            req.body.username,
+            req.body.newPassword,
+            req.body.resetToken,
+            (response) => {
+                res.json(response);
+            }
+        );
     }
 });
 
