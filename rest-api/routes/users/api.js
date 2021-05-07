@@ -191,4 +191,56 @@ module.exports = {
             }
         });
     },
+
+    /**
+     * Step 1 - Query the database for a user with the given username.
+     *          An error response will be sent back to the browser if no user is found in the database.
+     * Step 2 - Validate the given reset token.
+     *          Token needs to possess the following qualities:
+     *          Must match the token stored in the database for the user.
+     *          Must not have expired.
+     * Step 3 - Validate the new password value.
+     *          Must be at least 8 characters in length.
+     *          An error response will be sent back to the browser if the password is not valid.
+     * Step 4 - Save the new password to the database.
+     *          Reset token and expiration date will also be removed from the database.
+     * Step 5 - Send an email to the user notifying them that their password was changed.
+     * Step 6 - Send a success response back to the website.
+     */
+    resetPassword: (username, newPassword, resetToken, callback) => {
+        UserModel.findOne({ username: username }).exec((error, user) => {
+            if (error || !user) {
+                callback({ submitError: true });
+            } else if (resetToken !== user.resetPasswordToken) {
+                callback({ invalidTokenError: true });
+            } else if (moment().unix() > user.resetPasswordTokenExpiration) {
+                callback({ expiredTokenError: true });
+            } else if (newPassword.length < 8) {
+                callback({ passwordLengthError: true });
+            } else {
+                // proceed reset user password here
+                user.password = newPassword;
+                user.resetPasswordToken = null;
+                user.resetPasswordTokenExpiration = null;
+
+                user.save((saveError) => {
+                    if (saveError) {
+                        callback({ submitError: true });
+                    } else {
+                        if (user.email) {
+                            emailApi.sendChangePasswordNotificationEmail(
+                                username,
+                                user.email,
+                                () => {
+                                    callback({ success: true });
+                                }
+                            );
+                        } else {
+                            callback({ success: true });
+                        }
+                    }
+                });
+            }
+        });
+    },
 };
