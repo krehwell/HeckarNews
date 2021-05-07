@@ -243,4 +243,56 @@ module.exports = {
             }
         });
     },
+
+    getPublicUserData: (username, callback) => {
+        UserModel.findOne({ username: username })
+            .lean()
+            .exec((error, user) => {
+                if (error) {
+                    callback({ getDataError: true });
+                } else if (!user) {
+                    callback({ notFoundError: true });
+                } else {
+                    callback({
+                        success: true,
+                        user: {
+                            username: user.username,
+                            created: user.created,
+                            karma: user.karma,
+                            about: user.about,
+                        },
+                    });
+                }
+            });
+    },
+
+    getPrivateUserData: (username, callback) => {
+        UserModel.findOne({ username: username })
+            .lean()
+            .exec((error, user) => {
+                if (error) {
+                    callback({ getDataError: true });
+                } else if (!user) {
+                    callback({ notFoundError: true });
+                } else {
+                    const aboutText = user.about
+                        .replace(/<a\b[^>]*>/i, "")
+                        .replace(/<\/a>/i, "")
+                        .replace(/<i\b[^>]*>/i, "*")
+                        .replace(/<\/i>/i, "*");
+
+                    callback({
+                        success: true,
+                        user: {
+                            username: user.username,
+                            created: user.created,
+                            karma: user.karma,
+                            about: aboutText,
+                            email: user.email,
+                            showDead: user.showDead,
+                        },
+                    });
+                }
+            });
+    },
 };
