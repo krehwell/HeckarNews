@@ -20,6 +20,11 @@ const resetPasswordTemplate = fs.readFileSync(
     "utf8"
 );
 
+const changePasswordNotificationTemplate = fs.readFileSync(
+    path.join(__dirname, "/templates/changePasswordNotification.hbs"),
+    "utf8"
+);
+
 module.exports = {
     sendResetPasswordEmail: (username, token, email, callback) => {
         const template = handlebars.compile(resetPasswordTemplate);
@@ -40,11 +45,31 @@ module.exports = {
             html: htmlToSend,
         };
 
-        smtpTransport.sendMail(mailOptions, (error, response) => {
+        smtpTransport.sendMail(mailOptions, (error, _response) => {
             if (error) {
-                callback({success: false});
+                callback({ success: false });
             } else {
-                callback({success: true});
+                callback({ success: true });
+            }
+        });
+    },
+
+    sendResetPasswordEmail: (username, email, callback) => {
+        const template = handlebars.compile(changePasswordNotificationTemplate);
+        const htmlToSend = template({ username: username });
+
+        const mailOptions = {
+            from: "HeckarNews <me@krehwell.com>",
+            to: email,
+            subject: "HeckarNews Password Recovery",
+            html: htmlToSend,
+        };
+
+        smtpTransport.sendMail(mailOptions, (error, _response) => {
+            if (error) {
+                callback({ success: false });
+            } else {
+                callback({ success: true });
             }
         });
     },
