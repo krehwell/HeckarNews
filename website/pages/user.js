@@ -6,6 +6,7 @@ import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 
 import getUserData from "../api/users/getUserData.js";
+import updateUserData from "../api/users/updateUserData.js";
 
 export default class extends Component {
     constructor(props) {
@@ -52,17 +53,24 @@ export default class extends Component {
     submitUpdateRequest = () => {
         if (this.state.loading) return;
 
+        this.setState({ loading: true });
+
         const inputData = {
             about: this.state.aboutInputValue,
             email: this.state.emailInputValue,
             showDead: this.state.showDeadValue === "yes" ? true : false,
         };
 
-        this.setState({ loading: true });
-
-        const self = this;
-
-        // call to REST API goes here
+        updateUserData(inputData, (response) => {
+            if (response.submitError) {
+                this.setState({
+                    loading: false,
+                    submitError: true,
+                });
+            } else {
+                window.location.href = "";
+            }
+        });
     };
 
     render() {
@@ -477,7 +485,7 @@ export default class extends Component {
     }
 }
 
-export async function getServerSideProps({ req, res, query }) {
+export async function getServerSideProps({ req, query }) {
     const apiResult = await getUserData(query.id, req);
     // console.log(apiResult);
 
