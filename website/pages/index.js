@@ -1,5 +1,3 @@
-import { Component } from "react";
-
 /// COMPONENTS
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -8,26 +6,22 @@ import AlternateHeader from "../components/alternateHeader";
 
 import authUser from "../api/users/authUser.js";
 
-export default class Home extends Component {
-    render() {
-        return (
-            <div className="layout-wrapper">
-                <HeadMetadata
-                    title="HeckarNews"
-                    description="News and discussion for software engineers"
-                />
-                <Header
-                    userSignedIn={this.props.authUserData?.userSignedIn}
-                    username={this.props.authUserData?.username}
-                    karma={this.props.authUserData?.karma}
-                />
-                <div className="homepage-content-container">
-                    Your Next.js App
-                </div>
-                <Footer />
-            </div>
-        );
-    }
+export default function Home({ authUserData }) {
+    return (
+        <div className="layout-wrapper">
+            <HeadMetadata
+                title="HeckarNews"
+                description="News and discussion for software engineers"
+            />
+            <Header
+                userSignedIn={authUserData?.userSignedIn}
+                username={authUserData?.username}
+                karma={authUserData?.karma}
+            />
+            <div className="homepage-content-container">Your Next.js App</div>
+            <Footer />
+        </div>
+    );
 }
 
 export async function getServerSideProps({ req }) {

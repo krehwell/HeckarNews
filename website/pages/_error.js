@@ -1,14 +1,12 @@
-import { Component } from "react"
+import HeadMetadata from "../components/headMetadata.js";
+import AlternateHeader from "../components/alternateHeader.js";
 
-import HeadMetadata from "../components/headMetadata.js"
-
-export default class extends Component {
-    render () {
-        return (
-          <div className="error-wrapper">
+export default function _error() {
+    return (
+        <div className="error-wrapper layout-wrapper">
             <HeadMetadata title="Error | HeckarNews" />
+            <AlternateHeader displayMessage="Website Error" />
             <span>An error occurred. (ERROR: 500)</span>
-          </div>
-        )
-    }
+        </div>
+    );
 }
