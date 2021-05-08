@@ -1,6 +1,7 @@
 const nanoid = require("nanoid");
 const url = require("url");
 const psl = require("psl");
+const validator = require("validator");
 
 module.exports = {
     generateUniqueId: (length) => {
@@ -12,11 +13,19 @@ module.exports = {
         return generator();
     },
 
-    getDomainFromUrl: function (paramUrl) {
+    getDomainFromUrl: (paramUrl) => {
         const hostname = url.parse(paramUrl).hostname;
 
         const parsed = psl.parse(hostname);
 
         return parsed ? parsed.domain : null;
+    },
+
+    validateEmail: (email) => {
+        if (email === "") {
+            return true;
+        } else {
+            return validator.isEmail(email);
+        }
     },
 };

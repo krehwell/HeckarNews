@@ -1,4 +1,6 @@
 const moment = require("moment");
+const linkifyUrls = require("linkify-urls");
+const xss = require("xss");
 
 const utils = require("../utils.js");
 const config = require("../../config.js");
@@ -294,5 +296,70 @@ module.exports = {
                     });
                 }
             });
+    },
+
+    /**
+     * Step 1 - Retrieve the user from the database.
+     *          If the user is not found, an error will be sent back to the website.
+     * Step 2 - Prepare the about text before to saving it to the database.
+     *          Will need to do the following:
+     *          - Trim extra spaces from the beginning and end of the string.
+     *          - Remove all the HTML tags from the string.
+     *          - Convert text surrounded in asterisks (*) into italic elements (<i></i>).
+     *          - Turn each URL into a <a href=""> element.
+     *          - Sanitize the text using an external XSS tool. This is done for security reasons.
+     * Step 3 - Validate the inputted email value.
+     *          If the inputted email is invalid, it will not be saved to the database.
+     * Step 4 - Save the updated user document to the database.
+     * Step 5 - If the email was changed or removed, send a notification email to the user.
+     * Step 6 - Send back a success response to the website.
+     */
+    updateUserData: (username, inputData, callback) => {
+        UserModel.findOne({ username: username }, (error, user) => {
+            if (error || !user) {
+                callback({ submitError: true });
+            } else {
+                let newAboutText = inputData.about;
+
+                newAboutText = newAboutText.trim();
+                newAboutText = newAboutText.replace(/<[^>]+>/g, "");
+                newAboutText = newAboutText.replace(
+                    /\*([^*]+)\*/g,
+                    "<i>$1</i>"
+                );
+                newAboutText = linkifyUrls(newAboutText);
+                newAboutText = xss(newAboutText);
+
+                const oldEmail = user.email;
+                const isNewEmailValid = utils.validateEmail(inputData.email);
+
+                user.about = newAboutText;
+                user.email = isNewEmailValid ? inputData.email : oldEmail;
+                user.showDead = inputData.showDead ? true : false;
+
+                user.save((saveError) => {
+                    if (saveError) {
+                        callback({ submitError: true });
+                    } else {
+                        if (oldEmail && oldEmail !== inputData.email) {
+                            const emailAction = !inputData.email
+                                ? "deleted"
+                                : "changed";
+
+                            emailApi.sendChangeEmailNotificationEmail(
+                                username,
+                                oldEmail,
+                                emailAction,
+                                () => {
+                                    callback({ success: true });
+                                }
+                            );
+                        } else {
+                            callback({ success: true });
+                        }
+                    }
+                });
+            }
+        });
     },
 };

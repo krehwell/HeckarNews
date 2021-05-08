@@ -6,6 +6,7 @@ const path = require("path");
 
 const config = require("../../config.js");
 
+/// EMAIL CONFIG
 const mailgunAuth = {
     auth: {
         api_key: process.env.MAILGUN_API_KEY,
@@ -15,6 +16,7 @@ const mailgunAuth = {
 
 const smtpTransport = nodemailer.createTransport(mg(mailgunAuth));
 
+/// EMAIL TEMPLATE
 const resetPasswordTemplate = fs.readFileSync(
     path.join(__dirname, "/templates/resetPassword.hbs"),
     "utf8"
@@ -25,6 +27,12 @@ const changePasswordNotificationTemplate = fs.readFileSync(
     "utf8"
 );
 
+const changeEmailNotificationTemplate = fs.readFileSync(
+    path.join(__dirname, "/templates/changeEmailNotification.hbs"),
+    "utf8"
+);
+
+/// SEND EMAIL API
 module.exports = {
     sendResetPasswordEmail: (username, token, email, callback) => {
         const template = handlebars.compile(resetPasswordTemplate);
@@ -62,6 +70,35 @@ module.exports = {
             from: "HeckarNews <me@krehwell.com>",
             to: email,
             subject: "HeckarNews Password Recovery",
+            html: htmlToSend,
+        };
+
+        smtpTransport.sendMail(mailOptions, (error, _response) => {
+            if (error) {
+                callback({ success: false });
+            } else {
+                callback({ success: true });
+            }
+        });
+    },
+
+    sendChangeEmailNotificationEmail: (
+        username,
+        email,
+        actionType,
+        callback
+    ) => {
+        const template = handlebars.compile(changeEmailNotificationTemplate);
+
+        const htmlToSend = template({
+            username: username,
+            actionType: actionType,
+        });
+
+        const mailOptions = {
+            from: "Coder News <nick@codernews.com>",
+            to: email,
+            subject: "Email address changed for " + username,
             html: htmlToSend,
         };
 

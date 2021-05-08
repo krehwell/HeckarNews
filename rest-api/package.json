@@ -19,12 +19,15 @@
     "express": "^4.17.1",
     "handlebars": "^4.7.7",
     "helmet": "^4.4.1",
+    "linkify-urls": "^3.1.1",
     "moment": "^2.29.1",
     "mongoose": "^5.12.1",
     "nanoid": "^3.1.22",
     "nodemailer": "^6.6.0",
     "nodemailer-mailgun-transport": "^2.0.3",
-    "psl": "^1.8.0"
+    "psl": "^1.8.0",
+    "validator": "^13.6.0",
+    "xss": "^1.0.9"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

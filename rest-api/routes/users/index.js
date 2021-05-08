@@ -184,4 +184,20 @@ app.get("/users/get-user-data", authUser, (req, res) => {
     }
 });
 
+app.put("/users/update-user-data", authUser, (req, res) => {
+    if (!req.body.inputData) {
+        res.json({ submitError: true });
+    } else if (!res.locals.userSignedIn) {
+        res.json({ submitError: true });
+    } else {
+        api.updateUserData(
+            res.locals.username,
+            req.body.inputData,
+            (response) => {
+                res.json(response);
+            }
+        );
+    }
+});
+
 module.exports = app;
