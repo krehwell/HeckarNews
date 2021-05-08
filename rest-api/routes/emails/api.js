@@ -69,7 +69,7 @@ module.exports = {
         const mailOptions = {
             from: "HeckarNews <me@krehwell.com>",
             to: email,
-            subject: "HeckarNews Password Recovery",
+            subject: "Password changed for " + username,
             html: htmlToSend,
         };
 
@@ -96,7 +96,7 @@ module.exports = {
         });
 
         const mailOptions = {
-            from: "Coder News <nick@codernews.com>",
+            from: "HeckarNews <me@krehwell.com>",
             to: email,
             subject: "Email address changed for " + username,
             html: htmlToSend,
