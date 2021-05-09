@@ -161,6 +161,7 @@ app.put("/users/reset-password", (req, res) => {
     }
 });
 
+/* GET USER PROFILE DATA */
 app.get("/users/get-user-data", authUser, (req, res) => {
     if (!req.query.username) {
         res.json({ notFoundError: true, authUser: res.locals });
@@ -184,6 +185,7 @@ app.get("/users/get-user-data", authUser, (req, res) => {
     }
 });
 
+/* UPDATE USER PROFILE */
 app.put("/users/update-user-data", authUser, (req, res) => {
     if (!req.body.inputData) {
         res.json({ submitError: true });
@@ -194,6 +196,39 @@ app.put("/users/update-user-data", authUser, (req, res) => {
             res.locals.username,
             req.body.inputData,
             (response) => {
+                res.json(response);
+            }
+        );
+    }
+});
+
+/* CHANGE USER PASSWORD */
+app.put("/users/change-password", authUser, (req, res) => {
+    if (!req.body.currentPassword || !req.body.newPassword) {
+        res.json({ submitError: true });
+    } else if (!res.locals.userSignedIn) {
+        res.json({ authError: true });
+    } else {
+        api.changePassword(
+            res.locals.username,
+            req.body.currentPassword,
+            req.body.newPassword,
+            (response) => {
+                if (response.success) {
+                    const cookieSettings = {
+                        path: "/",
+                        secure: process.env.NODE_ENV === "production",
+                        domain:
+                            process.env.NODE_ENV === "development"
+                                ? ""
+                                : utils.getDomainFromUrl(
+                                      config.productionWebsiteURL
+                                  ),
+                    };
+
+                    res.clearCookie("user", cookieSettings);
+                }
+
                 res.json(response);
             }
         );

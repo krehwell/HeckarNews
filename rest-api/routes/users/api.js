@@ -362,4 +362,63 @@ module.exports = {
             }
         });
     },
+
+    /**
+     * Step 1 - Find a user in the database with the given username.
+     *          If the user is not found, an error response will be sent back to the website.
+     * Step 2 - Validate the new password value.
+     *          If it's not at least 8 characters in length, an error response will be sent back to the website.
+     * Step 3 - Verify that the current password input value matches what's in the database.
+     *          To do this, the user.comparePassword() Mongoose schema method will be used.
+     *          If they don't match, an error response will be sent back to the website.
+     * Step 4 - Save the new password value to the database.
+     *          We'll want to also delete the authentication token and expiration date stored in the database for the user.
+     *          This will ensure that the user is logged out after making the password change.
+     * Step 5 - Send an email notification to the user letting them know that their password was changed.
+     * Step 6 - Send a success response back to the website.
+     */
+    changePassword: (username, currentPassword, newPassword, callback) => {
+        UserModel.findOne({ username: username }).exec((error, user) => {
+            if (error || !user) {
+                callback({ submitError: true });
+            } else {
+                if (newPassword.length < 8) {
+                    callback({ newPasswordLengthError: true });
+                } else {
+                    user.comparePassword(
+                        currentPassword,
+                        (matchError, isMatch) => {
+                            if (matchError) {
+                                callback({ submitError: true });
+                            } else if (!isMatch) {
+                                callback({ invalidCurrentPassword: true });
+                            } else {
+                                user.password = newPassword;
+                                user.authToken = null;
+                                user.authTokenExpiration = null;
+
+                                user.save((saveError) => {
+                                    if (saveError) {
+                                        callback({ submitError: true });
+                                    } else {
+                                        if (user.email) {
+                                            emailApi.sendChangePasswordNotificationEmail(
+                                                username,
+                                                user.email,
+                                                () => {
+                                                    callback({ success: true });
+                                                }
+                                            );
+                                        } else {
+                                            callback({ success: true });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
+            }
+        });
+    },
 };
