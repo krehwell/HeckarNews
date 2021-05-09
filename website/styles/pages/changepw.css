@@ -1,0 +1,107 @@
+.changepw-content-container {
+    padding: 25px 5px 25px 5px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+.changepw-error-msg,
+.changepw-error-msg a {
+    margin-bottom: 25px;
+    color: #828282;
+}
+
+.changepw-input-item {
+    margin: 4px 0px 4px 0px;
+}
+
+.changepw-input-item-label {
+    display: inline-block;
+    width: 135px;
+}
+
+.changepw-input-item-input {
+    display: inline-block;
+}
+
+.changepw-input-item-input input {
+    height: 20px;
+    width: 225px;
+    -webkit-writing-mode: horizontal-tb;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    padding: 1px;
+    border: 1px solid #a6a4a4;
+}
+
+.changepw-input-item-input input[type="password"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.changepw-submit-btn {
+    margin-top: 7.5px;
+    margin-left: 135px;
+}
+
+.changepw-submit-btn input {
+    -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+}
+
+.changepw-submit-btn input[type="submit"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.changepw-submit-btn input[type="submit"]:active {
+    border-style: inset;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .changepw-content-container {
+        font-size: 13px;
+    }
+
+    .changepw-input-item-label {
+        display: inline-block;
+        width: 120px;
+        font-size: 12.5px;
+    }
+
+    .changepw-input-item-input input {
+        height: 24px;
+        width: 175px;
+    }
+
+    .changepw-input-item-input input[type="password"] {
+        font-size: 16px;
+    }
+
+    .changepw-submit-btn {
+        margin-left: 120px;
+    }
+}

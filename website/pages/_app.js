@@ -8,6 +8,7 @@ import "../styles/pages/login.css";
 import "../styles/pages/forgot.css";
 import "../styles/pages/reset.css";
 import "../styles/pages/user.css";
+import "../styles/pages/changepw.css";
 
 export default function MyApp({ Component, pageProps }) {
     return <Component {...pageProps} />;
