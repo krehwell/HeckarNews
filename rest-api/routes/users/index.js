@@ -1,13 +1,10 @@
 const express = require("express");
-
 const app = express.Router();
 
-const api = require("./api.js");
-
 const utils = require("../utils.js");
-
 const config = require("../../config.js");
 
+const api = require("./api.js");
 const authUser = require("../../middlewares/index.js").authUser;
 
 /// API ENDPOINT GOES HERE
