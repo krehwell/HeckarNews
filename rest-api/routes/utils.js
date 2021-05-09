@@ -28,4 +28,20 @@ module.exports = {
             return validator.isEmail(email);
         }
     },
+
+    isValidUrl: (url) => {
+        return validator.isURL(url, { require_protocol: true });
+    },
+
+    getItemType: (title, url, text) => {
+        if (url) {
+            if (title.toLowerCase().startsWith("show hn")) {
+                return "show";
+            } else {
+                return "news";
+            }
+        } else {
+            return "ask";
+        }
+    },
 };
