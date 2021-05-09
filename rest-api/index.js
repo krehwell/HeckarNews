@@ -37,7 +37,7 @@ app.use(cors({
 }));
 
 
-// PARSER
+/// PARSER
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -45,9 +45,10 @@ app.use(cookieParser());
 
 
 /// ROUTES
-app.get("/", (_, res) => res.send("rest-api is working, kel!"));
+app.get("/", (_, res) => res.send("rest-api is working, kel!")); // debugger
 
 app.use(require("./routes/users/index.js"));
+app.use(require("./routes/items/index.js"));
 
 
 /// RUN SERVER
