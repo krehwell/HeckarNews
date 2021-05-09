@@ -1,0 +1,194 @@
+.submit-content-container {
+    padding: 15px 5px 15px 5px;
+}
+
+.submit-content-error-msg {
+    color: #828282;
+    font-size: 13.5px;
+    margin-bottom: 20px;
+}
+
+.submit-content-input-item-label {
+    display: inline-block;
+    width: 35px;
+    color: #828282;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+}
+
+.submit-content-input-item-input {
+    display: inline-block;
+}
+
+.submit-content-input-item-input input {
+    width: 400px;
+    height: 20px;
+    -webkit-writing-mode: horizontal-tb;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+    margin: 0em;
+    padding: 1px;
+    border: 1px solid #a6a4a4;
+}
+
+.submit-content-input-item-input input[type="text"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.submit-content-title-length-msg {
+    margin-left: 10px;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #828282;
+    font-size: 13.5px;
+}
+
+.submit-content-input-item.url {
+    margin-top: 5px;
+}
+
+.submit-content-input-or-divider {
+    width: 100%;
+    height: 25px;
+    line-height: 25px;
+    font-size: 13.5px;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #828282;
+    font-weight: bold;
+    margin-left: 35px;
+}
+
+.submit-content-text-input-item {
+    height: auto;
+}
+
+.submit-content-text-input-item-label {
+    display: inline-block;
+    width: 35px;
+    color: #828282;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    vertical-align: middle;
+}
+
+.submit-content-text-input-item-input {
+    display: inline-block;
+}
+
+.submit-content-text-input-item-input textarea {
+    height: 64px;
+    width: 400px;
+    max-width: 98%;
+    vertical-align: middle;
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textarea;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    flex-direction: column;
+    resize: auto;
+    cursor: text;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    margin: 0em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(169, 169, 169);
+    border-image: initial;
+    padding: 2px 0px 0px 2px;
+}
+
+.submit-content-text-input-item-input textarea[type="text"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.submit-content-input-btn {
+    margin-top: 10px;
+    margin-left: 35px;
+    font-size: 14px;
+}
+
+.submit-content-input-btn input {
+    -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+}
+
+.submit-content-input-btn input[type="submit"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.submit-content-input-btn input[type="submit"]:active {
+    border-style: inset;
+}
+
+.submit-content-bottom-instructions {
+    color: #828282;
+    font-size: 13.5px;
+    margin-top: 25px;
+    margin-left: 30px;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .submit-content-input-item-input input[type="text"] {
+        height: 24px;
+        font-size: 16px;
+    }
+
+    .submit-content-text-input-item-input textarea[type="text"] {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 350px) {
+    .submit-content-input-item-input input {
+        width: 300px;
+    }
+
+    .submit-content-text-input-item-input textarea {
+        width: 300px;
+    }
+}
+
+@media only screen and (max-width: 350px) and (min-width: 0px) {
+    .submit-content-input-item-input input {
+        width: 250px;
+    }
+
+    .submit-content-text-input-item-input textarea {
+        width: 250px;
+    }
+}
