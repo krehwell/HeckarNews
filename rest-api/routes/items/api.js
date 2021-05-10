@@ -3,6 +3,7 @@ const linkifyUrls = require("linkify-urls");
 const moment = require("moment");
 
 const ItemModel = require("../../models/item.js");
+const UserModel = require("../../models/user.js");
 
 const utils = require("../utils.js");
 
