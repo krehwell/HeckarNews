@@ -109,27 +109,31 @@ module.exports = {
      *          3. Boolean value representing whether or not the user has an email added to their account or not.
      *          4. Boolean value representing whether or not the user wants to see dead submissions and comments.
      */
-    authenticateUser: (username, authToken, callback) => {
-        UserModel.findOne({ username: username })
-            .lean()
-            .exec((err, user) => {
-                if (
-                    err ||
-                    !user ||
-                    authToken !== user.authToken ||
-                    moment().unix() > user.authTokenExpiration
-                ) {
-                    callback({ success: false });
-                } else {
-                    callback({
-                        success: true,
-                        username: user.username,
-                        karma: user.karma,
-                        containsEmail: user.email ? true : false,
-                        showDead: user.showDead ? true : false,
-                    });
-                }
-            });
+    authenticateUser: async (username, authToken) => {
+        try {
+            const user = await UserModel.findOne({ username: username })
+                .lean()
+                .exec();
+
+            if (
+                !user ||
+                authToken !== user.authToken ||
+                moment().unix() > user.authTokenExpiration
+            ) {
+                throw { success: false };
+            }
+
+            return {
+                success: true,
+                username: user.username,
+                karma: user.karma,
+                containsEmail: user.email ? true : false,
+                showDead: user.showDead ? true : false,
+            };
+        } catch (error) {
+            // expected: should always return { success: false }
+            return error;
+        }
     },
 
     removeUserAuthData: (authUser, callback) => {

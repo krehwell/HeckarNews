@@ -84,11 +84,15 @@ app.put("/users/login", async (req, res) => {
 });
 
 /* AUTHENTICATE USER */
-app.get("/users/authenticate", authUser, (req, res) => {
-    if (!res.locals.userSignedIn) {
-        res.json({ success: false, authUser: res.locals });
-    } else {
-        res.json({ success: true, authUser: res.locals });
+app.get("/users/authenticate", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { success: false, authUser: res.locals };
+        } else {
+            res.json({ success: true, authUser: res.locals });
+        }
+    } catch (error) {
+        res.json(error);
     }
 });
 
