@@ -55,43 +55,44 @@ module.exports = {
         }
     },
 
-    loginUser: (username, password, callback) => {
-        UserModel.findOne({ username }).exec((error, user) => {
-            if (error) {
-                callback({ submitError: true });
-            } else if (!user) {
-                callback({ credentialError: true });
-            } else {
-                user.comparePassword(password, (matchError, isMatch) => {
-                    if (matchError) {
-                        callback({ submitError: true });
-                    } else if (!isMatch) {
-                        callback({ credentialError: true });
-                    } else {
-                        const authTokenString = utils.generateUniqueId(40);
-                        const authTokenExpirationTimestamp =
-                            moment().unix() +
-                            86400 * config.userCookieExpirationLengthInDays;
+    loginUser: async (username, password) => {
+        try {
+            const user = await UserModel.findOne({ username }).exec();
 
-                        user.authToken = authTokenString;
-                        user.authTokenExpiration = authTokenExpirationTimestamp;
-
-                        user.save((saveError) => {
-                            if (saveError) {
-                                callback({ submitError: true });
-                            } else {
-                                callback({
-                                    success: true,
-                                    username: username,
-                                    authToken: authTokenString,
-                                    authTokenExpirationTimestamp: authTokenExpirationTimestamp,
-                                });
-                            }
-                        });
-                    }
-                });
+            if (!user) {
+                throw { credentialError: true };
             }
-        });
+
+            const passwordIsMatch = await user.comparePassword(password);
+
+            if (!passwordIsMatch) {
+                throw { credentialError: true };
+            }
+
+            // renew user token
+            const authTokenString = utils.generateUniqueId(40);
+            const authTokenExpirationTimestamp =
+                moment().unix() +
+                86400 * config.userCookieExpirationLengthInDays;
+
+            user.authToken = authTokenString;
+            user.authTokenExpiration = authTokenExpirationTimestamp;
+
+            const saveUser = await user.save();
+            return {
+                success: true,
+                username: username,
+                authToken: authTokenString,
+                authTokenExpirationTimestamp: authTokenExpirationTimestamp,
+            };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
     },
 
     /**
