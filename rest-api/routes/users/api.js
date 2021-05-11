@@ -10,46 +10,48 @@ const emailApi = require("../emails/api.js");
 
 // API FUNCTIONS
 module.exports = {
-    createNewUser: (username, password, callback) => {
+    createNewUser: async (username, password) => {
         if (username.length < 2 || password.length > 15) {
-            callback({ usernameLengthError: true });
+            throw { usernameLengthError: true };
         } else if (password.length < 8) {
-            callback({ passwordLengthError: true });
+            throw { passwordLengthError: true };
         } else {
-            UserModel.findOne({ username }).exec((error, user) => {
-                if (error) {
-                    callback({ submitError: true });
-                } else if (user) {
-                    callback({ alreadyExistUser: true });
-                } else {
-                    // create new user here
-                    const authTokenString = utils.generateUniqueId(40);
-                    const authTokenExpirationTimestamp =
-                        moment().unix() +
-                        86400 * config.userCookieExpirationLengthInDays;
+            try {
+                const userExist = await UserModel.findOne({ username }).exec();
 
-                    const newUserDoc = new UserModel({
-                        username,
-                        password,
-                        authToken: authTokenString,
-                        authTokenExpiration: authTokenExpirationTimestamp,
-                        created: moment().unix(),
-                    });
-
-                    newUserDoc.save((newUserError, newUser) => {
-                        if (newUserError) {
-                            callback({ submitError: true });
-                        } else {
-                            callback({
-                                success: true,
-                                username,
-                                authToken: authTokenString,
-                                authTokenExpirationTimestamp,
-                            });
-                        }
-                    });
+                if (userExist) {
+                    throw { alreadyExistUser: true };
                 }
-            });
+
+                // create new user here
+                const authTokenString = utils.generateUniqueId(40);
+                const authTokenExpirationTimestamp =
+                    moment().unix() +
+                    86400 * config.userCookieExpirationLengthInDays;
+
+                const newUserDoc = new UserModel({
+                    username,
+                    password,
+                    authToken: authTokenString,
+                    authTokenExpiration: authTokenExpirationTimestamp,
+                    created: moment().unix(),
+                });
+
+                const newUser = await newUserDoc.save();
+                return {
+                    success: true,
+                    username,
+                    authToken: authTokenString,
+                    authTokenExpirationTimestamp,
+                };
+            } catch (error) {
+                // make sure to always send bad response from a known error
+                if (!(error instanceof Error)) {
+                    throw error;
+                } else {
+                    throw { submitError: true };
+                }
+            }
         }
     },
 

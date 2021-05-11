@@ -9,43 +9,41 @@ const authUser = require("../../middlewares/index.js").authUser;
 
 /// API ENDPOINT GOES HERE
 
-/* CREATE NEW USER */
-app.post("/users/create-new-user", (req, res) => {
-    if (!req.body.username || !req.body.password) {
-        res.json({ submitError: true });
-    } else {
-        api.createNewUser(req.body.username, req.body.password, (response) => {
-            if (!response.success) {
-                res.json(response);
-            } else {
-                const cookieSettings = {
-                    path: "/",
-                    expires: new Date(
-                        response.authTokenExpirationTimestamp * 1000
-                    ),
-                    httpOnly: true,
-                    encode: String,
-                    secure: process.env.NODE_ENV === "production",
-                    domain:
-                        process.env.NODE_ENV === "development"
-                            ? ""
-                            : utils.getDomainFromUrl(
-                                  config.productionWebsiteURL
-                              ),
-                };
+app.post("/users/create-new-user", async (req, res) => {
+    try {
+        if (!req.body.username || !req.body.password) {
+            throw new Error({ submitError: true });
+        } else {
+            const response = await api.createNewUser(
+                req.body.username,
+                req.body.password
+            );
 
-                /*
-                 * cookie format: user = "username&auth_token"
-                 */
-                res.cookie(
-                    "user",
-                    response.username + "&" + response.authToken,
-                    cookieSettings
-                );
+            const cookieSettings = {
+                path: "/",
+                expires: new Date(response.authTokenExpirationTimestamp * 1000),
+                httpOnly: true,
+                encode: String,
+                secure: process.env.NODE_ENV === "production",
+                domain:
+                    process.env.NODE_ENV === "development"
+                        ? ""
+                        : utils.getDomainFromUrl(config.productionWebsiteURL),
+            };
 
-                res.json({ success: true });
-            }
-        });
+            /**
+             * cookie format: user = "username&auth_token"
+             */
+            res.cookie(
+                "user",
+                response.username + "&" + response.authToken,
+                cookieSettings
+            );
+
+            res.json({ success: true });
+        }
+    } catch (error) {
+        res.json(error);
     }
 });
 
