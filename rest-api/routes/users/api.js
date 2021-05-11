@@ -11,12 +11,12 @@ const emailApi = require("../emails/api.js");
 // API FUNCTIONS
 module.exports = {
     createNewUser: async (username, password) => {
-        if (username.length < 2 || password.length > 15) {
-            throw { usernameLengthError: true };
-        } else if (password.length < 8) {
-            throw { passwordLengthError: true };
-        } else {
-            try {
+        try {
+            if (username.length < 2 || password.length > 15) {
+                throw { usernameLengthError: true };
+            } else if (password.length < 8) {
+                throw { passwordLengthError: true };
+            } else {
                 const userExist = await UserModel.findOne({ username }).exec();
 
                 if (userExist) {
@@ -44,13 +44,13 @@ module.exports = {
                     authToken: authTokenString,
                     authTokenExpirationTimestamp,
                 };
-            } catch (error) {
-                // make sure to always send bad response from a known error
-                if (!(error instanceof Error)) {
-                    throw error;
-                } else {
-                    throw { submitError: true };
-                }
+            }
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
             }
         }
     },

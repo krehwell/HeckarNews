@@ -64,8 +64,6 @@ export default function Login({ goto }) {
             setState({ ...state, loading: true });
 
             loginUser(username, password, (response) => {
-                console.log("RESSS ISS", response);
-
                 if (response.credentialError) {
                     setState({
                         ...state,
