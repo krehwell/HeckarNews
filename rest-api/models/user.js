@@ -66,14 +66,14 @@ UserSchema.pre("save", function (next) {
     }
 });
 
-UserSchema.methods.comparePassword = function (pw, cb) {
-    bcrypt.compare(pw, this.password, (err, isMatch) => {
-        if (err) {
-            return cb(err);
-        } else {
-            cb(null, isMatch);
-        }
-    });
+UserSchema.methods.comparePassword = async function (pw) {
+    const passwordIsMatch = bcrypt.compareSync(pw, this.password)
+
+    if (passwordIsMatch) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 UserSchema.index({ username: 1 }, { unique: true });
