@@ -80,12 +80,7 @@ module.exports = {
         }
     },
 
-    sendChangeEmailNotificationEmail: (
-        username,
-        email,
-        actionType,
-        callback
-    ) => {
+    sendChangeEmailNotificationEmail: async (username, email, actionType) => {
         const template = handlebars.compile(changeEmailNotificationTemplate);
 
         const htmlToSend = template({
@@ -100,12 +95,11 @@ module.exports = {
             html: htmlToSend,
         };
 
-        smtpTransport.sendMail(mailOptions, (error, _response) => {
-            if (error) {
-                callback({ success: false });
-            } else {
-                callback({ success: true });
-            }
-        });
+        try {
+            const sendEmail = await smtpTransport.sendMail(mailOptions);
+            return { success: true };
+        } catch (error) {
+            // throw { success: false };
+        }
     },
 };
