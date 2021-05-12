@@ -61,7 +61,7 @@ module.exports = {
         }
     },
 
-    sendChangePasswordNotificationEmail: (username, email, callback) => {
+    sendChangePasswordNotificationEmail: async (username, email) => {
         const template = handlebars.compile(changePasswordNotificationTemplate);
         const htmlToSend = template({ username: username });
 
@@ -72,13 +72,12 @@ module.exports = {
             html: htmlToSend,
         };
 
-        smtpTransport.sendMail(mailOptions, (error, _response) => {
-            if (error) {
-                callback({ success: false });
-            } else {
-                callback({ success: true });
-            }
-        });
+        try {
+            const sendEmail = await smtpTransport.sendMail(mailOptions);
+            return { success: true };
+        } catch (error) {
+            // throw { success: false };
+        }
     },
 
     sendChangeEmailNotificationEmail: (
