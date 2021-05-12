@@ -13,35 +13,35 @@ app.post("/users/create-new-user", async (req, res) => {
     try {
         if (!req.body.username || !req.body.password) {
             throw { submitError: true };
-        } else {
-            const response = await api.createNewUser(
-                req.body.username,
-                req.body.password
-            );
-
-            const cookieSettings = {
-                path: "/",
-                expires: new Date(response.authTokenExpirationTimestamp * 1000),
-                httpOnly: true,
-                encode: String,
-                secure: process.env.NODE_ENV === "production",
-                domain:
-                    process.env.NODE_ENV === "development"
-                        ? ""
-                        : utils.getDomainFromUrl(config.productionWebsiteURL),
-            };
-
-            /**
-             * cookie format: user = "username&auth_token"
-             */
-            res.cookie(
-                "user",
-                response.username + "&" + response.authToken,
-                cookieSettings
-            );
-
-            res.json({ success: true });
         }
+
+        const response = await api.createNewUser(
+            req.body.username,
+            req.body.password
+        );
+
+        const cookieSettings = {
+            path: "/",
+            expires: new Date(response.authTokenExpirationTimestamp * 1000),
+            httpOnly: true,
+            encode: String,
+            secure: process.env.NODE_ENV === "production",
+            domain:
+                process.env.NODE_ENV === "development"
+                    ? ""
+                    : utils.getDomainFromUrl(config.productionWebsiteURL),
+        };
+
+        /**
+         * cookie format: user = "username&auth_token"
+         */
+        res.cookie(
+            "user",
+            response.username + "&" + response.authToken,
+            cookieSettings
+        );
+
+        res.json({ success: true });
     } catch (error) {
         res.json(error);
     }
@@ -52,32 +52,32 @@ app.put("/users/login", async (req, res) => {
     try {
         if (!req.body.username || !req.body.password) {
             throw { submitError: true };
-        } else {
-            const response = await api.loginUser(
-                req.body.username,
-                req.body.password
-            );
-
-            const cookieSettings = {
-                path: "/",
-                expires: new Date(response.authTokenExpirationTimestamp * 1000),
-                httpOnly: true,
-                encode: String,
-                secure: process.env.NODE_ENV === "production",
-                domain:
-                    process.env.NODE_ENV === "development"
-                        ? ""
-                        : utils.getDomainFromUrl(config.productionWebsiteURL),
-            };
-
-            res.cookie(
-                "user",
-                response.username + "&" + response.authToken,
-                cookieSettings
-            );
-
-            res.json({ success: true });
         }
+
+        const response = await api.loginUser(
+            req.body.username,
+            req.body.password
+        );
+
+        const cookieSettings = {
+            path: "/",
+            expires: new Date(response.authTokenExpirationTimestamp * 1000),
+            httpOnly: true,
+            encode: String,
+            secure: process.env.NODE_ENV === "production",
+            domain:
+                process.env.NODE_ENV === "development"
+                    ? ""
+                    : utils.getDomainFromUrl(config.productionWebsiteURL),
+        };
+
+        res.cookie(
+            "user",
+            response.username + "&" + response.authToken,
+            cookieSettings
+        );
+
+        res.json({ success: true });
     } catch (error) {
         res.json(error);
     }
@@ -88,9 +88,9 @@ app.get("/users/authenticate", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn) {
             throw { success: false, authUser: res.locals };
-        } else {
-            res.json({ success: true, authUser: res.locals });
         }
+
+        res.json({ success: true, authUser: res.locals });
     } catch (error) {
         res.json(error);
     }
