@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import moment from "moment";
 
 import Header from "../components/header.js";
@@ -26,7 +26,7 @@ export default function User({
     });
 
     const updateAboutInputValue = (event) => {
-        setState({ aboutInputValue: event.target.value });
+        setState({ ...state, aboutInputValue: event.target.value });
     };
 
     const setInitialTextareaHeight = () => {
