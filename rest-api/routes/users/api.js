@@ -405,48 +405,44 @@ module.exports = {
      * Step 5 - Send an email notification to the user letting them know that their password was changed.
      * Step 6 - Send a success response back to the website.
      */
-    changePassword: (username, currentPassword, newPassword, callback) => {
-        UserModel.findOne({ username: username }).exec((error, user) => {
-            if (error || !user) {
-                callback({ submitError: true });
-            } else {
-                if (newPassword.length < 8) {
-                    callback({ newPasswordLengthError: true });
-                } else {
-                    user.comparePassword(
-                        currentPassword,
-                        (matchError, isMatch) => {
-                            if (matchError) {
-                                callback({ submitError: true });
-                            } else if (!isMatch) {
-                                callback({ invalidCurrentPassword: true });
-                            } else {
-                                user.password = newPassword;
-                                user.authToken = null;
-                                user.authTokenExpiration = null;
-
-                                user.save((saveError) => {
-                                    if (saveError) {
-                                        callback({ submitError: true });
-                                    } else {
-                                        if (user.email) {
-                                            emailApi.sendChangePasswordNotificationEmail(
-                                                username,
-                                                user.email,
-                                                () => {
-                                                    callback({ success: true });
-                                                }
-                                            );
-                                        } else {
-                                            callback({ success: true });
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    );
-                }
+    changePassword: async (username, currentPassword, newPassword) => {
+        try {
+            const user = await UserModel.findOne({ username: username }).exec();
+            if (!user) {
+                throw { submitError: true };
             }
-        });
+
+            if (newPassword.length < 8) {
+                throw { newPasswordLengthError: true };
+            }
+
+            const passwordIsMatch = await user.comparePassword(currentPassword);
+
+            if (!passwordIsMatch) {
+                throw { invalidCurrentPassword: true };
+            }
+
+            user.password = newPassword;
+            user.authToken = null;
+            user.authTokenExpiration = null;
+
+            const saveUser = await user.save();
+
+            if (user.email) {
+                const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
+                    username,
+                    user.email
+                );
+            }
+
+            throw { success: true };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
     },
 };

@@ -217,35 +217,37 @@ app.put("/users/update-user-data", authUser, async (req, res) => {
 });
 
 /* CHANGE USER PASSWORD */
-app.put("/users/change-password", authUser, (req, res) => {
-    if (!req.body.currentPassword || !req.body.newPassword) {
-        res.json({ submitError: true });
-    } else if (!res.locals.userSignedIn) {
-        res.json({ authError: true });
-    } else {
-        api.changePassword(
+app.put("/users/change-password", authUser, async (req, res) => {
+    try {
+        if (!req.body.currentPassword || !req.body.newPassword) {
+            throw { submitError: true };
+        } else if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        }
+
+        const response = await api.changePassword(
             res.locals.username,
             req.body.currentPassword,
-            req.body.newPassword,
-            (response) => {
-                if (response.success) {
-                    const cookieSettings = {
-                        path: "/",
-                        secure: process.env.NODE_ENV === "production",
-                        domain:
-                            process.env.NODE_ENV === "development"
-                                ? ""
-                                : utils.getDomainFromUrl(
-                                      config.productionWebsiteURL
-                                  ),
-                    };
+            req.body.newPassword);
 
-                    res.clearCookie("user", cookieSettings);
-                }
+        if (response.success) {
+            const cookieSettings = {
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+                domain:
+                process.env.NODE_ENV === "development"
+                ? ""
+                : utils.getDomainFromUrl(
+                    config.productionWebsiteURL
+                ),
+            };
 
-                res.json(response);
-            }
-        );
+            res.clearCookie("user", cookieSettings);
+        }
+
+        res.json(response);
+    } catch (error) {
+        res.json(error);
     }
 });
 
