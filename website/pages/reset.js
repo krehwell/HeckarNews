@@ -124,6 +124,7 @@ export default function Reset({ resetToken, username }) {
                         value="Change"
                         onClick={() => submitRequest()}
                     />
+                    {state.loading && <span> loading...</span>}
                 </div>
             </div>
         </div>

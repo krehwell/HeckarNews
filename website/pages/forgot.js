@@ -114,6 +114,7 @@ export default function Forgot() {
                                 value="Send reset email"
                                 onClick={() => submitRequest()}
                             />
+                            {state.loading && <span> loading...</span>}
                         </div>
                     </div>
                 </>
