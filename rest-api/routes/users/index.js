@@ -172,26 +172,28 @@ app.put("/users/reset-password", async (req, res) => {
 });
 
 /* GET USER PROFILE DATA */
-app.get("/users/get-user-data", authUser, (req, res) => {
-    if (!req.query.username) {
-        res.json({ notFoundError: true, authUser: res.locals });
-    } else if (
-        !res.locals.userSignedIn ||
-        res.locals.username !== req.query.username
-    ) {
-        api.getPublicUserData(req.query.username, (response) => {
+app.get("/users/get-user-data", authUser, async (req, res) => {
+    try {
+        if (!req.query.username) {
+            throw { notFoundError: true, authUser: res.locals };
+        } else if (
+            !res.locals.userSignedIn ||
+            res.locals.username !== req.query.username
+        ) {
+            const response = await api.getPublicUserData(req.query.username);
             response.authUser = res.locals;
             response.showPrivateUserData = false;
 
             res.json(response);
-        });
-    } else {
-        api.getPrivateUserData(req.query.username, (response) => {
+        } else {
+            const response = await api.getPrivateUserData(req.query.username);
             response.authUser = res.locals;
             response.showPrivateUserData = true;
 
             res.json(response);
-        });
+        }
+    } catch (error) {
+        res.json(error);
     }
 });
 

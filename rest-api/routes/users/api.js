@@ -262,56 +262,70 @@ module.exports = {
         }
     },
 
-    getPublicUserData: (username, callback) => {
-        UserModel.findOne({ username: username })
-            .lean()
-            .exec((error, user) => {
-                if (error) {
-                    callback({ getDataError: true });
-                } else if (!user) {
-                    callback({ notFoundError: true });
-                } else {
-                    callback({
-                        success: true,
-                        user: {
-                            username: user.username,
-                            created: user.created,
-                            karma: user.karma,
-                            about: user.about,
-                        },
-                    });
-                }
-            });
+    getPublicUserData: async (username) => {
+        try {
+            const user = await UserModel.findOne({ username: username })
+                .lean()
+                .exec();
+
+            if (!user) {
+                throw { notFoundError: true };
+            }
+
+            return {
+                success: true,
+                user: {
+                    username: user.username,
+                    created: user.created,
+                    karma: user.karma,
+                    about: user.about,
+                },
+            };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { getDataError: true };
+            }
+        }
     },
 
-    getPrivateUserData: (username, callback) => {
-        UserModel.findOne({ username: username })
-            .lean()
-            .exec((error, user) => {
-                if (error) {
-                    callback({ getDataError: true });
-                } else if (!user) {
-                    callback({ notFoundError: true });
-                } else {
-                    const aboutText = user.about
-                        .replace(/<a\b[^>]*>/i, "")
-                        .replace(/<\/a>/i, "")
-                        .replace(/<i\b[^>]*>/i, "*")
-                        .replace(/<\/i>/i, "*");
+    getPrivateUserData: async (username) => {
+        try {
+            const user = await UserModel.findOne({ username: username })
+                .lean()
+                .exec();
+            if (!user) {
+                throw { notFoundError: true };
+            }
 
-                    callback({
-                        success: true,
-                        user: {
-                            username: user.username,
-                            created: user.created,
-                            karma: user.karma,
-                            about: aboutText,
-                            email: user.email,
-                            showDead: user.showDead,
-                        },
-                    });
-                }
-            });
+            // change about text to be a plain text
+            const aboutText = user.about
+                .replace(/<a\b[^>]*>/i, "")
+                .replace(/<\/a>/i, "")
+                .replace(/<i\b[^>]*>/i, "*")
+                .replace(/<\/i>/i, "*");
+
+            return {
+                success: true,
+                user: {
+                    username: user.username,
+                    created: user.created,
+                    karma: user.karma,
+                    about: aboutText,
+                    email: user.email,
+                    showDead: user.showDead,
+                },
+            };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { getDataError: true };
+            }
+        }
     },
 
     /**
