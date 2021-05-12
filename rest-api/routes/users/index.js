@@ -150,18 +150,24 @@ app.put("/users/request-password-reset-link", async (req, res) => {
 });
 
 /* RESET PASSWORD USER */
-app.put("/users/reset-password", (req, res) => {
-    if (!req.body.username || !req.body.newPassword || !req.body.resetToken) {
-        res.json({ submitError: true });
-    } else {
-        api.resetPassword(
+app.put("/users/reset-password", async (req, res) => {
+    try {
+        if (
+            !req.body.username ||
+            !req.body.newPassword ||
+            !req.body.resetToken
+        ) {
+            throw { submitError: true };
+        }
+
+        const response = await api.resetPassword(
             req.body.username,
             req.body.newPassword,
-            req.body.resetToken,
-            (response) => {
-                res.json(response);
-            }
+            req.body.resetToken
         );
+        res.json(response);
+    } catch (error) {
+        res.json(error);
     }
 });
 
