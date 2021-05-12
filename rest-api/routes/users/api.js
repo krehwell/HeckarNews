@@ -247,11 +247,12 @@ module.exports = {
 
             // as long as new pass has been saved then return {success: true}
             if (user.email) {
-                const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail();
-                return { success: true };
-            } else {
-                return { success: true };
+                const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
+                    user.username,
+                    user.email
+                );
             }
+            return { success: true };
         } catch (error) {
             // make sure to always send bad response from a known error
             if (!(error instanceof Error)) {
@@ -344,53 +345,50 @@ module.exports = {
      * Step 5 - If the email was changed or removed, send a notification email to the user.
      * Step 6 - Send back a success response to the website.
      */
-    updateUserData: (username, inputData, callback) => {
-        UserModel.findOne({ username: username }, (error, user) => {
-            if (error || !user) {
-                callback({ submitError: true });
-            } else {
-                let newAboutText = inputData.about;
-
-                newAboutText = newAboutText.trim();
-                newAboutText = newAboutText.replace(/<[^>]+>/g, "");
-                newAboutText = newAboutText.replace(
-                    /\*([^*]+)\*/g,
-                    "<i>$1</i>"
-                );
-                newAboutText = linkifyUrls(newAboutText);
-                newAboutText = xss(newAboutText);
-
-                const oldEmail = user.email;
-                const isNewEmailValid = utils.validateEmail(inputData.email);
-
-                user.about = newAboutText;
-                user.email = isNewEmailValid ? inputData.email : oldEmail;
-                user.showDead = inputData.showDead ? true : false;
-
-                user.save((saveError) => {
-                    if (saveError) {
-                        callback({ submitError: true });
-                    } else {
-                        if (oldEmail && oldEmail !== inputData.email) {
-                            const emailAction = !inputData.email
-                                ? "deleted"
-                                : "changed";
-
-                            emailApi.sendChangeEmailNotificationEmail(
-                                username,
-                                oldEmail,
-                                emailAction,
-                                () => {
-                                    callback({ success: true });
-                                }
-                            );
-                        } else {
-                            callback({ success: true });
-                        }
-                    }
-                });
+    updateUserData: async (username, inputData) => {
+        try {
+            const user = await UserModel.findOne({ username: username });
+            if (!user) {
+                throw { submitError: true };
             }
-        });
+
+            let newAboutText = inputData.about;
+
+            newAboutText = newAboutText.trim();
+            newAboutText = newAboutText.replace(/<[^>]+>/g, "");
+            newAboutText = newAboutText.replace(/\*([^*]+)\*/g, "<i>$1</i>");
+            newAboutText = linkifyUrls(newAboutText);
+            newAboutText = xss(newAboutText);
+
+            const oldEmail = user.email;
+
+            const isNewEmailValid = utils.validateEmail(inputData.email);
+
+            user.about = newAboutText;
+            user.email = isNewEmailValid ? inputData.email : oldEmail;
+            user.showDead = inputData.showDead ? true : false;
+
+            const saveUser = await user.save();
+
+            // as long as new user data has been saved then return {success: true}
+            if (oldEmail && oldEmail !== inputData.email) {
+                const emailAction = !inputData.email ? "deleted" : "changed";
+
+                const sendEmailResponse = await emailApi.sendChangeEmailNotificationEmail(
+                    username,
+                    oldEmail,
+                    emailAction
+                );
+            }
+            return { success: true };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
     },
 
     /**

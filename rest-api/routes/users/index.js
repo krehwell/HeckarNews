@@ -198,19 +198,21 @@ app.get("/users/get-user-data", authUser, async (req, res) => {
 });
 
 /* UPDATE USER PROFILE */
-app.put("/users/update-user-data", authUser, (req, res) => {
-    if (!req.body.inputData) {
-        res.json({ submitError: true });
-    } else if (!res.locals.userSignedIn) {
-        res.json({ submitError: true });
-    } else {
-        api.updateUserData(
+app.put("/users/update-user-data", authUser, async (req, res) => {
+    try {
+        if (!req.body.inputData) {
+            throw { submitError: true };
+        } else if (!res.locals.userSignedIn) {
+            throw { submitError: true };
+        }
+
+        const response = await api.updateUserData(
             res.locals.username,
-            req.body.inputData,
-            (response) => {
-                res.json(response);
-            }
+            req.body.inputData
         );
+        res.json(response);
+    } catch (error) {
+        res.json(error);
     }
 });
 
