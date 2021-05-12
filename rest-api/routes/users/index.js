@@ -136,13 +136,16 @@ app.put("/users/remove-user-cookie-data", (req, res) => {
 });
 
 /* REQUEST TO SEND RESET PASSWORD USER TOKEN */
-app.put("/users/request-password-reset-link", (req, res) => {
-    if (!req.body.username) {
-        res.json({ submitError: true });
-    } else {
-        api.requestPasswordResetLink(req.body.username, (response) => {
-            res.json(response);
-        });
+app.put("/users/request-password-reset-link", async (req, res) => {
+    try {
+        if (!req.body.username) {
+            throw { submitError: true };
+        }
+
+        const response = await api.requestPasswordResetLink(req.body.username);
+        res.json(response);
+    } catch (error) {
+        res.json(error);
     }
 });
 

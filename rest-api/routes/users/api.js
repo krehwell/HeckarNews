@@ -171,41 +171,42 @@ module.exports = {
      * Step 4 - Send an email to the user with the reset password link.
      * Step 5 - Send a success response back to the website.
      */
-    requestPasswordResetLink: (username, callback) => {
-        UserModel.findOne({ username: username }).exec((error, user) => {
-            if (error) {
-                callback({ submitError: true });
-            } else if (!user) {
-                callback({ userNotFound: true });
+    requestPasswordResetLink: async (username, callback) => {
+        try {
+            const user = await UserModel.findOne({ username: username }).exec();
+
+            if (!user) {
+                throw { userNotFound: true };
             } else if (!user.email) {
-                callback({ noEmailError: true });
-            } else {
-                const resetPasswordToken = utils.generateUniqueId(40);
-                const resetPasswordTokenExpiration = moment().unix() + 3600;
-
-                user.resetPasswordToken = resetPasswordToken;
-                user.resetPasswordTokenExpiration = resetPasswordTokenExpiration;
-
-                user.save(function (saveError) {
-                    if (saveError) {
-                        callback({ submitError: true });
-                    } else {
-                        emailApi.sendResetPasswordEmail(
-                            user.username,
-                            resetPasswordToken,
-                            user.email,
-                            (response) => {
-                                if (!response.success) {
-                                    callback({ submitError: true });
-                                } else {
-                                    callback({ success: true });
-                                }
-                            }
-                        );
-                    }
-                });
+                throw { noEmailError: true };
             }
-        });
+
+            const resetPasswordToken = utils.generateUniqueId(40);
+            const resetPasswordTokenExpiration = moment().unix() + 3600;
+
+            user.resetPasswordToken = resetPasswordToken;
+            user.resetPasswordTokenExpiration = resetPasswordTokenExpiration;
+
+            const saveUser = await user.save();
+            const sendEmailResponse = await emailApi.sendResetPasswordEmail(
+                user.username,
+                resetPasswordToken,
+                user.email
+            );
+
+            if (!sendEmailResponse.success) {
+                throw { submitError: true };
+            }
+
+            return { success: true };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
     },
 
     /**
