@@ -34,7 +34,7 @@ const changeEmailNotificationTemplate = fs.readFileSync(
 
 /// SEND EMAIL API
 module.exports = {
-    sendResetPasswordEmail: (username, token, email, callback) => {
+    sendResetPasswordEmail: async (username, token, email) => {
         const template = handlebars.compile(resetPasswordTemplate);
         const baseWebsiteUrl =
             process.env.NODE_ENV === "development"
@@ -53,13 +53,12 @@ module.exports = {
             html: htmlToSend,
         };
 
-        smtpTransport.sendMail(mailOptions, (error, _response) => {
-            if (error) {
-                callback({ success: false });
-            } else {
-                callback({ success: true });
-            }
-        });
+        try {
+            const sendEmail = await smtpTransport.sendMail(mailOptions);
+            return { success: true };
+        } catch (error) {
+            throw { success: false };
+        }
     },
 
     sendChangePasswordNotificationEmail: (username, email, callback) => {
