@@ -136,21 +136,28 @@ module.exports = {
         }
     },
 
-    removeUserAuthData: (authUser, callback) => {
-        UserModel.findOneAndUpdate(
-            { username: authUser.username },
-            { authToken: null, authTokenExpirationTimestamp: null }
-        )
-            .lean()
-            .exec((error, user) => {
-                if (error) {
-                    callback({ submitError: true });
-                } else if (!user) {
-                    callback({ success: false });
-                } else {
-                    callback({ success: true });
-                }
-            });
+    removeUserAuthData: async (authUser) => {
+        try {
+            const user = await UserModel.findOneAndUpdate(
+                { username: authUser.username },
+                { authToken: null, authTokenExpiration: null }
+            )
+                .lean()
+                .exec();
+
+            if (!user) {
+                throw { success: false };
+            }
+
+            return { success: true };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
     },
 
     /**

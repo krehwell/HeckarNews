@@ -97,23 +97,26 @@ app.get("/users/authenticate", authUser, async (req, res) => {
 });
 
 /* LOGOUT USER */
-app.put("/users/logout", authUser, (req, res) => {
-    const cookieSettings = {
-        path: "/",
-        domain:
-            process.env.NODE_ENV === "development"
-                ? ""
-                : utils.getDomainFromUrl(config.productionWebsiteURL),
-    };
+app.put("/users/logout", authUser, async (req, res) => {
+    try {
+        const cookieSettings = {
+            path: "/",
+            domain:
+                process.env.NODE_ENV === "development"
+                    ? ""
+                    : utils.getDomainFromUrl(config.productionWebsiteURL),
+        };
 
-    res.clearCookie("user", cookieSettings);
+        res.clearCookie("user", cookieSettings);
 
-    if (!res.locals.userSignedIn) {
-        res.json({ success: false });
-    } else {
-        api.removeUserAuthData(res.locals, function (response) {
-            res.json(response);
-        });
+        if (!res.locals.userSignedIn) {
+            throw { success: false };
+        }
+
+        const response = await api.removeUserAuthData(res.locals);
+        res.json(response);
+    } catch (error) {
+        res.json(error);
     }
 });
 
