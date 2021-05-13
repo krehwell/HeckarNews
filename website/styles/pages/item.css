@@ -1,0 +1,10 @@
+.item-content-container {
+    width: 100%;
+    padding: 15px 0px 15px 0px;
+}
+
+.item-get-data-error-msg {
+    margin: 8px;
+    font-size: 13.5px;
+    color: #828282;
+}
