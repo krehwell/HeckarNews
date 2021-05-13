@@ -85,7 +85,7 @@ module.exports = {
 
     getItemById: async (itemId) => {
         try {
-            const item = await ItemModel.findOne({ itemId: itemId });
+            const item = await ItemModel.findOne({ id: itemId });
 
             if (!item) {
                 throw { notFoundError: true };
@@ -96,7 +96,12 @@ module.exports = {
                 item: item,
             };
         } catch (error) {
-            throw { getDataError: true };
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
         }
     },
 };

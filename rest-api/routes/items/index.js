@@ -31,4 +31,18 @@ app.post("/items/submit-new-item", authUser, async (req, res) => {
     }
 });
 
+app.get("/items/get-item-by-id", authUser, async (req, res) => {
+    try {
+        if (!req.query.id) {
+            throw { notFoundError: true, authUser: res.locals };
+        }
+
+        const response = await api.getItemById(req.query.id);
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        res.json(error);
+    }
+});
+
 module.exports = app;
