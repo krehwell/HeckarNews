@@ -28,56 +28,75 @@ module.exports = {
      * Step 4 - In the database, increment the author's karma count by a value of 1.
      * Step 5 - Send a success response back to the website.
      */
-    submitNewItem: (title, url, text, authUser, callback) => {
-        const isValidUrl = utils.isValidUrl(url);
+    submitNewItem: async (title, url, text, authUser) => {
+        try {
+            const isValidUrl = utils.isValidUrl(url);
 
-        if (url && !isValidUrl) {
-            callback({ invalidUrlError: true });
-        } else {
-            title = title.trim();
-            title = xss(title);
+            if (url && !isValidUrl) {
+                throw { invalidUrlError: true };
+            } else {
+                title = title.trim();
+                title = xss(title);
 
-            url = url.trim();
-            url = xss(url);
+                url = url.trim();
+                url = xss(url);
 
-            if (text) {
-                text = text.trim();
-                text = text.replace(/<[^>]+>/g, "");
-                text = text.replace(/\*([^*]+)\*/g, "<i>$1</i>");
-                text = linkifyUrls(text);
-                text = xss(text);
+                if (text) {
+                    text = text.trim();
+                    text = text.replace(/<[^>]+>/g, "");
+                    text = text.replace(/\*([^*]+)\*/g, "<i>$1</i>");
+                    text = linkifyUrls(text);
+                    text = xss(text);
+                }
+
+                const domain = url ? utils.getDomainFromUrl(url) : "";
+                const itemType = utils.getItemType(title, url, text);
+
+                // submit new post/item
+                const newItem = new ItemModel({
+                    id: utils.generateUniqueId(12),
+                    by: authUser.username,
+                    title: title,
+                    type: itemType,
+                    url: url,
+                    domain: domain,
+                    text: text,
+                    created: moment().unix(),
+                });
+
+                const saveItem = await newItem.save();
+
+                const updateUserKarma = await UserModel.findOneAndUpdate(
+                    { username: authUser.username },
+                    { $inc: { karma: 1 } }
+                ).exec();
+
+                return { success: true };
+            }
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
+    },
+
+    getItemById: async (itemId) => {
+        try {
+            const item = await ItemModel.findOne({ itemId: itemId });
+
+            if (!item) {
+                throw { notFoundError: true };
             }
 
-            const domain = url ? utils.getDomainFromUrl(url) : "";
-            const itemType = utils.getItemType(title, url, text);
-
-            const newItem = new ItemModel({
-                id: utils.generateUniqueId(12),
-                by: authUser.username,
-                title: title,
-                type: itemType,
-                url: url,
-                domain: domain,
-                text: text,
-                created: moment().unix(),
-            });
-
-            newItem.save((saveError, newItemDoc) => {
-                if (saveError) {
-                    callback({ submitError: true });
-                } else {
-                    UserModel.findOneAndUpdate(
-                        { username: authUser.username },
-                        { $inc: { karma: 1 } }
-                    ).exec((updateUserError) => {
-                        if (updateUserError) {
-                            callback({ submitError: true });
-                        } else {
-                            callback({ success: true });
-                        }
-                    });
-                }
-            });
+            return {
+                success: true,
+                item: item,
+            };
+        } catch (error) {
+            throw { getDataError: true };
         }
     },
 };
