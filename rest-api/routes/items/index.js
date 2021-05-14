@@ -48,14 +48,34 @@ app.get("/items/get-item-by-id", authUser, async (req, res) => {
             throw { notFoundError: true, authUser: res.locals };
         }
 
-        const response = await api.getItemById(req.query.id);
+        const response = await api.getItemById(req.query.id, res.locals);
         response.authUser = res.locals;
+
         res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
             res.json({ getDataError: true });
+        }
+    }
+});
+
+app.post("/items/upvote-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+
+        const response = await api.upvoteItem(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
         }
     }
 });

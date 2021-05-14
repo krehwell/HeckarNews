@@ -76,16 +76,37 @@ module.exports = {
         return { success: true };
     },
 
-    getItemById: async (itemId) => {
-        const item = await ItemModel.findOne({ id: itemId });
+    getItemById: async (itemId, authUser) => {
+        const item = await ItemModel.findOne({ id: itemId }).exec();
 
         if (!item) {
             throw { notFoundError: true };
         }
 
+        // show item even if user not logged in
+        if (!authUser.userSignedIn) {
+            return { success: true, item: item };
+        }
+
+        const [voteDoc] = await Promise.all([
+            UserVoteModel.findOne({
+                username: authUser.username,
+                id: itemId,
+            }).lean(),
+        ]);
+
+        /**
+         * BUG     : don't know why item can't be mutate on first run.
+         * SOLUTION: as below, need to find why tho
+         * NOT SURE: why below doesnt work
+         *           item["votedOnByUser"] = voteDoc ? true : false;
+         */
+        const itemClone = { ...item._doc };
+        itemClone.votedOnByUser = voteDoc ? true : false;
+
         return {
             success: true,
-            item: item,
+            item: itemClone
         };
     },
 
@@ -108,28 +129,45 @@ module.exports = {
      * Step 6 - Send a success response back to the website.
      */
     upvoteItem: async (itemId, authUser) => {
-        try {
-            const [item, voteDoc] = await Promise.all([
-                ItemModel.findOne({ id: itemId }),
-                UserVoteModel.findOne({
-                    username: authUser.username,
-                    id: itemId,
-                    type: "item",
-                }).lean(),
-            ]);
+        const [item, voteDoc] = await Promise.all([
+            ItemModel.findOne({ id: itemId }),
+            UserVoteModel.findOne({
+                username: authUser.username,
+                id: itemId,
+                type: "item",
+            }).lean(),
+        ]);
 
-            if (!item || item.by === authUser.username || item.dead) {
-                throw { submitError: true };
-            } else if (voteDoc) {
-                throw { submitError: true };
-            }
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        if (!item || item.by === authUser.username || item.dead) {
+            throw { submitError: true };
+        } else if (voteDoc) {
+            // if user already vote dont allow to revote
+            throw { submitError: true };
         }
+
+        // create vote document
+        const newUserVoteDoc = new UserVoteModel({
+            username: authUser.username,
+            type: "item",
+            id: itemId,
+            upvote: true,
+            downvote: false,
+            date: moment().unix(),
+        });
+
+        const saveVoteDoc = await newUserVoteDoc.save();
+
+        item.points = item.points + 1;
+        const saveItem = await item.save();
+
+        // increment author karma
+        await UserModel.findOneAndUpdate(
+            { username: item.by },
+            { $inc: { karma: 1 } }
+        )
+            .lean()
+            .exec();
+
+        return { success: true };
     },
 };
