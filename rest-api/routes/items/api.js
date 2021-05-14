@@ -4,6 +4,7 @@ const moment = require("moment");
 
 const ItemModel = require("../../models/item.js");
 const UserModel = require("../../models/user.js");
+const UserVoteModel = require("../../models/userVote.js");
 
 const utils = require("../utils.js");
 
@@ -95,6 +96,50 @@ module.exports = {
                 success: true,
                 item: item,
             };
+        } catch (error) {
+            // make sure to always send bad response from a known error
+            if (!(error instanceof Error)) {
+                throw error;
+            } else {
+                throw { submitError: true };
+            }
+        }
+    },
+
+    /**
+     * Step 1 - Find the item in the database with the given id.
+     *          If the item doesn't exist, an error will be sent back to the website.
+     * Step 2 - Query the database for a user vote document with the given username and item id.
+     *          If the document is found, this means the user has already voted on the item (users can only vote on an item once).
+     *          An error response will be sent back to the website.
+     * Step 3 - Create a new user vote document and save it to the database.
+     *          Document will contain these values:
+     *          - username for the user who requested the upvote action.
+     *          - "item" string value that represents the type of content the upvote is for.
+     *          - id of the item the upvote was requested for.
+     *          - set the upvote field to true.
+     *          - set the downvote field to false.
+     *          - UNIX timestamp that represents when the vote was made by the user.
+     * Step 4 - Increment the item's point value by 1.
+     * Step 5 - Increment the item author's karma count by 1.
+     * Step 6 - Send a success response back to the website.
+     */
+    upvoteItem: async (itemId, authUser) => {
+        try {
+            const [item, voteDoc] = await Promise.all([
+                ItemModel.findOne({ id: itemId }),
+                UserVoteModel.findOne({
+                    username: authUser.username,
+                    id: itemId,
+                    type: "item",
+                }).lean(),
+            ]);
+
+            if (!item || item.by === authUser.username || item.dead) {
+                throw { submitError: true };
+            } else if (voteDoc) {
+                throw { submitError: true };
+            }
         } catch (error) {
             // make sure to always send bad response from a known error
             if (!(error instanceof Error)) {

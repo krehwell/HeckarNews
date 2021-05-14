@@ -16,7 +16,7 @@ export default function Item({
     return (
         <div className="layout-wrapper">
             <HeadMetadata
-                title={item ? `${item.title} | HeckarNews` : "HeckarNews"}
+                title={!!item.title ? `${item.title} | HeckarNews` : "HeckarNews"}
             />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
