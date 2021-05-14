@@ -329,43 +329,35 @@ module.exports = {
      * Step 6 - Send a success response back to the website.
      */
     changePassword: async (username, currentPassword, newPassword) => {
-        try {
-            const user = await UserModel.findOne({ username: username }).exec();
-            if (!user) {
-                throw { submitError: true };
-            }
-
-            if (newPassword.length < 8) {
-                throw { newPasswordLengthError: true };
-            }
-
-            const passwordIsMatch = await user.comparePassword(currentPassword);
-
-            if (!passwordIsMatch) {
-                throw { invalidCurrentPassword: true };
-            }
-
-            user.password = newPassword;
-            user.authToken = null;
-            user.authTokenExpiration = null;
-
-            const saveUser = await user.save();
-
-            if (user.email) {
-                const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
-                    username,
-                    user.email
-                );
-            }
-
-            throw { success: true };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        const user = await UserModel.findOne({ username: username }).exec();
+        if (!user) {
+            throw { submitError: true };
         }
+
+        if (newPassword.length < 8) {
+            throw { newPasswordLengthError: true };
+        }
+
+        const passwordIsMatch = await user.comparePassword(currentPassword);
+
+        if (!passwordIsMatch) {
+            throw { invalidCurrentPassword: true };
+        }
+
+        user.password = newPassword;
+        user.authToken = null;
+        user.authTokenExpiration = null;
+
+        const saveUser = await user.save();
+
+        // as long as pass has been saved then return {success: true}
+        if (user.email) {
+            const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
+                username,
+                user.email
+            );
+        }
+
+        return { success: true };
     },
 };
