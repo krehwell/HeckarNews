@@ -213,68 +213,52 @@ module.exports = {
     },
 
     getPublicUserData: async (username) => {
-        try {
-            const user = await UserModel.findOne({ username: username })
-                .lean()
-                .exec();
+        const user = await UserModel.findOne({ username: username })
+            .lean()
+            .exec();
 
-            if (!user) {
-                throw { notFoundError: true };
-            }
-
-            return {
-                success: true,
-                user: { username: user.username,
-                    created: user.created,
-                    karma: user.karma,
-                    about: user.about,
-                },
-            };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { getDataError: true };
-            }
+        if (!user) {
+            throw { notFoundError: true };
         }
+
+        return {
+            success: true,
+            user: {
+                username: user.username,
+                created: user.created,
+                karma: user.karma,
+                about: user.about,
+            },
+        };
     },
 
     getPrivateUserData: async (username) => {
-        try {
-            const user = await UserModel.findOne({ username: username })
-                .lean()
-                .exec();
-            if (!user) {
-                throw { notFoundError: true };
-            }
+        const user = await UserModel.findOne({ username: username })
+            .lean()
+            .exec();
 
-            // change about text to be a plain text
-            const aboutText = user.about
-                .replace(/<a\b[^>]*>/i, "")
-                .replace(/<\/a>/i, "")
-                .replace(/<i\b[^>]*>/i, "*")
-                .replace(/<\/i>/i, "*");
-
-            return {
-                success: true,
-                user: {
-                    username: user.username,
-                    created: user.created,
-                    karma: user.karma,
-                    about: aboutText,
-                    email: user.email,
-                    showDead: user.showDead,
-                },
-            };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { getDataError: true };
-            }
+        if (!user) {
+            throw { notFoundError: true };
         }
+
+        // change about text to be a plain text
+        const aboutText = user.about
+            .replace(/<a\b[^>]*>/i, "")
+            .replace(/<\/a>/i, "")
+            .replace(/<i\b[^>]*>/i, "*")
+            .replace(/<\/i>/i, "*");
+
+        return {
+            success: true,
+            user: {
+                username: user.username,
+                created: user.created,
+                karma: user.karma,
+                about: aboutText,
+                email: user.email,
+                showDead: user.showDead,
+            },
+        };
     },
 
     /**
