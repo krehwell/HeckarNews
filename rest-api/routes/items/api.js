@@ -30,80 +30,63 @@ module.exports = {
      * Step 5 - Send a success response back to the website.
      */
     submitNewItem: async (title, url, text, authUser) => {
-        try {
-            const isValidUrl = utils.isValidUrl(url);
+        const isValidUrl = utils.isValidUrl(url);
 
-            if (url && !isValidUrl) {
-                throw { invalidUrlError: true };
-            } else {
-                title = title.trim();
-                title = xss(title);
-
-                url = url.trim();
-                url = xss(url);
-
-                if (text) {
-                    text = text.trim();
-                    text = text.replace(/<[^>]+>/g, "");
-                    text = text.replace(/\*([^*]+)\*/g, "<i>$1</i>");
-                    text = linkifyUrls(text);
-                    text = xss(text);
-                }
-
-                const domain = url ? utils.getDomainFromUrl(url) : "";
-                const itemType = utils.getItemType(title, url, text);
-
-                // submit new post/item
-                const newItem = new ItemModel({
-                    id: utils.generateUniqueId(12),
-                    by: authUser.username,
-                    title: title,
-                    type: itemType,
-                    url: url,
-                    domain: domain,
-                    text: text,
-                    created: moment().unix(),
-                });
-
-                const saveItem = await newItem.save();
-
-                const updateUserKarma = await UserModel.findOneAndUpdate(
-                    { username: authUser.username },
-                    { $inc: { karma: 1 } }
-                ).exec();
-
-                return { success: true };
-            }
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        if (url && !isValidUrl) {
+            throw { invalidUrlError: true };
         }
+
+        // filter content
+        title = title.trim();
+        title = xss(title);
+
+        url = url.trim();
+        url = xss(url);
+
+        if (text) {
+            text = text.trim();
+            text = text.replace(/<[^>]+>/g, "");
+            text = text.replace(/\*([^*]+)\*/g, "<i>$1</i>");
+            text = linkifyUrls(text);
+            text = xss(text);
+        }
+
+        const domain = url ? utils.getDomainFromUrl(url) : "";
+        const itemType = utils.getItemType(title, url, text);
+
+        // submit new post/item
+        const newItem = new ItemModel({
+            id: utils.generateUniqueId(12),
+            by: authUser.username,
+            title: title,
+            type: itemType,
+            url: url,
+            domain: domain,
+            text: text,
+            created: moment().unix(),
+        });
+
+        const saveItem = await newItem.save();
+
+        const updateUserKarma = await UserModel.findOneAndUpdate(
+            { username: authUser.username },
+            { $inc: { karma: 1 } }
+        ).exec();
+
+        return { success: true };
     },
 
     getItemById: async (itemId) => {
-        try {
-            const item = await ItemModel.findOne({ id: itemId });
+        const item = await ItemModel.findOne({ id: itemId });
 
-            if (!item) {
-                throw { notFoundError: true };
-            }
-
-            return {
-                success: true,
-                item: item,
-            };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        if (!item) {
+            throw { notFoundError: true };
         }
+
+        return {
+            success: true,
+            item: item,
+        };
     },
 
     /**

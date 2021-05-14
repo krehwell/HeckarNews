@@ -4,7 +4,14 @@ const app = express.Router();
 const api = require("./api.js");
 const authUser = require("../../middlewares/index.js").authUser;
 
-// API ENDPOINT CODE WILL GO HERE
+/**
+ * IMPORTANT: make sure to always send bad response from a known error
+ *            catch error and return to be a suitable response instead
+ * @param error, expected type to be a object {userNotFound: true}, etc.
+ * else @returns/response {submitError: true}
+ */
+/// ITEM API ENDPOINT GOES HERE
+
 app.post("/items/submit-new-item", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn) {
@@ -27,7 +34,11 @@ app.post("/items/submit-new-item", authUser, async (req, res) => {
         );
         res.json(response);
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
@@ -41,7 +52,11 @@ app.get("/items/get-item-by-id", authUser, async (req, res) => {
         response.authUser = res.locals;
         res.json(response);
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ getDataError: true });
+        }
     }
 });
 
