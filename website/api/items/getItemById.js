@@ -14,7 +14,6 @@ export default async function getItemById(itemId, req) {
 
         return response.data;
     } catch (error) {
-        console.log("error is", error);
         return { getDataError: true };
     }
 }

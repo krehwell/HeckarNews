@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, updateState } from "react";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
+
+import upvoteItem from "../api/items/upvoteItem.js";
 
 export default function ItemComponent({
     item,
@@ -16,6 +18,30 @@ export default function ItemComponent({
         commentTextRequiredError: "",
         commentSubmitError: "",
     });
+
+    const requestUpvoteItem = () => {
+        if (state.loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(
+                goToString
+            )}`;
+        } else {
+            setState({ ...state, loading: true });
+
+            item.votedOnByUser = true;
+
+            upvoteItem(item.id, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(
+                        goToString
+                    )}`;
+                } else {
+                    setState({ ...state, loading: false });
+                }
+            });
+        }
+    };
 
     const updateCommentInputValue = (event) => {
         setCommentInputValue(event.target.value);
@@ -73,7 +99,11 @@ export default function ItemComponent({
                                     {item.votedOnByUser || item.dead ? (
                                         <span className="item-upvote hide"></span>
                                     ) : (
-                                        <span className="item-upvote"></span>
+                                        <span
+                                            className="item-upvote"
+                                            onClick={() =>
+                                                requestUpvoteItem()
+                                            }></span>
                                     )}
                                 </>
                             ) : null}
@@ -122,7 +152,7 @@ export default function ItemComponent({
                                     {renderCreatedTime(item.created)}
                                 </a>
                             </span>
-                            {/* DOWNVOTE */}
+                            {/* UNVOTE */}
                             {item.votedOnByUser &&
                             !item.unvoteExpired &&
                             !item.dead ? (
