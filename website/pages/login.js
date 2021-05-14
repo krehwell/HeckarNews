@@ -131,7 +131,7 @@ export default function Login({ goto }) {
                         createAccountPasswordLengthError: true,
                         createAccountSubmitError: false,
                     });
-                } else if (response.alreadyExistsError) {
+                } else if (response.alreadyExistUser) {
                     setState({
                         ...state,
                         loading: false,
