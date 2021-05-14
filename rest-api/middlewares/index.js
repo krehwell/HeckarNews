@@ -17,42 +17,39 @@ const usersApi = require("../routes/users/api.js");
 
 module.exports = {
     authUser: async (req, res, next) => {
-        const cookies = req.cookies.user ? req.cookies.user.split("&") : null;
+        try {
+            const cookies = req.cookies.user
+                ? req.cookies.user.split("&")
+                : null;
 
-        const username = cookies ? cookies[0] : "";
-        const authToken = cookies ? cookies[1] : "";
+            const username = cookies ? cookies[0] : "";
+            const authToken = cookies ? cookies[1] : "";
 
-        if (cookies) res.locals.cookiesIncluded = true;
+            if (cookies) res.locals.cookiesIncluded = true;
 
-        if (!cookies || !username || !authToken) {
+            if (!cookies || !username || !authToken) {
+                throw { success: false };
+            }
+
+            const authResponse = await usersApi.authenticateUser(
+                username,
+                authToken
+            );
+
+            res.locals.userSignedIn = true;
+            res.locals.username = authResponse.username;
+            res.locals.karma = authResponse.karma;
+            res.locals.containsEmail = authResponse.containsEmail;
+            res.locals.showDead = authResponse.showDead;
+
+            next();
+        } catch (error) {
             res.locals.userSignedIn = false;
             res.locals.username = null;
             res.locals.karma = null;
             res.locals.showDead = false;
 
             next();
-        } else {
-            const authResponse = await usersApi.authenticateUser(
-                username,
-                authToken
-            );
-
-            if (!authResponse.success) {
-                res.locals.userSignedIn = false;
-                res.locals.username = null;
-                res.locals.karma = null;
-                res.locals.showDead = false;
-
-                next();
-            } else {
-                res.locals.userSignedIn = true;
-                res.locals.username = authResponse.username;
-                res.locals.karma = authResponse.karma;
-                res.locals.containsEmail = authResponse.containsEmail;
-                res.locals.showDead = authResponse.showDead;
-
-                next();
-            }
         }
     },
 };
