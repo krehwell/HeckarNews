@@ -113,27 +113,18 @@ module.exports = {
     },
 
     removeUserAuthData: async (authUser) => {
-        try {
-            const user = await UserModel.findOneAndUpdate(
-                { username: authUser.username },
-                { authToken: null, authTokenExpiration: null }
-            )
-                .lean()
-                .exec();
+        const user = await UserModel.findOneAndUpdate(
+            { username: authUser.username },
+            { authToken: null, authTokenExpiration: null }
+        )
+            .lean()
+            .exec();
 
-            if (!user) {
-                throw { success: false };
-            }
-
-            return { success: true };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        if (!user) {
+            throw { success: false };
         }
+
+        return { success: true };
     },
 
     /**

@@ -130,7 +130,11 @@ app.put("/users/logout", authUser, async (req, res) => {
         const response = await api.removeUserAuthData(res.locals);
         res.json(response);
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
