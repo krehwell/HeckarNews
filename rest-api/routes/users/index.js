@@ -242,7 +242,11 @@ app.put("/users/update-user-data", authUser, async (req, res) => {
         );
         res.json(response);
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
