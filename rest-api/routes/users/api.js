@@ -139,41 +139,32 @@ module.exports = {
      * Step 5 - Send a success response back to the website.
      */
     requestPasswordResetLink: async (username) => {
-        try {
-            const user = await UserModel.findOne({ username: username }).exec();
+        const user = await UserModel.findOne({ username: username }).exec();
 
-            if (!user) {
-                throw { userNotFound: true };
-            } else if (!user.email) {
-                throw { noEmailError: true };
-            }
-
-            const resetPasswordToken = utils.generateUniqueId(40);
-            const resetPasswordTokenExpiration = moment().unix() + 3600;
-
-            user.resetPasswordToken = resetPasswordToken;
-            user.resetPasswordTokenExpiration = resetPasswordTokenExpiration;
-
-            const saveUser = await user.save();
-            const sendEmailResponse = await emailApi.sendResetPasswordEmail(
-                user.username,
-                resetPasswordToken,
-                user.email
-            );
-
-            if (!sendEmailResponse.success) {
-                throw { submitError: true };
-            }
-
-            return { success: true };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        if (!user) {
+            throw { userNotFound: true };
+        } else if (!user.email) {
+            throw { noEmailError: true };
         }
+
+        const resetPasswordToken = utils.generateUniqueId(40);
+        const resetPasswordTokenExpiration = moment().unix() + 3600;
+
+        user.resetPasswordToken = resetPasswordToken;
+        user.resetPasswordTokenExpiration = resetPasswordTokenExpiration;
+
+        const saveUser = await user.save();
+        const sendEmailResponse = await emailApi.sendResetPasswordEmail(
+            user.username,
+            resetPasswordToken,
+            user.email
+        );
+
+        if (!sendEmailResponse.success) {
+            throw { submitError: true };
+        }
+
+        return { success: true };
     },
 
     /**
@@ -192,42 +183,33 @@ module.exports = {
      * Step 6 - Send a success response back to the website.
      */
     resetPassword: async (username, newPassword, resetToken) => {
-        try {
-            const user = await UserModel.findOne({ username: username }).exec();
+        const user = await UserModel.findOne({ username: username }).exec();
 
-            if (!user) {
-                throw { submitError: true };
-            } else if (resetToken !== user.resetPasswordToken) {
-                throw { invalidTokenError: true };
-            } else if (moment().unix() > user.resetPasswordTokenExpiration) {
-                throw { expiredTokenError: true };
-            } else if (newPassword.length < 8) {
-                throw { passwordLengthError: true };
-            }
-
-            // proceed reset user password
-            user.password = newPassword;
-            user.resetPasswordToken = null;
-            user.resetPasswordTokenExpiration = null;
-
-            const saveUser = await user.save();
-
-            // as long as new pass has been saved then return {success: true}
-            if (user.email) {
-                const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
-                    user.username,
-                    user.email
-                );
-            }
-            return { success: true };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
+        if (!user) {
+            throw { submitError: true };
+        } else if (resetToken !== user.resetPasswordToken) {
+            throw { invalidTokenError: true };
+        } else if (moment().unix() > user.resetPasswordTokenExpiration) {
+            throw { expiredTokenError: true };
+        } else if (newPassword.length < 8) {
+            throw { passwordLengthError: true };
         }
+
+        // proceed reset user password
+        user.password = newPassword;
+        user.resetPasswordToken = null;
+        user.resetPasswordTokenExpiration = null;
+
+        const saveUser = await user.save();
+
+        // as long as new pass has been saved then return {success: true}
+        if (user.email) {
+            const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
+                user.username,
+                user.email
+            );
+        }
+        return { success: true };
     },
 
     getPublicUserData: async (username) => {
@@ -242,8 +224,7 @@ module.exports = {
 
             return {
                 success: true,
-                user: {
-                    username: user.username,
+                user: { username: user.username,
                     created: user.created,
                     karma: user.karma,
                     about: user.about,

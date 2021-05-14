@@ -163,7 +163,11 @@ app.put("/users/request-password-reset-link", async (req, res) => {
         const response = await api.requestPasswordResetLink(req.body.username);
         res.json(response);
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
@@ -185,7 +189,11 @@ app.put("/users/reset-password", async (req, res) => {
         );
         res.json(response);
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
@@ -211,7 +219,11 @@ app.get("/users/get-user-data", authUser, async (req, res) => {
             res.json(response);
         }
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ getDataError: true });
+        }
     }
 });
 
