@@ -7,6 +7,12 @@ const config = require("../../config.js");
 const api = require("./api.js");
 const authUser = require("../../middlewares/index.js").authUser;
 
+/**
+ * IMPORTANT: make sure to always send bad response from a known error
+ *            catch error and return to be a suitable response instead
+ * @param error, expected type to be a object {userNotFound: true}, etc.
+ * else @returns/response {submitError: true}
+ */
 /// API ENDPOINT GOES HERE
 
 app.post("/users/create-new-user", async (req, res) => {
@@ -43,7 +49,11 @@ app.post("/users/create-new-user", async (req, res) => {
 
         res.json({ success: true });
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
@@ -79,7 +89,11 @@ app.put("/users/login", async (req, res) => {
 
         res.json({ success: true });
     } catch (error) {
-        res.json(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
     }
 });
 
@@ -228,18 +242,17 @@ app.put("/users/change-password", authUser, async (req, res) => {
         const response = await api.changePassword(
             res.locals.username,
             req.body.currentPassword,
-            req.body.newPassword);
+            req.body.newPassword
+        );
 
         if (response.success) {
             const cookieSettings = {
                 path: "/",
                 secure: process.env.NODE_ENV === "production",
                 domain:
-                process.env.NODE_ENV === "development"
-                ? ""
-                : utils.getDomainFromUrl(
-                    config.productionWebsiteURL
-                ),
+                    process.env.NODE_ENV === "development"
+                        ? ""
+                        : utils.getDomainFromUrl(config.productionWebsiteURL),
             };
 
             res.clearCookie("user", cookieSettings);

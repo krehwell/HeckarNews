@@ -11,88 +11,69 @@ const emailApi = require("../emails/api.js");
 // API FUNCTIONS
 module.exports = {
     createNewUser: async (username, password) => {
-        try {
-            if (username.length < 2 || password.length > 15) {
-                throw { usernameLengthError: true };
-            } else if (password.length < 8) {
-                throw { passwordLengthError: true };
-            } else {
-                const userExist = await UserModel.findOne({ username }).exec();
+        if (username.length < 2 || password.length > 15) {
+            throw { usernameLengthError: true };
+        } else if (password.length < 8) {
+            throw { passwordLengthError: true };
+        } else {
+            const userExist = await UserModel.findOne({ username }).exec();
 
-                if (userExist) {
-                    throw { alreadyExistUser: true };
-                }
-
-                // create new user
-                const authTokenString = utils.generateUniqueId(40);
-                const authTokenExpirationTimestamp =
-                    moment().unix() +
-                    86400 * config.userCookieExpirationLengthInDays;
-
-                const newUserDoc = new UserModel({
-                    username,
-                    password,
-                    authToken: authTokenString,
-                    authTokenExpiration: authTokenExpirationTimestamp,
-                    created: moment().unix(),
-                });
-
-                const newUser = await newUserDoc.save();
-                return {
-                    success: true,
-                    username,
-                    authToken: authTokenString,
-                    authTokenExpirationTimestamp,
-                };
-            }
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
-        }
-    },
-
-    loginUser: async (username, password) => {
-        try {
-            const user = await UserModel.findOne({ username }).exec();
-
-            if (!user) {
-                throw { credentialError: true };
+            if (userExist) {
+                throw { alreadyExistUser: true };
             }
 
-            const passwordIsMatch = await user.comparePassword(password);
-
-            if (!passwordIsMatch) {
-                throw { credentialError: true };
-            }
-
-            // renew user token
+            // create new user
             const authTokenString = utils.generateUniqueId(40);
             const authTokenExpirationTimestamp =
                 moment().unix() +
                 86400 * config.userCookieExpirationLengthInDays;
 
-            user.authToken = authTokenString;
-            user.authTokenExpiration = authTokenExpirationTimestamp;
+            const newUserDoc = new UserModel({
+                username,
+                password,
+                authToken: authTokenString,
+                authTokenExpiration: authTokenExpirationTimestamp,
+                created: moment().unix(),
+            });
 
-            const saveUser = await user.save();
+            const newUser = await newUserDoc.save();
             return {
                 success: true,
-                username: username,
+                username,
                 authToken: authTokenString,
-                authTokenExpirationTimestamp: authTokenExpirationTimestamp,
+                authTokenExpirationTimestamp,
             };
-        } catch (error) {
-            // make sure to always send bad response from a known error
-            if (!(error instanceof Error)) {
-                throw error;
-            } else {
-                throw { submitError: true };
-            }
         }
+    },
+
+    loginUser: async (username, password) => {
+        const user = await UserModel.findOne({ username }).exec();
+
+        if (!user) {
+            throw { credentialError: true };
+        }
+
+        const passwordIsMatch = await user.comparePassword(password);
+
+        if (!passwordIsMatch) {
+            throw { credentialError: true };
+        }
+
+        // renew user token
+        const authTokenString = utils.generateUniqueId(40);
+        const authTokenExpirationTimestamp =
+            moment().unix() + 86400 * config.userCookieExpirationLengthInDays;
+
+        user.authToken = authTokenString;
+        user.authTokenExpiration = authTokenExpirationTimestamp;
+
+        const saveUser = await user.save();
+        return {
+            success: true,
+            username: username,
+            authToken: authTokenString,
+            authTokenExpirationTimestamp: authTokenExpirationTimestamp,
+        };
     },
 
     /**
