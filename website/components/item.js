@@ -4,6 +4,7 @@ import renderCreatedTime from "../utils/renderCreatedTime.js";
 
 import upvoteItem from "../api/items/upvoteItem.js";
 import unvoteItem from "../api/items/unvoteItem.js";
+import favoriteItem from "../api/items/favoriteItem.js"
 
 export default function ItemComponent({
     item,
@@ -53,7 +54,7 @@ export default function ItemComponent({
                 this.props.goToString
             )}`;
         } else {
-            setState({ loading: true });
+            setState({ ...state, loading: true });
 
             item.votedOnByUser = false;
 
@@ -63,8 +64,32 @@ export default function ItemComponent({
                         self.props.goToString
                     )}`;
                 } else {
-                    setState({ loading: false });
+                    setState({ ...state, loading: false });
                     setNumOfVote(numOfVote - 1);
+                }
+            });
+        }
+    };
+
+    const requestFavoriteItem = () => {
+        if (state.loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(
+                this.props.goToString
+            )}`;
+        } else {
+            setState({ ...state, loading: true });
+
+            favoriteItem(item.id, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(
+                        self.props.goToString
+                    )}`;
+                } else if (!response.success) {
+                    window.location.href = "";
+                } else {
+                    window.location.href = `/favorites?id=${self.props.currUsername}`;
                 }
             });
         }
@@ -220,7 +245,9 @@ export default function ItemComponent({
                             {!item.favoritedByUser ? (
                                 <>
                                     <span> | </span>
-                                    <span className="item-favorite">
+                                    <span
+                                        className="item-favorite"
+                                        onClick={() => requestFavoriteItem()}>
                                         favorite
                                     </span>
                                 </>
