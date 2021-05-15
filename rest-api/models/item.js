@@ -6,6 +6,7 @@ const ItemSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
+
     by: {
         type: String,
         required: true,
@@ -18,9 +19,11 @@ const ItemSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+
     url: String,
     domain: String,
     text: String,
+
     points: {
         type: Number,
         default: 1,
@@ -34,6 +37,7 @@ const ItemSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+
     created: Number,
     dead: {
         type: Boolean,
