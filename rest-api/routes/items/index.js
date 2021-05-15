@@ -80,4 +80,23 @@ app.post("/items/upvote-item", authUser, async (req, res) => {
     }
 });
 
+app.put("/items/unvote-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+
+        response = await api.unvoteItem(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
+
 module.exports = app;

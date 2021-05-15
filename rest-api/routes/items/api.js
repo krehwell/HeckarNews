@@ -7,6 +7,7 @@ const UserModel = require("../../models/user.js");
 const UserVoteModel = require("../../models/userVote.js");
 
 const utils = require("../utils.js");
+const config = require("../../config.js");
 
 module.exports = {
     /**
@@ -106,7 +107,7 @@ module.exports = {
 
         return {
             success: true,
-            item: itemClone
+            item: itemClone,
         };
     },
 
@@ -169,5 +170,49 @@ module.exports = {
             .exec();
 
         return { success: true };
+    },
+
+    /**
+     * Step 1 - Query the database for the item the original upvote belongs to.
+     *          If the item doesn't exist, an error will be sent back to the website.
+     * Step 2 - Query the database for a user vote document with the given username and item id.
+     *          If the document isn't found, an error response will be sent back to the website.
+     * Step 3 - Verify that the un-vote option hasn't expired.
+     *          If the option has expired, an error response will be sent back to the website.
+     * Step 4 - Remove the user vote document from the database.
+     * Step 5 - Decrement the item's points value by 1.
+     * Step 6 - Decrement the item author's karma count by 1.
+     * Step 7 - Send a success response back to the website.
+     */
+    unvoteItem: async (itemId, authUser) => {
+        const [item, voteDoc] = await Promise.all([
+            ItemModel.findOne({ id: itemId }),
+            UserVoteModel.findOne({
+                username: authUser.username,
+                id: itemId,
+                type: "item",
+            }),
+        ]);
+
+        if (
+            !voteDoc ||
+            voteDoc.date + 3600 * config.hrsUntilUnvoteExpires < moment().unix()
+        ) {
+            throw { submitError: true };
+        }
+
+        const removeVoteDoc = await voteDoc.remove();
+
+        item.points = item.points - 1;
+
+        const saveItem = await item.save();
+
+        // decrement author karma
+        await UserModel.findOneAndUpdate(
+            { username: item.by },
+            { $inc: { karma: -1 } }
+        )
+            .lean()
+            .exec();
     },
 };
