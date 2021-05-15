@@ -5,6 +5,7 @@ const moment = require("moment");
 const ItemModel = require("../../models/item.js");
 const UserModel = require("../../models/user.js");
 const UserVoteModel = require("../../models/userVote.js");
+const UserFavoriteModel = require("../../models/userFavorite.js");
 
 const utils = require("../utils.js");
 const config = require("../../config.js");
@@ -89,10 +90,16 @@ module.exports = {
             return { success: true, item: item };
         }
 
-        const [voteDoc] = await Promise.all([
+        // find user has been voted or favorited the item
+        const [voteDoc, favoriteDoc] = await Promise.all([
             UserVoteModel.findOne({
                 username: authUser.username,
                 id: itemId,
+            }).lean(),
+            UserFavoriteModel.findOne({
+                username: authUser.username,
+                id: itemId,
+                type: "item",
             }).lean(),
         ]);
 
@@ -111,6 +118,8 @@ module.exports = {
             voteDoc &&
             voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
                 moment().unix();
+
+        itemClone.favoritedByUser = favoriteDoc ? true : false
 
         return {
             success: true,
@@ -221,5 +230,44 @@ module.exports = {
         )
             .lean()
             .exec();
+    },
+
+    /**
+     * Step 1 - Query the database for the item the user wants to add to their favorites.
+     *          If the item doesn't exist, an error will be sent back to the website.
+     * Step 2 - Query the database to see if the user has already added the item to their favorites.
+     *          If the user has already favorited the item, an error will be sent back to the website.
+     * Step 3 - Create a new user favorite document and save it to the database.
+     *          Document will contain these values:
+     *          username for the user who made the request.
+     *          "item" string value that represents the type of content the favorite is for.
+     *          id of the item the user wants to add to their favorites.
+     *          UNIX timestamp that represents the creation date.
+     * Step 4 - Send success response back to the website.
+     */
+    favoriteItem: async (itemId, authUser) => {
+        const [item, favorite] = await Promise.all([
+            ItemModel.findOne({ id: itemId }).lean(),
+            UserFavoriteModel.findOne({
+                username: authUser.username,
+                id: itemId,
+                type: "item",
+            }).lean(),
+        ]);
+
+        if (!item || favorite) {
+            throw { submitError: true };
+        }
+
+        // save item to user favorite
+        const newFavoriteDoc = new UserFavoriteModel({
+            username: authUser.username,
+            type: "item",
+            id: itemId,
+            date: moment().unix(),
+        });
+
+        const saveFavoriteItem = newFavoriteDoc.save();
+        return { success: true };
     },
 };

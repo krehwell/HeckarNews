@@ -53,6 +53,7 @@ app.get("/items/get-item-by-id", authUser, async (req, res) => {
 
         res.json(response);
     } catch (error) {
+        // console.log(error);
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
@@ -99,4 +100,22 @@ app.put("/items/unvote-item", authUser, async (req, res) => {
     }
 });
 
+app.post("/items/favorite-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+
+        response = await api.favoriteItem(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
 module.exports = app;
