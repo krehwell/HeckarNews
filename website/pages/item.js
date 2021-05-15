@@ -1,7 +1,6 @@
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
-
 import ItemComponent from "../components/item.js";
 
 import getItemById from "../api/items/getItemById.js";

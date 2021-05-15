@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, updateState } from "react";
+import { useState } from "react";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
 import upvoteItem from "../api/items/upvoteItem.js";
+import unvoteItem from "../api/items/unvoteItem.js";
 
 export default function ItemComponent({
     item,
@@ -11,7 +12,7 @@ export default function ItemComponent({
     userSignedIn,
 }) {
     const [state, setState] = useState({ loading: false });
-
+    const [numOfVote, setNumOfVote] = useState(item.points);
     const [commentInputValue, setCommentInputValue] = useState("");
     const [error, setError] = useState({
         commentTextTooLongError: "",
@@ -38,6 +39,32 @@ export default function ItemComponent({
                     )}`;
                 } else {
                     setState({ ...state, loading: false });
+                    setNumOfVote(numOfVote + 1);
+                }
+            });
+        }
+    };
+
+    const requestUnvoteItem = () => {
+        if (state.loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(
+                this.props.goToString
+            )}`;
+        } else {
+            setState({ loading: true });
+
+            item.votedOnByUser = false;
+
+            unvoteItem(item.id, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(
+                        self.props.goToString
+                    )}`;
+                } else {
+                    setState({ loading: false });
+                    setNumOfVote(numOfVote - 1);
                 }
             });
         }
@@ -135,10 +162,10 @@ export default function ItemComponent({
                     <tr className="item-details-bottom">
                         <td colSpan="1"></td>
                         <td>
-                            {/* ITEM POINTS*/}
+                            {/* ITEM POINTS | NUM OF VOTE */}
                             <span>
-                                {item.points.toLocaleString()}{" "}
-                                {item.points === 1 ? "point" : "points"}
+                                {numOfVote.toLocaleString()}{" "}
+                                {numOfVote === 1 ? "point" : "points"}
                             </span>
                             &nbsp;
                             {/* ITEM MADE BY */}
@@ -158,7 +185,11 @@ export default function ItemComponent({
                             !item.dead ? (
                                 <>
                                     <span> | </span>
-                                    <span className="item-unvote">un-vote</span>
+                                    <span
+                                        className="item-unvote"
+                                        onClick={() => requestUnvoteItem()}>
+                                        un-vote
+                                    </span>
                                 </>
                             ) : null}
                             {/* HIDDEN ITEM */}
