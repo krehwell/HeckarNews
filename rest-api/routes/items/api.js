@@ -98,12 +98,19 @@ module.exports = {
 
         /**
          * BUG     : don't know why item can't be mutate on first run.
-         * SOLUTION: as below, need to find why tho
-         * NOT SURE: why below doesnt work
+         * NOT SURE: why below doesnt work?
          *           item["votedOnByUser"] = voteDoc ? true : false;
+         * SOLUTION: as below, need to find why tho
          */
         const itemClone = { ...item._doc };
+
         itemClone.votedOnByUser = voteDoc ? true : false;
+
+        // if item already 1 hour long, decline any vote
+        itemClone.unvoteExpired =
+            voteDoc &&
+            voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                moment().unix();
 
         return {
             success: true,
