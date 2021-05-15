@@ -106,7 +106,7 @@ module.exports = {
 
         itemClone.votedOnByUser = voteDoc ? true : false;
 
-        // if item already 1 hour long, decline any vote
+        // if item already 1 hour long, decline any unvote
         itemClone.unvoteExpired =
             voteDoc &&
             voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
