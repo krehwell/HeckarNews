@@ -4,7 +4,8 @@ import renderCreatedTime from "../utils/renderCreatedTime.js";
 
 import upvoteItem from "../api/items/upvoteItem.js";
 import unvoteItem from "../api/items/unvoteItem.js";
-import favoriteItem from "../api/items/favoriteItem.js"
+import favoriteItem from "../api/items/favoriteItem.js";
+import unfavoriteItem from "../api/items/unfavoriteItem.js";
 
 export default function ItemComponent({
     item,
@@ -51,7 +52,7 @@ export default function ItemComponent({
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
-                this.props.goToString
+                goToString
             )}`;
         } else {
             setState({ ...state, loading: true });
@@ -61,7 +62,7 @@ export default function ItemComponent({
             unvoteItem(item.id, (response) => {
                 if (response.authError) {
                     window.location.href = `/login?goto=${encodeURIComponent(
-                        self.props.goToString
+                        goToString
                     )}`;
                 } else {
                     setState({ ...state, loading: false });
@@ -76,7 +77,7 @@ export default function ItemComponent({
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
-                this.props.goToString
+                goToString
             )}`;
         } else {
             setState({ ...state, loading: true });
@@ -84,12 +85,36 @@ export default function ItemComponent({
             favoriteItem(item.id, (response) => {
                 if (response.authError) {
                     window.location.href = `/login?goto=${encodeURIComponent(
-                        self.props.goToString
+                        goToString
                     )}`;
                 } else if (!response.success) {
                     window.location.href = "";
                 } else {
-                    window.location.href = `/favorites?id=${self.props.currUsername}`;
+                    window.location.href = `/favorites?id=${currUsername}`;
+                }
+            });
+        }
+    };
+
+    const requestUnfavoriteItem = () => {
+        if (state.loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(
+                goToString
+            )}`;
+        } else {
+            setState({ ...state, loading: true });
+
+            unfavoriteItem(item.id, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(
+                        goToString
+                    )}`;
+                } else if (!response.success) {
+                    window.location.href = "";
+                } else {
+                    window.location.href = `/favorites?id=${currUsername}`;
                 }
             });
         }
@@ -254,7 +279,9 @@ export default function ItemComponent({
                             ) : (
                                 <>
                                     <span> | </span>
-                                    <span className="item-favorite">
+                                    <span
+                                        className="item-favorite"
+                                        onClick={() => requestUnfavoriteItem()}>
                                         un-favorite
                                     </span>
                                 </>
