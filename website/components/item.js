@@ -7,6 +7,7 @@ import unvoteItem from "../api/items/unvoteItem.js";
 import favoriteItem from "../api/items/favoriteItem.js";
 import unfavoriteItem from "../api/items/unfavoriteItem.js";
 import hideItem from "../api/items/hideItem.js";
+import unhideItem from "../api/items/unhideItem.js";
 
 export default function ItemComponent({
     item,
@@ -147,6 +148,26 @@ export default function ItemComponent({
         }
     };
 
+    const requestUnhideItem = () => {
+        if (state.loading) return;
+
+        setState({ ...state, loading: true });
+
+        item.hiddenByUser = false;
+
+        unhideItem(item.id, (response) => {
+            if (response.authError) {
+                window.location.href = `/login?goto=${encodeURIComponent(
+                    goToString
+                )}`;
+            } else if (!response.success) {
+                window.location.href = "";
+            } else {
+                setState({ ...state, loading: false });
+            }
+        });
+    };
+
     const updateCommentInputValue = (event) => {
         setCommentInputValue(event.target.value);
     };
@@ -282,7 +303,11 @@ export default function ItemComponent({
                             ) : (
                                 <>
                                     <span> | </span>
-                                    <span className="item-hide">un-hide</span>
+                                    <span
+                                        className="item-hide"
+                                        onClick={() => requestUnhideItem()}>
+                                        un-hide
+                                    </span>
                                 </>
                             )}
                             {/* SEARCH SIMILAR ITEM */}
