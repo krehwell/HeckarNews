@@ -274,8 +274,12 @@ module.exports = {
     unfavoriteItem: async (itemId, authUser) => {
         const removeItemFavorite = await UserFavoriteModel.findOneAndRemove({
             username: authUser.username,
-            itemId: itemId,
+            id: itemId,
         });
+
+        if (!removeItemFavorite) {
+            throw {submitError: false};
+        }
 
         return { success: true };
     },

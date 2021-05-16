@@ -15,7 +15,12 @@ const app = express();
 /// DB CONNECTION
 const mongoString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@heckar-news.d3u83.mongodb.net/heckarnewsdb?retryWrites=true&w=majority`;
 
-mongoose.connect(mongoString, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+mongoose.connect(mongoString, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+});
 
 mongoose.connection.on("error", (error) => {
     if (process.env.NODE_ENV === "development") {

@@ -126,8 +126,8 @@ app.put("/items/unfavorite-item", authUser, async (req, res) => {
         } else if (!req.body.id) {
             throw { submitError: true };
         }
-        const response = await api.unfavoriteItem(req.body.id, res.locals);
 
+        const response = await api.unfavoriteItem(req.body.id, res.locals);
         res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {
