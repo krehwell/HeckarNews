@@ -144,10 +144,29 @@ app.post("/items/hide-item", authUser, async (req, res) => {
             throw { authError: true };
         } else if (!req.body.id) {
             throw { submitError: true };
-        } else {
-            const response = await api.hideItem(req.body.id, res.locals);
-            res.json(response);
         }
+
+        const response = await api.hideItem(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
+
+app.put("/items/unhide-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+
+        const response = await api.unhideItem(req.body.id, res.locals);
+        res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {
             res.json(error);

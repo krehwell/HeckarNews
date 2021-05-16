@@ -326,4 +326,17 @@ module.exports = {
         saveHiddenItem = await newHiddenDoc.save();
         return { success: true };
     },
+
+    unhideItem: async (itemId, authUser) => {
+        const removeHideItem = await UserHiddenModel.findOneAndRemove({
+            username: authUser.username,
+            id: itemId,
+        }).exec();
+
+        if (!removeHideItem) {
+            throw { submitError: false };
+        }
+
+        return { success: true };
+    },
 };
