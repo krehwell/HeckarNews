@@ -55,9 +55,10 @@ app.get("/items/get-item-by-id", authUser, async (req, res) => {
     } catch (error) {
         // console.log(error);
         if (!(error instanceof Error)) {
+            error.authUser = res.locals;
             res.json(error);
         } else {
-            res.json({ getDataError: true });
+            res.json({ getDataError: true, authUser: res.locals });
         }
     }
 });
