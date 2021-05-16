@@ -6,6 +6,7 @@ const ItemModel = require("../../models/item.js");
 const UserModel = require("../../models/user.js");
 const UserVoteModel = require("../../models/userVote.js");
 const UserFavoriteModel = require("../../models/userFavorite.js");
+const UserHiddenModel = require("../../models/userHidden.js");
 
 const utils = require("../utils.js");
 const config = require("../../config.js");
@@ -91,7 +92,7 @@ module.exports = {
         }
 
         // find user has been voted or favorited the item
-        const [voteDoc, favoriteDoc] = await Promise.all([
+        const [voteDoc, favoriteDoc, hiddenDoc] = await Promise.all([
             UserVoteModel.findOne({
                 username: authUser.username,
                 id: itemId,
@@ -100,6 +101,10 @@ module.exports = {
                 username: authUser.username,
                 id: itemId,
                 type: "item",
+            }).lean(),
+            UserHiddenModel.findOne({
+                username: authUser.username,
+                id: itemId,
             }).lean(),
         ]);
 
@@ -120,6 +125,8 @@ module.exports = {
                 moment().unix();
 
         itemClone.favoritedByUser = favoriteDoc ? true : false;
+
+        itemClone.hiddenByUser = hiddenDoc ? true : false;
 
         return {
             success: true,
@@ -281,6 +288,42 @@ module.exports = {
             throw { submitError: false };
         }
 
+        return { success: true };
+    },
+
+    /**
+     * When a user adds an item to their hidden list, that item will not be shown
+     * to the user when they view item list pages (i.e. "/news", "/newest", "past")
+     * ---
+     * Step 1 - Query the database for an item with a given id.
+     *          If the item document isn't found in the database, an error
+     *          response will be sent back to the website.
+     * Step 2 - Query the database for a hidden item document with the given username and item id.
+     *          If the user's hidden document already exists, an error will be sent back to the website.
+     * Step 3 - Create a new hidden item document and save it to the database.
+     * Step 4 - Send a success response back to the website.
+     */
+    hideItem: async (itemId, authUser) => {
+        const [item, hiddenDoc] = await Promise.all([
+            ItemModel.findOne({ id: itemId }).lean(),
+            UserHiddenModel.findOne({
+                username: authUser.username,
+                id: itemId,
+            }).lean(),
+        ]);
+
+        if (!item || hiddenDoc) {
+            throw { submitError: true };
+        }
+
+        const newHiddenDoc = new UserHiddenModel({
+            username: authUser.username,
+            id: itemId,
+            date: moment().unix(),
+            itemCreationDate: item.created,
+        });
+
+        saveHiddenItem = await newHiddenDoc.save();
         return { success: true };
     },
 };
