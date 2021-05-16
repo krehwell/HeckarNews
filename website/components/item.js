@@ -6,6 +6,7 @@ import upvoteItem from "../api/items/upvoteItem.js";
 import unvoteItem from "../api/items/unvoteItem.js";
 import favoriteItem from "../api/items/favoriteItem.js";
 import unfavoriteItem from "../api/items/unfavoriteItem.js";
+import hideItem from "../api/items/hideItem.js";
 
 export default function ItemComponent({
     item,
@@ -115,6 +116,32 @@ export default function ItemComponent({
                     window.location.href = "";
                 } else {
                     window.location.href = `/favorites?id=${currUsername}`;
+                }
+            });
+        }
+    };
+
+    const requestHideItem = () => {
+        if (state.loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(
+                goToString
+            )}`;
+        } else {
+            setState({ ...state, loading: true });
+
+            item.hiddenByUser = true;
+
+            hideItem(item.id, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(
+                        goToString
+                    )}`;
+                } else if (!response.success) {
+                    window.location.href = "";
+                } else {
+                    setState({ ...state, loading: false });
                 }
             });
         }
@@ -242,11 +269,15 @@ export default function ItemComponent({
                                     </span>
                                 </>
                             ) : null}
-                            {/* HIDDEN ITEM */}
+                            {/* HIDDEN ITEM | HIDE ITEM */}
                             {!item.hiddenByUser ? (
                                 <>
                                     <span> | </span>
-                                    <span className="item-hide">hide</span>
+                                    <span
+                                        className="item-hide"
+                                        onClick={() => requestHideItem()}>
+                                        hide
+                                    </span>
                                 </>
                             ) : (
                                 <>
