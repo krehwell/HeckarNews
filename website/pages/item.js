@@ -50,6 +50,7 @@ export async function getServerSideProps({ req, query }) {
     const itemId = query.id ? query.id : "";
 
     const apiResult = await getItemById(itemId, req);
+    // console.log(apiResult);
 
     return {
         props: {
