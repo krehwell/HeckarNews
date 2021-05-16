@@ -119,7 +119,7 @@ module.exports = {
             voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
                 moment().unix();
 
-        itemClone.favoritedByUser = favoriteDoc ? true : false
+        itemClone.favoritedByUser = favoriteDoc ? true : false;
 
         return {
             success: true,
@@ -268,6 +268,15 @@ module.exports = {
         });
 
         const saveFavoriteItem = newFavoriteDoc.save();
+        return { success: true };
+    },
+
+    unfavoriteItem: async (itemId, authUser) => {
+        const removeItemFavorite = await UserFavoriteModel.findOneAndRemove({
+            username: authUser.username,
+            itemId: itemId,
+        });
+
         return { success: true };
     },
 };

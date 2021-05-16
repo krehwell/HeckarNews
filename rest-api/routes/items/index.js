@@ -118,4 +118,24 @@ app.post("/items/favorite-item", authUser, async (req, res) => {
         }
     }
 });
+
+app.put("/items/unfavorite-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+        const response = await api.unfavoriteItem(req.body.id, res.locals);
+
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
+
 module.exports = app;
