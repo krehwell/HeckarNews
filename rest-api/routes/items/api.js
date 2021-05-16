@@ -278,7 +278,7 @@ module.exports = {
         });
 
         if (!removeItemFavorite) {
-            throw {submitError: false};
+            throw { submitError: false };
         }
 
         return { success: true };
