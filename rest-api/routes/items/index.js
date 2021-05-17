@@ -201,4 +201,33 @@ app.get("/items/get-edit-item-page-data", authUser, async (req, res) => {
     }
 });
 
+app.put("/items/edit-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id || !req.body.newItemTitle) {
+            throw { submitError: true };
+        } else if (req.body.newItemTitle.length > 80) {
+            throw { titleTooLongError: true };
+        } else if (req.body.newItemText.length > 5000) {
+            throw { textTooLongError: true };
+        }
+
+        const response = await api.editItem(
+            req.body.id,
+            req.body.newItemTitle,
+            req.body.newItemText,
+            res.locals
+        );
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;

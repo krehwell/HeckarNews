@@ -388,4 +388,47 @@ module.exports = {
 
         return { success: true, item: item };
     },
+
+    editItem: async (itemId, newItemTitle, newItemText, authUser) => {
+        const item = await ItemModel.findOne({ id: itemId }).exec();
+
+        if (!item) {
+            throw { submitError: true };
+        } else if (item.dead) {
+            throw { notAllowedError: true };
+        } else if (item.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            item.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (item.commentCount > 0) {
+            throw { notAllowedError: true };
+        }
+
+        const ogItemTitle = item.title;
+
+        newItemTitle = newItemTitle.trim();
+        newItemTitle = xss(newItemTitle);
+
+        item.title = newItemTitle;
+
+        if (!item.url && newItemText) {
+            newItemText = newItemText.trim();
+            newItemText = newItemText.replace(/<[^>]+>/g, "");
+            newItemText = newItemText.replace(/\*([^*]+)\*/g, "<i>$1</i>");
+            newItemText = linkifyUrls(newItemText);
+            newItemText = xss(newItemText);
+        }
+
+        item.text = newItemText;
+
+        if (ogItemTitle !== newItemTitle) {
+            item.type = utils.getItemType(newItemTitle, item.url, newItemText);
+        }
+
+        const saveItem = await item.save();
+        return { success: true };
+    },
 };
