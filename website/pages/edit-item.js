@@ -5,6 +5,7 @@ import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 
 import getEditItemPageData from "../api/items/getEditItemPageData.js";
+import editItem from "../api/items/editItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
@@ -49,6 +50,7 @@ export default function EditItem({
 
         if (!titleInputValue.trim()) {
             setError({
+                ...error,
                 titleRequiredError: true,
                 titleTooLongError: false,
                 textTooLongError: false,
@@ -56,6 +58,7 @@ export default function EditItem({
             });
         } else if (titleInputValue.length > 80) {
             setError({
+                ...error,
                 titleRequiredError: false,
                 titleTooLongError: true,
                 textTooLongError: false,
@@ -63,6 +66,7 @@ export default function EditItem({
             });
         } else if (textInputValue.length > 5000) {
             setError({
+                ...error,
                 titleRequiredError: false,
                 titleTooLongError: false,
                 textTooLongError: true,
@@ -71,7 +75,41 @@ export default function EditItem({
         } else {
             setLoading(true);
 
-            // request to the REST API goes here
+            editItem(item.id, titleInputValue, textInputValue, (response) => {
+                setLoading(false);
+
+                if (response.authError) {
+                    window.location.href = `/login?goto=${goToString}`;
+                } else if (response.notAllowedError) {
+                    setError({ ...error, notAllowedError: true });
+                } else if (response.titleTooLongError) {
+                    setError({
+                        ...error,
+                        titleRequiredError: false,
+                        titleTooLongError: true,
+                        textTooLongError: false,
+                        submitError: false,
+                    });
+                } else if (response.textTooLongError) {
+                    setError({
+                        ...error,
+                        titleRequiredError: false,
+                        titleTooLongError: false,
+                        textTooLongError: true,
+                        submitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    setError({
+                        ...error,
+                        titleRequiredError: false,
+                        titleTooLongError: false,
+                        textTooLongError: false,
+                        submitError: true,
+                    });
+                } else {
+                    window.location.href = `/item?id=${item.id}`;
+                }
+            });
         }
     };
 
@@ -244,14 +282,23 @@ export default function EditItem({
                                 </span>
                             </div>
                         ) : null}
+                        {error.notAllowedError ? (
+                            <div className="edit-item-submit-error-msg">
+                                <span>You can’t edit that item.</span>
+                            </div>
+                        ) : null}
                     </>
                 ) : (
                     <div className="edit-item-error-msg">
-                        {getDataError ? <span>An error occurred.</span> : null}
+                        {error.getDataError ? (
+                            <span>An error occurred.</span>
+                        ) : null}
                         {notAllowedError ? (
                             <span>You can’t edit that item.</span>
                         ) : null}
-                        {notFoundError ? <span>Item not found.</span> : null}
+                        {error.notFoundError ? (
+                            <span>Item not found.</span>
+                        ) : null}
                     </div>
                 )}
             </div>
