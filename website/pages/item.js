@@ -57,8 +57,8 @@ export async function getServerSideProps({ req, query }) {
             item: apiResult && apiResult.item || {},
             authUserData:
                 apiResult && apiResult.authUser ? apiResult.authUser : {},
-            getDataError: (apiResult && apiResult.getDataError) || "",
-            notFoundError: (apiResult && apiResult.notFoundError) || "",
+            getDataError: (apiResult && apiResult.getDataError) || false,
+            notFoundError: (apiResult && apiResult.notFoundError) || false,
             goToString: `item?id=${itemId}` || "",
         },
     };

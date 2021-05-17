@@ -163,7 +163,7 @@ export default function Submit({}) {
 
     return (
         <div className="layout-wrapper">
-            <HeadMetadata title="Submit | Coder News" />
+            <HeadMetadata title="Submit | HeckarNews" />
             <AlternateHeader displayMessage="Submit" />
             <div className="submit-content-container">
                 {state.titleRequiredError ? (
