@@ -300,7 +300,7 @@ module.exports = {
     },
 
     /**
-     * When a user adds an item to their hidden list, that item will not be shown
+     * @summary When a user adds an item to their hidden list, that item will not be shown
      * to the user when they view item list pages (i.e. "/news", "/newest", "past")
      * ---
      * Step 1 - Query the database for an item with a given id.
@@ -349,6 +349,8 @@ module.exports = {
     },
 
     /**
+     * @summary Only the item and text content can be modified. The URL cannot be changed after submitting the item.
+     * ---
      * Step 1 - Determine if the item can be edited.
      *          An error will be sent back to the website and the item's data
      *          will not be retrieved if one of these conditions occur:

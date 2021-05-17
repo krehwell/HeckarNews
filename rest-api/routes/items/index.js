@@ -178,15 +178,27 @@ app.put("/items/unhide-item", authUser, async (req, res) => {
 });
 
 app.get("/items/get-edit-item-page-data", authUser, async (req, res) => {
-    if (!res.locals.userSignedIn) {
-        throw { notAllowedError: true, authUser: res.locals };
-    } else if (!req.query.id) {
-        throw { notFoundError: true, authUser: res.locals };
-    }
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { notAllowedError: true, authUser: res.locals };
+        } else if (!req.query.id) {
+            throw { notFoundError: true, authUser: res.locals };
+        }
 
-    const response = await api.getEditItemPageData(req.query.id, res.locals);
-    response.authUser = res.locals;
-    res.json(response);
+        const response = await api.getEditItemPageData(
+            req.query.id,
+            res.locals
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
 });
 
 module.exports = app;
