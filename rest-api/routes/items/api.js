@@ -128,6 +128,14 @@ module.exports = {
 
         itemClone.hiddenByUser = hiddenDoc ? true : false;
 
+        if (itemClone.by === authUser.username) {
+            const hasEditAndDeleteExpired =
+                itemClone.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+                    moment().unix() || itemClone.commentCount > 0;
+
+            itemClone.editAndDeleteExpired = hasEditAndDeleteExpired;
+        }
+
         return {
             success: true,
             item: itemClone,
