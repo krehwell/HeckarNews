@@ -262,7 +262,7 @@ export default function EditItem({
 
 export async function getServerSideProps({ query, req }) {
     const apiResult = await getEditItemPageData(query.id, req);
-    console.log("result", apiResult);
+    // console.log("result", apiResult);
 
     return {
         props: {
