@@ -339,4 +339,43 @@ module.exports = {
 
         return { success: true };
     },
+
+    /**
+     * Step 1 - Determine if the item can be edited.
+     *          An error will be sent back to the website and the item's data
+     *          will not be retrieved if one of these conditions occur:
+     *          - The item has been killed by a moderator.
+     *          - The item author's username doesn't match the authenticated user's username (a user can only edit an item they submitted).
+     *          - The edit option has expired for the item (set for 2 hours after the item was created).
+     *          - A comment has been placed on the item.
+     */
+    getEditItemPageData: async (itemId, authUser) => {
+        const item = await ItemModel.findOne({ id: itemId }).lean().exec();
+        if (!item) {
+            throw { notFoundError: true };
+        } else if (item.dead) {
+            throw { notAllowedError: true };
+        } else if (item.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            item.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (item.commentCount > 0) {
+            throw { notAllowedError: true };
+        }
+
+        if (item.text) {
+            item.textForEditing = item.text
+                .replace(/<a\b[^>]*>/g, "")
+                .replace(/<\/a>/g, "")
+                .replace(/<i\b[^>]*>/g, "*")
+                .replace(/<\/i>/g, "*");
+        } else {
+            item.textForEditing = "";
+        }
+
+        return { success: true, item: item };
+    },
 };
