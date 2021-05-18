@@ -259,10 +259,10 @@ app.put("/items/delete-item", authUser, async (req, res) => {
             throw { notAllowedError: true };
         } else if (!req.body.id) {
             throw { submitError: true };
-        } else {
-            const response = await api.deleteItem(req.body.id, res.locals);
-            res.json(response);
         }
+
+        const response = await api.deleteItem(req.body.id, res.locals);
+        res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
@@ -277,14 +277,13 @@ app.get("/items/get-ranked-items-by-page", authUser, async (req, res) => {
     try {
         if (!req.query.page) {
             throw { getDataError: true, authUser: res.locals };
-        } else {
-            const response = await api.getRankedItemsByPage(
-                req.query.page,
-                res.locals
-            );
-
-            res.json(response);
         }
+
+        const response = await api.getRankedItemsByPage(
+            req.query.page,
+            res.locals
+        );
+        res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
