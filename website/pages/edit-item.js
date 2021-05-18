@@ -256,7 +256,7 @@ export default function EditItem({
                                 type="submit"
                                 value="update"
                                 onClick={() => submitEditItem()}
-                            />
+                            /> {loading && <span> loading...</span>}
                         </div>
                         {error.submitError ? (
                             <div className="edit-item-submit-error-msg">
