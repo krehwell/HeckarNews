@@ -18,7 +18,7 @@ export default function Home({ authUserData }) {
                 username={authUserData?.username}
                 karma={authUserData?.karma}
             />
-            <div className="homepage-content-container">Your Next.js App</div>
+            <div className="homepage-content-container">t(·̿Ĺ̯·̿ ̿) Hacker News Clone</div>
             <Footer />
         </div>
     );
