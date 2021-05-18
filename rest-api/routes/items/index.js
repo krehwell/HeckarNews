@@ -283,8 +283,11 @@ app.get("/items/get-ranked-items-by-page", authUser, async (req, res) => {
             req.query.page,
             res.locals
         );
+
+        response.authUser = res.locals;
         res.json(response);
     } catch (error) {
+        // console.log("ERR:", error);
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
             res.json(error);
