@@ -4,6 +4,7 @@ import "../styles/components/header.css";
 import "../styles/components/footer.css";
 import "../styles/components/alternateHeader.css";
 import "../styles/components/item.css"
+import "../styles/components/itemsList.css"
 
 import "../styles/pages/_error.css";
 import "../styles/pages/login.css";

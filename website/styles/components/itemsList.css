@@ -1,0 +1,164 @@
+.items-list-content-container {
+    width: 100%;
+    padding: 10px 5px 10px 2px;
+}
+
+.listed-item-container {
+    margin-top: 5px;
+    padding-bottom: 2.5px;
+    padding-right: 5px;
+}
+
+.listed-item-rank {
+    color: #828282;
+    font-size: 13.5px;
+    width: 32.5px;
+    text-align: right;
+    vertical-align: top;
+}
+
+.listed-item-rank.hide {
+    width: 0px;
+}
+
+.listed-item-upvote {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 0px;
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+    margin-bottom: 1px;
+    cursor: pointer;
+    background: url("/upvote-arrow.png") no-repeat;
+}
+
+.listed-item-upvote.hide {
+    background: none;
+    cursor: default;
+}
+
+.listed-item-star {
+    color: rgb(255, 102, 0);
+    text-align: center;
+    font-size: 13.5px;
+    width: 15px;
+}
+
+.listed-item-title {
+    font-size: 13.5px;
+}
+
+.listed-item-domain {
+    font-size: 10.5px;
+    margin-left: 4px;
+    color: #828282;
+}
+
+.listed-item-domain a {
+    text-decoration: none;
+    color: #828282;
+}
+
+.listed-item-domain a:hover {
+    text-decoration: underline;
+}
+
+.listed-item-title a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.listed-item-title a:visited {
+    color: #828282;
+}
+
+.listed-item-bottom-section {
+    padding-left: 35px;
+    font-size: 9.5px;
+    color: #828282;
+    cursor: default;
+}
+
+.listed-item-kill {
+    color: #b82727;
+}
+
+.listed-item-unvote:hover,
+.listed-item-unfavorite:hover,
+.listed-item-hide:hover,
+.listed-item-unhide:hover,
+.listed-item-kill:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.listed-item-bottom-section a {
+    text-decoration: none;
+    color: #828282;
+}
+
+.listed-item-bottom-section a:hover {
+    text-decoration: underline;
+}
+
+.listed-item-more {
+    font-size: 13.5px;
+    margin-left: 47.5px;
+    margin-top: 12.5px;
+}
+
+.listed-item-more.hide-rank {
+    margin-left: 15px;
+}
+
+.listed-item-more a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.listed-item-more a:visited {
+    color: #828282;
+    text-decoration: none;
+}
+
+.items-list-error-msg {
+    margin: 8px;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .listed-item-rank {
+        font-size: 14.5px;
+    }
+
+    .listed-item-upvote {
+        background: url("/upvote-arrow-mobile.png") no-repeat;
+        background-size: 10px;
+        transform: scale(1.3, 1.3);
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .listed-item-star {
+        margin-right: 2.5px;
+        margin-left: 2.5px;
+    }
+
+    .listed-item-title {
+        font-size: 14.5px;
+    }
+
+    .listed-item-bottom-section {
+        font-size: 12px;
+    }
+
+    .listed-item-more {
+        margin-left: 52.5px;
+    }
+
+    .listed-item-more.hide-rank {
+        margin-left: 20px;
+    }
+}
