@@ -475,7 +475,7 @@ module.exports = {
 
         const newUserKarmaValue = authUser.karma - item.points;
 
-        UserModel.findOneAndUpdate(
+        const updateUserKarma = await UserModel.findOneAndUpdate(
             { username: authUser.username },
             { karma: newUserKarmaValue }
         ).exec();

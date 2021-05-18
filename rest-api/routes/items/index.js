@@ -272,3 +272,5 @@ app.put("/items/delete-item", authUser, async (req, res) => {
         }
     }
 });
+
+module.exports = app;
