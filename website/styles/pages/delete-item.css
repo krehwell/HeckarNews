@@ -1,0 +1,149 @@
+.delete-item-content-container {
+    padding: 15px 0px 15px 0px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+.delete-item-star {
+    display: inline-block;
+    color: rgb(255, 102, 0);
+    width: 20px;
+    text-align: center;
+    font-size: 13.5px;
+}
+
+.delete-item-title {
+    font-size: 13.5px;
+}
+
+.delete-item-title a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.delete-item-title a:visited {
+    color: #828282;
+}
+
+.delete-item-domain {
+    font-size: 10.5px;
+    margin-left: 4px;
+    color: #828282;
+}
+
+.delete-item-domain a {
+    text-decoration: none;
+    color: #828282;
+}
+
+.delete-item-domain a:hover {
+    text-decoration: underline;
+}
+
+.delete-item-details-bottom {
+    font-size: 9.5px;
+    color: #828282;
+    cursor: default;
+    margin-left: 20px;
+    line-height: 20px;
+}
+
+.delete-item-details-bottom a {
+    text-decoration: none;
+    color: #828282;
+    cursor: pointer;
+}
+
+.delete-item-details-bottom a:hover {
+    text-decoration: underline;
+}
+
+.delete-item-text-content {
+    margin-top: 12.5px;
+    color: #828282;
+    font-size: 13px;
+    margin-left: 20px;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding-right: 15px;
+}
+
+.delete-item-text-content a {
+    color: #828282;
+    text-decoration: underline;
+}
+
+.delete-item-text-content a:visited {
+    color: #828282;
+}
+
+.delete-item-confirm-msg {
+    margin-top: 25px;
+    margin-left: 20px;
+    font-size: 13.5px;
+}
+
+.delete-item-btns {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.delete-item-btns input {
+    -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+}
+
+.delete-item-btns input[type="text"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.delete-item-btns input[type="submit"]:active {
+    border-style: inset;
+}
+
+.delete-item-btns input {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.delete-item-yes-btn {
+    margin-right: 7.5px;
+}
+
+.delete-item-submit-error-msg {
+    color: #828282;
+    font-size: 13.5px;
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.delete-item-error-msg {
+    margin: 8px;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .delete-item-title {
+        font-size: 14.5px;
+    }
+
+    .delete-item-details-bottom {
+        font-size: 12px;
+    }
+}
