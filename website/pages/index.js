@@ -1,36 +1,59 @@
-/// COMPONENTS
+import { Component } from "react";
+
+import HeadMetadata from "../components/headMetadata.js";
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
-import HeadMetadata from "../components/headMetadata.js";
-import AlternateHeader from "../components/alternateHeader";
 
-import authUser from "../api/users/authUser.js";
+import getRankedItemsByPage from "../api/items/getRankedItemsByPage.js";
 
-export default function Home({ authUserData }) {
+export default function Index({
+    item,
+    authUserData,
+    page,
+    isMore,
+    getDataError,
+    goToString,
+}) {
     return (
         <div className="layout-wrapper">
             <HeadMetadata
                 title="HeckarNews"
-                description="News and discussion for software engineers"
+                description="News and Bullshit people having."
             />
             <Header
-                userSignedIn={authUserData?.userSignedIn}
-                username={authUserData?.username}
-                karma={authUserData?.karma}
+                userSignedIn={authUserData.userSignedIn}
+                username={authUserData.username}
+                karma={authUserData.karma}
+                goto={goToString}
             />
-            <div className="homepage-content-container">t(·̿Ĺ̯·̿ ̿) Hacker News Clone</div>
+            <div className="items-list-content-container">
+                {!getDataError ? (
+                    <></>
+                ) : (
+                    <div className="items-list-error-msg">
+                        <span>An error occurred.</span>
+                    </div>
+                )}
+            </div>
             <Footer />
         </div>
     );
 }
 
-export async function getServerSideProps({ req }) {
-    const authResult = await authUser(req);
+export async function getServerSideProps({ req, query }) {
+    const page = 1;
+
+    const apiResult = await getRankedItemsByPage(page, req);
 
     return {
         props: {
+            items: (apiResult && apiResult.items) || {},
             authUserData:
-                authResult && authResult.authUser ? authResult.authUser : {},
+                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            page: page,
+            isMore: (apiResult && apiResult.isMore) || false,
+            getDataError: (apiResult && apiResult.getDataError) || false,
+            goToString: "",
         },
     };
 }
