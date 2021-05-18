@@ -253,4 +253,22 @@ app.get("/items/get-delete-item-page-data", authUser, async (req, res) => {
     }
 });
 
-module.exports = app;
+app.put("/items/delete-item", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { notAllowedError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        } else {
+            const response = await api.deleteItem(req.body.id, res.locals);
+            res.json(response);
+        }
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
