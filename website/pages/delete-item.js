@@ -4,6 +4,7 @@ import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
 
 import getDeleteItemPageData from "../api/items/getDeleteItemPageData.js";
+import deleteItem from "../api/items/deleteItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
@@ -21,13 +22,40 @@ export default function DeleteItem({
         notAllowedError,
         submitError: false,
     });
-
     const [loading, setLoading] = useState(false);
 
     const submitDeleteItem = () => {
         if (loading) return;
 
         setLoading(true);
+
+        deleteItem(item.id, (response) => {
+            setLoading(false);
+            if (response.notAllowedError) {
+                setError({
+                    ...error,
+                    notAllowedError: true,
+                    notFoundError: false,
+                    submitError: false,
+                });
+            } else if (response.notFoundError) {
+                setError({
+                    ...error,
+                    notAllowedError: false,
+                    notFoundError: true,
+                    submitError: false,
+                });
+            } else if (response.submitError || !response.success) {
+                setError({
+                    ...error,
+                    notAllowedError: false,
+                    notFoundError: false,
+                    submitError: true,
+                });
+            } else {
+                window.location.href = `/${goToString}`;
+            }
+        });
     };
 
     const goBackToOriginPage = () => {
@@ -133,7 +161,8 @@ export default function DeleteItem({
                                 type="submit"
                                 value="No"
                                 onClick={goBackToOriginPage}
-                            /> {loading && <span> loading...</span>}
+                            />{" "}
+                            {loading && <span> loading...</span>}
                         </div>
                         {error.submitError ? (
                             <div className="delete-item-submit-error-msg">
