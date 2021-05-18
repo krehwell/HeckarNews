@@ -273,4 +273,26 @@ app.put("/items/delete-item", authUser, async (req, res) => {
     }
 });
 
+app.get("/items/get-ranked-items-by-page", authUser, async (req, res) => {
+    try {
+        if (!req.query.page) {
+            throw { getDataError: true, authUser: res.locals };
+        } else {
+            const response = await api.getRankedItemsByPage(
+                req.query.page,
+                res.locals
+            );
+
+            res.json(response);
+        }
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;

@@ -482,4 +482,147 @@ module.exports = {
 
         return { success: true };
     },
+
+    /**
+     * Step 1 - If the user is not signed-in, retrieve:
+     *          - The items that have been submitted within the past three days.
+     *          sorted by their points and creation date values.
+     *          - Total number of items submitted in the past three days.
+     *          will be used for pagination purposes.
+     * Step 2 - If the user is signed-in, retrieve this data:
+     *          - All the user's hidden item documents from the past three days.
+     *          - The items that have been submitted within the past three days.
+     *          sorted by their points and creation date values.
+     *          - any item that is hidden by the user will not be included.
+     *          - All the user's item upvotes from the past three days.
+     *          any item the user has upvoted will contain a votedOnByUser value.
+     *          this will tell the website if it should display the upvote arrow for each item.
+     *          Total number of items submitted in the past three days.
+     *          will be used for pagination purposes.
+     * Step 3 - Regardless of whether or not the user is signed-in, the data sent back to the website should include the following:
+     *          - Array of items retrieved from the database.
+     *          - An isMore value that indicates whether or not there is an additional page of results to retrieve
+     */
+    getRankedItemsByPage: async (page, authUser) => {
+        const startDate =
+            moment().unix() - 86400 * config.maxAgeOfRankedItemsInDays;
+
+        if (!authUser.userSignedIn) {
+            // get data for a non-signed-in user
+            const [items, totalItemCount] = await Promise.all([
+                ItemModel.find({ created: { $gt: startDate }, dead: false })
+                    .sort({ points: -1, _id: -1 })
+                    .skip((page - 1) * config.itemsPerPage)
+                    .limit(config.itemsPerPage)
+                    .lean(),
+                ItemModel.countDocuments({
+                    created: { $gt: startDate },
+                    dead: false,
+                }).lean(),
+            ]);
+
+            // set item rank shown on each num of page, item rank [1, 2, 3, ..., 10, 11, 12]
+            for (i = 0; i < items.length; i++) {
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount > (page - 1) * itemsPerPage + itemsPerPage
+                        ? true
+                        : false,
+            };
+        } else {
+            // get data for a signed-in user
+            const hiddenDocs = await UserHiddenModel.find({
+                username: authUser.username,
+                itemCreationDate: { $gte: startDate },
+            })
+                .lean()
+                .exec();
+
+            // filter id of each hidden item
+            let arrayOfHiddenItems = [];
+
+            for (let i = 0; i < hiddenDocs.length; i++) {
+                arrayOfHiddenItems.push(hiddenDocs[i].id);
+            }
+
+            // query all items and exclude($nin) hidden items
+            let itemsDbQuery = {
+                created: {
+                    $gte: startDate,
+                },
+                id: {
+                    $nin: arrayOfHiddenItems,
+                },
+            };
+
+            if (!authUser.showDead) itemsDbQuery.dead = false;
+
+            const items = await ItemModel.find(itemsDbQuery)
+                .sort({ points: -1, _id: -1 })
+                .skip((page - 1) * itemsPerPage)
+                .limit(itemsPerPage)
+                .lean()
+                .exec();
+
+            // be ready to retrieve the user's upvote history from the db
+            let arrayOfItemIds = [];
+
+            for (let i = 0; i < items.length; i++) {
+                arrayOfItemIds.push(items[i].id);
+            }
+
+            const [userItemVoteDocs, totalItemCount] = await Promise.all([
+                UserVoteModel.find({
+                    username: authUser.username,
+                    date: { $gte: startDate },
+                    id: { $in: arrayOfItemIds },
+                    type: "item",
+                }).lean(),
+                ItemModel.countDocuments(itemsDbQuery).lean(),
+            ]);
+
+            for (let i = 0; i < items.length; i++) {
+                // set item rank shown on each num of page, item rank [1, 2, 3, ..., 10, 11, 12]
+                items[i].rank = (page - 1) * itemsPerPage + (i + 1);
+
+                // is item allowed to be edited or deleted?
+                if (items[i].by === authUser.username) {
+                    const hasEditAndDeleteExpired =
+                        items[i].created +
+                            3600 * config.hrsUntilEditAndDeleteExpires <
+                            moment().unix() || items[i].commentCount > 0;
+
+                    items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+                }
+
+                // check if item has been voted by user
+                const voteDoc = await userItemVoteDocs.find(function (voteDoc) {
+                    return voteDoc.id === items[i].id;
+                });
+
+                if (voteDoc) {
+                    items[i].votedOnByUser = true;
+                    items[i].unvoteExpired =
+                        voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                        moment().unix()
+                            ? true
+                            : false;
+                }
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount > (page - 1) * itemsPerPage + itemsPerPage
+                        ? true
+                        : false,
+            };
+        }
+    },
 };
