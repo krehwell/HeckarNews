@@ -431,4 +431,25 @@ module.exports = {
         const saveItem = await item.save();
         return { success: true };
     },
+
+    getDeleteItemPageData: async (itemId, authUser) => {
+        const item = await ItemModel.findOne({ id: itemId }).lean().exec();
+
+        if (!item) {
+            throw { notFoundError: true };
+        } else if (item.dead) {
+            throw { notAllowedError: true };
+        } else if (item.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            item.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (item.commentCount > 0) {
+            throw { notAllowedError: true };
+        }
+
+        return { success: true, item: item };
+    },
 };
