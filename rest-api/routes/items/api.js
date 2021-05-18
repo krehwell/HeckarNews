@@ -530,7 +530,8 @@ module.exports = {
                 success: true,
                 items: items,
                 isMore:
-                    totalItemCount > (page - 1) * itemsPerPage + itemsPerPage
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
                         ? true
                         : false,
             };
@@ -564,8 +565,8 @@ module.exports = {
 
             const items = await ItemModel.find(itemsDbQuery)
                 .sort({ points: -1, _id: -1 })
-                .skip((page - 1) * itemsPerPage)
-                .limit(itemsPerPage)
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
                 .lean()
                 .exec();
 
@@ -588,7 +589,7 @@ module.exports = {
 
             for (let i = 0; i < items.length; i++) {
                 // set item rank shown on each num of page, item rank [1, 2, 3, ..., 10, 11, 12]
-                items[i].rank = (page - 1) * itemsPerPage + (i + 1);
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
 
                 // is item allowed to be edited or deleted?
                 if (items[i].by === authUser.username) {
@@ -619,7 +620,7 @@ module.exports = {
                 success: true,
                 items: items,
                 isMore:
-                    totalItemCount > (page - 1) * itemsPerPage + itemsPerPage
+                    totalItemCount > (page - 1) * config.itemsPerPage + config.itemsPerPage
                         ? true
                         : false,
             };
