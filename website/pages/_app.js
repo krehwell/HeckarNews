@@ -14,6 +14,7 @@ import "../styles/pages/changepw.css";
 import "../styles/pages/submit.css";
 import "../styles/pages/item.css";
 import "../styles/pages/edit-item.css";
+import "../styles/pages/delete-item.css";
 
 export default function MyApp({ Component, pageProps }) {
     return <Component {...pageProps} />;
