@@ -628,7 +628,7 @@ module.exports = {
         }
     },
 
-    getNewestItemByPage: async (page, authUser) => {
+    getNewestItemsByPage: async (page, authUser) => {
         if (!authUser.userSignedIn) {
             /// GET NEWEST ITEMS IF USER NOT SIGNED IN
             const [items, totalItemCount] = await Promise.all([
