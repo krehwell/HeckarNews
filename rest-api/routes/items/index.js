@@ -307,6 +307,8 @@ app.get("/items/get-newest-items-by-page", authUser, async (req, res) => {
             req.query.page,
             res.locals
         );
+
+        response.authUser = res.locals;
         res.json(response);
     } catch (error) {
         // console.log("ERR:", error);
