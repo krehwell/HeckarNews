@@ -485,19 +485,19 @@ module.exports = {
 
     /**
      * Step 1 - If the user is not signed-in, retrieve:
-     *          - The items that have been submitted within the past three days.
+     *          - The items that have been submitted within the past config.maxAgeOfRankedItemsInDays days
      *          sorted by their points and creation date values.
-     *          - Total number of items submitted in the past three days.
+     *          - Total number of items submitted in the config.maxAgeOfRankedItemsInDays days
      *          will be used for pagination purposes.
      * Step 2 - If the user is signed-in, retrieve this data:
-     *          - All the user's hidden item documents from the past three days.
-     *          - The items that have been submitted within the past three days.
+     *          - All the user's hidden item documents from the past config.maxAgeOfRankedItemsInDays.
+     *          - The items that have been submitted within the past config.maxAgeOfRankedItemsInDays
      *          sorted by their points and creation date values.
      *          - any item that is hidden by the user will not be included.
      *          - All the user's item upvotes from the past three days.
      *          any item the user has upvoted will contain a votedOnByUser value.
      *          this will tell the website if it should display the upvote arrow for each item.
-     *          Total number of items submitted in the past three days.
+     *          - Total number of items submitted in the past config.maxAgeOfRankedItemsInDays
      *          will be used for pagination purposes.
      * Step 3 - Regardless of whether or not the user is signed-in, the data sent back to the website should include the following:
      *          - Array of items retrieved from the database.
