@@ -508,7 +508,7 @@ module.exports = {
             moment().unix() - 86400 * config.maxAgeOfRankedItemsInDays;
 
         if (!authUser.userSignedIn) {
-            // get data for a non-signed-in user
+            /// GET DATA FOR A NON-SIGNED-IN USER
             const [items, totalItemCount] = await Promise.all([
                 ItemModel.find({ created: { $gt: startDate }, dead: false })
                     .sort({ points: -1, _id: -1 })
@@ -536,7 +536,7 @@ module.exports = {
                         : false,
             };
         } else {
-            // get data for a signed-in user
+            /// GET DATA FOR A SIGNED-IN USER
             const hiddenDocs = await UserHiddenModel.find({
                 username: authUser.username,
                 itemCreationDate: { $gte: startDate },
@@ -620,7 +620,124 @@ module.exports = {
                 success: true,
                 items: items,
                 isMore:
-                    totalItemCount > (page - 1) * config.itemsPerPage + config.itemsPerPage
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        }
+    },
+
+    getNewestItemByPage: async (page, authUser) => {
+        if (!authUser.userSignedIn) {
+            /// GET NEWEST ITEMS IF USER NOT SIGNED IN
+            const [items, totalItemCount] = await Promise.all([
+                ItemModel.find({ dead: false })
+                    .sort({ _id: -1 })
+                    .skip((page - 1) * config.itemsPerPage)
+                    .limit(config.itemsPerPage)
+                    .lean(),
+                ItemModel.countDocuments({ dead: false }).lean(),
+            ]);
+
+            for (let i = 0; i < items.length; i++) {
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        } else {
+            /// GET NEWEST ITEMS IF USER SIGNED IN
+            const hiddenDocs = await UserHiddenModel.find({
+                username: authUser.username,
+            })
+                .lean()
+                .exec();
+
+            // collect item id which set to hidden
+            let arrayOfHiddenItems = [];
+
+            for (let i = 0; i < hiddenDocs.length; i++) {
+                arrayOfHiddenItems.push(hiddenDocs[i].id);
+            }
+
+            // query to get the suitable items
+            let itemsDbQuery = {
+                id: {
+                    $nin: arrayOfHiddenItems,
+                },
+            };
+
+            if (!authUser.showDead) itemsDbQuery.dead = false;
+
+            const items = await ItemModel.find(itemsDbQuery)
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfItemIds = [];
+
+            for (let i = 0; i < items.length; i++) {
+                arrayOfItemIds.push(items[i].id);
+            }
+
+            const [userItemVoteDocs, totalItemCount] = await Promise.all([
+                UserVoteModel.find({
+                    username: authUser.username,
+                    id: { $in: arrayOfItemIds },
+                    type: "item",
+                }).lean(),
+                ItemModel.countDocuments(itemsDbQuery).lean(),
+            ]);
+
+            // assign rank to each item
+            for (let i = 0; i < items.length; i++) {
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+            }
+
+            // show delete or edit on website?
+            for (let i = 0; i < items.length; i++) {
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+
+                if (items[i].by === authUser.username) {
+                    const hasEditAndDeleteExpired =
+                        items[i].created +
+                            3600 * config.hrsUntilEditAndDeleteExpires <
+                            moment().unix() || items[i].commentCount > 0;
+
+                    items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+                }
+
+                const voteDoc = userItemVoteDocs.find(function (voteDoc) {
+                    return voteDoc.id === items[i].id;
+                });
+
+                if (voteDoc) {
+                    items[i].votedOnByUser = true;
+                    items[i].unvoteExpired =
+                        voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                        moment().unix()
+                            ? true
+                            : false;
+                }
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
                         ? true
                         : false,
             };

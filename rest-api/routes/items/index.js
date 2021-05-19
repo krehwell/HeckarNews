@@ -297,4 +297,26 @@ app.get("/items/get-ranked-items-by-page", authUser, async (req, res) => {
     }
 });
 
+app.get("/items/get-newest-items-by-page", authUser, async (req, res) => {
+    try {
+        if (!req.query.page) {
+            throw { getDataError: true, authUser: res.locals };
+        }
+
+        const response = await api.getNewestItemsByPage(
+            req.query.page,
+            res.locals
+        );
+        res.json(response);
+    } catch (error) {
+        // console.log("ERR:", error);
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;
