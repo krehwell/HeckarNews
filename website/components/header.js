@@ -1,81 +1,85 @@
-/*
- * NEVER PRETTIER THIS CODE!!!!
+/**
+ * WARNING: NEVER PRETTIER THIS CODE!!!!
  */
-import { Component } from "react"
 
 import logoutUser from "../api/users/logoutUser";
 
-export default class Header extends Component {
+export default function Header({
+    userSignedIn,
+    username,
+    karma,
+    goto,
+    pageName,
+    label
+}) {
 
-    requestLogout = () => {
+    const requestLogout = () => {
         logoutUser(() => {
             window.location.reload();
         });
     }
 
-    render() {
-        return (
-            <table className="header-wrapper">
-                <tbody>
-                    <tr>
-                        <td className="header-logo">
-                            <a href="/">
-                                <img src="/favicon.ico" />
-                            </a>
-                        </td>
-                        <td className="header-links">
-                            <span className="header-links-items">
-                                <b className="header-links-name">
-                                    <a href="/news">HeckarNews</a>
-                                </b>
-                                <a className={this.props.pageName === "newest" ? "white-text" : null} href="/newest">new</a>
-                                <span> | </span>
-                                {
-                                    this.props.userSignedIn ?
-                                        <>
-                                            <a className={this.props.pageName === "threads" ? "white-text" : null} href={`/threads?id=${this.props.username}`}>threads</a>
-                                            <span> | </span>
-                                        </> : null
-                                }
-                                <a href="/past">past</a>
-                                <span> | </span>
-                                <a className={this.props.pageName === "newcomments" ? "white-text" : null} href="/newcomments">comments</a>
-                                <span> | </span>
-                                <a className={this.props.pageName === "ask" ? "white-text" : null} href="/ask">ask</a>
-                                <span> | </span>
-                                <a className={this.props.pageName === "show" ? "white-text" : null} href="/show">show</a>
-                                <span> | </span>
-                                <a className={this.props.pageName === "submit" ? "white-text" : null} href="/submit">submit</a>
-                                {
-                                    this.props.label ?
-                                        <>
-                                            <span> | </span>
-                                            <span className="white-text">{this.props.label}</span>
-                                        </> : null
-                                }
-                            </span>
-                        </td>
-                        <td className="header-right-nav-links">
-                            <span className="header-right-nav-links-items">
-                                {
-                                    this.props.userSignedIn ?
-                                        <>
-                                            <a href={`/user?id=${this.props.username}`}>{this.props.username}</a>
-                                            <span> ({this.props.karma.toLocaleString()})</span>
-                                            <span> | </span>
-                                            <span className="header-logout" onClick={() => this.requestLogout()}>logout</span>
-                                        </> :
-                                        <>
-                                            <a href={`/login${this.props.goto ? "?goto=" + encodeURIComponent(this.props.goto) : ""}`}>
-                                                <span>login</span>
-                                            </a>
-                                        </>
-                                }
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        )
-    }
+    return (
+        <table className="header-wrapper">
+            <tbody>
+                <tr>
+                    <td className="header-logo">
+                        <a href="/">
+                            <img src="/favicon.ico" />
+                        </a>
+                    </td>
+                    <td className="header-links">
+                        <span className="header-links-items">
+                            <b className="header-links-name">
+                                <a href="/news">HeckarNews</a>
+                            </b>
+                            <a className={pageName === "newest" ? "white-text" : null} href="/newest">new</a>
+                            <span> | </span>
+                            {
+                                userSignedIn ?
+                                    <>
+                                        <a className={pageName === "threads" ? "white-text" : null} href={`/threads?id=${username}`}>threads</a>
+                                        <span> | </span>
+                                    </> : null
+                            }
+                            <a href="/past">past</a>
+                            <span> | </span>
+                            <a className={pageName === "newcomments" ? "white-text" : null} href="/newcomments">comments</a>
+                            <span> | </span>
+                            <a className={pageName === "ask" ? "white-text" : null} href="/ask">ask</a>
+                            <span> | </span>
+                            <a className={pageName === "show" ? "white-text" : null} href="/show">show</a>
+                            <span> | </span>
+                            <a className={pageName === "submit" ? "white-text" : null} href="/submit">submit</a>
+                            {
+                                label ?
+                                    <>
+                                        <span> | </span>
+                                        <span className="white-text">{label}</span>
+                                    </> : null
+                            }
+                        </span>
+                    </td>
+                    <td className="header-right-nav-links">
+                        <span className="header-right-nav-links-items">
+                            {
+                                userSignedIn ?
+                                    <>
+                                        <a href={`/user?id=${username}`}>{username}</a>
+                                        <span> ({karma.toLocaleString()})</span>
+                                        <span> | </span>
+                                        <span className="header-logout" onClick={() => requestLogout()}>logout</span>
+                                    </> :
+                                    <>
+                                        <a href={`/login${goto ? "?goto=" + encodeURIComponent(goto) : ""}`}>
+                                            <span>login</span>
+                                        </a>
+                                    </>
+                            }
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    )
 }

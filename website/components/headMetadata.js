@@ -1,16 +1,14 @@
-import { Component } from "react";
 import Head from "next/head";
 
-export default class HeadMetadata extends Component {
-    render() {
+export default function HeadMetadata({description, title}) {
         return (
             <Head>
-                <title>{this.props.title}</title>
-                <meta  name="description" content={this.props.description} />
-                <title>{this.props.title}</title>
+                <title>{title}</title>
+                <meta  name="description" content={description} />
+                <title>{title}</title>
                 <meta
                     name="description"
-                    content={this.props.description}
+                    content={description}
                 />
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -20,5 +18,4 @@ export default class HeadMetadata extends Component {
                 <meta name="theme-color" content="#ffffff" />
             </Head>
         )
-    }
 }
