@@ -780,7 +780,7 @@ module.exports = {
             };
         } else {
             /// GET HN ITEMS FOR A SIGNED-IN USER
-            const hiddenDocs = UserHiddenModel.find({
+            const hiddenDocs = await UserHiddenModel.find({
                 username: authUser.username,
                 itemCreationDate: { $gte: startDate },
             })
@@ -807,7 +807,7 @@ module.exports = {
 
             if (!authUser.showDead) itemsDbQuery.dead = false;
 
-            const items = ItemModel.find(itemsDbQuery)
+            const items = await ItemModel.find(itemsDbQuery)
                 .sort({ points: -1, _id: -1 })
                 .skip((page - 1) * config.itemsPerPage)
                 .limit(config.itemsPerPage)
@@ -840,7 +840,7 @@ module.exports = {
                     const hasEditAndDeleteExpired =
                         items[i].created +
                             3600 * config.hrsUntilEditAndDeleteExpires <
-                            moment().unix() || config.items[i].commentCount > 0;
+                            moment().unix() || items[i].commentCount > 0;
 
                     items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
                 }
