@@ -1,8 +1,8 @@
 const config = {
     productionWebsiteUrl: "https://news.krehwell.com",
     userCookieExpirationLengthInDays: 365,
-    hrsUntilUnvoteExpires: 1,
-    hrsUntilEditAndDeleteExpires: 2,
+    hrsUntilUnvoteExpires: 24 * 30,
+    hrsUntilEditAndDeleteExpires: 24 * 30,
     maxAgeOfRankedItemsInDays: 360,
     itemsPerPage: 30,
 };
