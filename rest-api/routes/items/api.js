@@ -840,7 +840,7 @@ module.exports = {
                     const hasEditAndDeleteExpired =
                         items[i].created +
                             3600 * config.hrsUntilEditAndDeleteExpires <
-                            moment().unix() || items[i].commentCount > 0;
+                            moment().unix() || config.items[i].commentCount > 0;
 
                     items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
                 }
@@ -864,7 +864,8 @@ module.exports = {
                 success: true,
                 items: items,
                 isMore:
-                    totalItemCount > (page - 1) * itemsPerPage + itemsPerPage
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
                         ? true
                         : false,
             };
