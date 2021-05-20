@@ -142,7 +142,7 @@ module.exports = {
         const user = await UserModel.findOne({ username: username }).exec();
 
         if (!user) {
-            throw { userNotFound: true };
+            throw { userNotFoundError: true };
         } else if (!user.email) {
             throw { noEmailError: true };
         }
