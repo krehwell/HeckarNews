@@ -30,7 +30,7 @@ export default function Forgot() {
             requestPasswordResetLink(usernameInputValue, (response) => {
                 setLoading(false);
                 console.log(response);
-                if (response.userNotFound) {
+                if (response.userNotFoundError) {
                     setError({
                         ...error,
                         noEmailError: false,
