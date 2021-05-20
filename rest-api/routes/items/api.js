@@ -743,7 +743,7 @@ module.exports = {
 
     getRankedShowItemsByPage: async (page, authUser) => {
         const startDate =
-            moment().unix() - (86400 - config.maxAgeOfRankedItemsInDays);
+            moment().unix() - (86400 * config.maxAgeOfRankedItemsInDays);
 
         if (!authUser.userSignedIn) {
             /// GET HN ITEMS FOR A NON-SIGNED-IN USER
