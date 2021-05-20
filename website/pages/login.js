@@ -8,73 +8,81 @@ import loginUser from "../api/users/loginUser.js";
 import authUser from "../api/users/authUser.js";
 
 export default function Login({ goto }) {
-    const [state, setState] = useState({
-        loading: false,
-
-        // login
+    const [loginState, setLoginState] = useState({
         loginUsernameInputValue: "",
         loginPasswordInputValue: "",
-        loginCredentialError: false,
-        loginSubmitError: false,
+    });
 
-        //create account
+    const [createAccountState, setCreateAccountState] = useState({
         createAccountUsernameInputValue: "",
         createAcountPasswordInputValue: "",
+    });
+
+    const [error, setError] = useState({
+        loginCredentialError: false,
+        loginSubmitError: false,
         createAccountUsernameExistsError: false,
         createAccountUsernameLengthError: false,
         createAccountPasswordLengthError: false,
         createAccountSubmitError: false,
     });
 
+    const [loading, setLoading] = useState(false);
+
     const updateLoginUsernameInputValue = (event) => {
-        setState({ ...state, loginUsernameInputValue: event.target.value });
+        setLoginState({
+            ...loginState,
+            loginUsernameInputValue: event.target.value,
+        });
     };
 
     const updateLoginPasswordInputValue = (event) => {
-        setState({ ...state, loginPasswordInputValue: event.target.value });
+        setLoginState({
+            ...loginState,
+            loginPasswordInputValue: event.target.value,
+        });
     };
 
     const updateCreateAccountUsernameInputValue = (event) => {
-        setState({
-            ...state,
+        setCreateAccountState({
+            ...createAccountState,
             createAccountUsernameInputValue: event.target.value,
         });
     };
 
     const updateCreateAccountPasswordInputValue = (event) => {
-        setState({
-            ...state,
+        setCreateAccountState({
+            ...createAccountState,
             createAcountPasswordInputValue: event.target.value,
         });
     };
 
     const submitLogin = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        const username = state.loginUsernameInputValue;
-        const password = state.loginPasswordInputValue;
+        const username = loginState.loginUsernameInputValue;
+        const password = loginState.loginPasswordInputValue;
 
         if (username.length === 0 || password.length === 0) {
-            setState({
-                ...state,
+            setError({
+                ...error,
                 loginCredentialError: true,
                 loginSubmitError: false,
             });
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             loginUser(username, password, (response) => {
+                setLoading(false);
                 if (response.credentialError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         loginCredentialError: true,
                         loginSubmitError: false,
                     });
                 } else if (response.submitError || !response.success) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         loginCredentialError: false,
                         loginSubmitError: true,
                     });
@@ -86,64 +94,59 @@ export default function Login({ goto }) {
     };
 
     const submitCreateAccount = () => {
-        if (state.loading) {
-            return;
-        }
+        if (loading) return;
 
-        const username = state.createAccountUsernameInputValue;
-        const password = state.createAcountPasswordInputValue;
+        const username = createAccountState.createAccountUsernameInputValue;
+        const password = createAccountState.createAcountPasswordInputValue;
 
         if (username.length < 2 || username.length > 15) {
-            setState({
-                ...state,
+            setError({
+                ...error,
                 createAccountUsernameExistsError: false,
                 createAccountUsernameLengthError: true,
                 createAccountPasswordLengthError: false,
                 createAccountSubmitError: false,
             });
         } else if (password.length < 8) {
-            setState({
-                ...state,
+            setError({
+                ...error,
                 createAccountUsernameExistsError: false,
                 createAccountUsernameLengthError: false,
                 createAccountPasswordLengthError: true,
                 createAccountSubmitError: false,
             });
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             createNewUser(username, password, (response) => {
+                setLoading(false);
                 if (response.usernameLengthError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         createAccountUsernameExistsError: false,
                         createAccountUsernameLengthError: true,
                         createAccountPasswordLengthError: false,
                         createAccountSubmitError: false,
                     });
                 } else if (response.passwordLengthError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         createAccountUsernameExistsError: false,
                         createAccountUsernameLengthError: false,
                         createAccountPasswordLengthError: true,
                         createAccountSubmitError: false,
                     });
                 } else if (response.alreadyExistUser) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         createAccountUsernameExistsError: true,
                         createAccountUsernameLengthError: false,
                         createAccountPasswordLengthError: false,
                         createAccountSubmitError: false,
                     });
                 } else if (response.submitError || !response.success) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         createAccountUsernameExistsError: false,
                         createAccountUsernameLengthError: false,
                         createAccountPasswordLengthError: false,
@@ -163,12 +166,12 @@ export default function Login({ goto }) {
             <AlternateHeader displayMessage="Login | Signup" />
 
             {/*LOGIN SECTION*/}
-            {state.loginCredentialError ? (
+            {error.loginCredentialError ? (
                 <div className="login-error-msg">
                     <span>Bad login.</span>
                 </div>
             ) : null}
-            {state.loginSubmitError ? (
+            {error.loginSubmitError ? (
                 <div className="login-error-msg">
                     <span>An error occurred.</span>
                 </div>
@@ -183,7 +186,7 @@ export default function Login({ goto }) {
                 <div className="login-input-item-input">
                     <input
                         type="text"
-                        value={state.loginUsernameInputValue}
+                        value={loginState.loginUsernameInputValue}
                         onChange={updateLoginUsernameInputValue}
                     />
                 </div>
@@ -195,7 +198,7 @@ export default function Login({ goto }) {
                 <div className="login-input-item-input">
                     <input
                         type="password"
-                        value={state.loginPasswordInputValue}
+                        value={loginState.loginPasswordInputValue}
                         onChange={updateLoginPasswordInputValue}
                     />
                 </div>
@@ -205,7 +208,8 @@ export default function Login({ goto }) {
                     type="submit"
                     value="login"
                     onClick={() => submitLogin()}
-                />
+                />{" "}
+                {loading && <span> loading...</span>}
             </div>
             <div className="login-input-item-forgot-text">
                 <span>
@@ -221,24 +225,24 @@ export default function Login({ goto }) {
             />
 
             {/*CREATE ACCOUNT SECTION*/}
-            {state.createAccountUsernameExistsError ? (
+            {error.createAccountUsernameExistsError ? (
                 <div className="login-error-msg">
                     <span>That username is taken.</span>
                 </div>
             ) : null}
-            {state.createAccountUsernameLengthError ? (
+            {error.createAccountUsernameLengthError ? (
                 <div className="login-error-msg">
                     <span>
                         Username must be between 2 and 15 characters long.
                     </span>
                 </div>
             ) : null}
-            {state.createAccountPasswordLengthError ? (
+            {error.createAccountPasswordLengthError ? (
                 <div className="login-error-msg">
                     <span>Passwords should be at least 8 characters.</span>
                 </div>
             ) : null}
-            {state.createAccountSubmitError ? (
+            {error.createAccountSubmitError ? (
                 <div className="login-error-msg">
                     <span>An error occurred.</span>
                 </div>
@@ -253,7 +257,9 @@ export default function Login({ goto }) {
                 <div className="login-input-item-input">
                     <input
                         type="text"
-                        value={state.createAccountUsernameInputValue}
+                        value={
+                            createAccountState.createAccountUsernameInputValue
+                        }
                         onChange={updateCreateAccountUsernameInputValue}
                     />
                 </div>
@@ -265,7 +271,9 @@ export default function Login({ goto }) {
                 <div className="login-input-item-input">
                     <input
                         type="password"
-                        value={state.createAcountPasswordInputValue}
+                        value={
+                            createAccountState.createAcountPasswordInputValue
+                        }
                         onChange={updateCreateAccountPasswordInputValue}
                     />
                 </div>
@@ -275,7 +283,8 @@ export default function Login({ goto }) {
                     type="submit"
                     value="create account"
                     onClick={() => submitCreateAccount()}
-                />
+                />{" "}
+                {loading && <span> loading...</span>}
             </div>
         </div>
     );
