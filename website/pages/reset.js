@@ -6,8 +6,9 @@ import AlternateHeader from "../components/alternateHeader.js";
 import resetPassword from "../api/users/resetPassword.js";
 
 export default function Reset({ resetToken, username }) {
-    const [state, setState] = useState({
-        passwordInputValue: "",
+    const [passwordInputValue, setPasswordInputValue] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState({
         passwordLengthError: false,
         expiredTokenError: false,
         invalidTokenError: false,
@@ -15,59 +16,55 @@ export default function Reset({ resetToken, username }) {
     });
 
     const updatePasswordInputValue = (event) => {
-        setState({ passwordInputValue: event.target.value });
+        setPasswordInputValue(event.target.value);
     };
 
     const submitRequest = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        if (state.passwordInputValue.length < 8) {
-            setState({
-                ...state,
+        if (passwordInputValue.length < 8) {
+            setError({
                 passwordLengthError: true,
                 expiredTokenError: false,
                 invalidTokenError: false,
                 submitError: false,
             });
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             resetPassword(
                 username,
-                state.passwordInputValue,
+                passwordInputValue,
                 resetToken,
                 (response) => {
+                    setLoading(false);
                     if (response.invalidTokenError) {
-                        setState({
-                            ...state,
-                            loading: false,
+                        setError({
+                            ...error,
                             passwordLengthError: false,
                             expiredTokenError: false,
                             invalidTokenError: true,
                             submitError: false,
                         });
                     } else if (response.expiredTokenError) {
-                        setState({
-                            ...state,
-                            loading: false,
+                        setError({
+                            ...error,
                             passwordLengthError: false,
                             expiredTokenError: true,
                             invalidTokenError: false,
                             submitError: false,
                         });
                     } else if (response.passwordLengthError) {
-                        setState({
-                            ...state,
-                            loading: false,
+                        setError({
+                            ...error,
                             passwordLengthError: true,
                             expiredTokenError: false,
                             invalidTokenError: false,
                             submitError: false,
                         });
                     } else if (response.submitError || !response.success) {
-                        setState({
-                            ...state,
-                            loading: false,
+                        setError({
+                            ...error,
                             passwordLengthError: false,
                             expiredTokenError: false,
                             invalidTokenError: false,
@@ -86,22 +83,22 @@ export default function Reset({ resetToken, username }) {
             <HeadMetadata title="Reset Password | HeckarNews" />
             <AlternateHeader displayMessage="Reset Password" />
             <div className="reset-password-content-container">
-                {state.passwordLengthError ? (
+                {error.passwordLengthError ? (
                     <div className="reset-password-error-msg">
                         <span>Passwords should be at least 8 characters.</span>
                     </div>
                 ) : null}
-                {state.expiredTokenError ? (
+                {error.expiredTokenError ? (
                     <div className="reset-password-error-msg">
                         <span>Reset token has expired.</span>
                     </div>
                 ) : null}
-                {state.invalidTokenError ? (
+                {error.invalidTokenError ? (
                     <div className="reset-password-error-msg">
                         <span>Reset token is invalid.</span>
                     </div>
                 ) : null}
-                {state.submitError ? (
+                {error.submitError ? (
                     <div className="reset-password-error-msg">
                         <span>An error occurred.</span>
                     </div>
@@ -113,7 +110,7 @@ export default function Reset({ resetToken, username }) {
                     <div className="reset-password-input-item-input">
                         <input
                             type="password"
-                            value={state.passwordInputValue}
+                            value={passwordInputValue}
                             onChange={updatePasswordInputValue}
                         />
                     </div>
@@ -124,7 +121,7 @@ export default function Reset({ resetToken, username }) {
                         value="Change"
                         onClick={() => submitRequest()}
                     />
-                    {state.loading && <span> loading...</span>}
+                    {loading && <span> loading...</span>}
                 </div>
             </div>
         </div>
