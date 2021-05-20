@@ -373,7 +373,7 @@ app.get("/items/get-ranked-ask-items-by-page", authUser, async (req, res) => {
             res.json({ getDataError: true, authUser: res.locals });
         }
 
-        const response = api.getRankedAskItemsByPage(
+        const response = await api.getRankedAskItemsByPage(
             req.query.page,
             res.locals
         );
