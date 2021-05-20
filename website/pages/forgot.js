@@ -6,61 +6,59 @@ import AlternateHeader from "../components/alternateHeader.js";
 import requestPasswordResetLink from "../api/users/requestPasswordResetLink.js";
 
 export default function Forgot() {
-    const [state, setState] = useState({
-        usernameInputValue: "",
+    const [usernameInputValue, setUsernameInputValue] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState({
         noEmailError: false,
         userNotFoundError: false,
         submitError: false,
-        loading: false,
-        success: false,
     });
 
     const updateUsernameInputValue = (event) => {
-        setState({ usernameInputValue: event.target.value });
+        setUsernameInputValue(event.target.value);
     };
 
     const submitRequest = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        if (!state.usernameInputValue) {
-            setState({ ...state, userNotFoundError: true });
+        if (!usernameInputValue) {
+            setError({ ...error, userNotFoundError: true });
         } else {
-            setState({ loading: true });
+            setLoading(true);
 
-            requestPasswordResetLink(state.usernameInputValue, (response) => {
-                if (response.userNotFoundError) {
-                    setState({
-                        ...state,
-                        loading: false,
+            requestPasswordResetLink(usernameInputValue, (response) => {
+                setLoading(false);
+                console.log(response);
+                if (response.userNotFound) {
+                    setError({
+                        ...error,
                         noEmailError: false,
                         userNotFoundError: true,
                         submitError: false,
                     });
                 } else if (response.noEmailError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         noEmailError: true,
                         userNotFoundError: false,
                         submitError: false,
                     });
                 } else if (response.submitError || !response.success) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
+                        ...error,
                         noEmailError: false,
                         userNotFoundError: false,
                         submitError: true,
                     });
                 } else {
-                    setState({
-                        ...state,
-                        loading: false,
-                        success: true,
+                    setError({
+                        ...error,
                         noEmailError: false,
                         userNotFoundError: false,
                         submitError: false,
                     });
+                    setSuccess(true);
                 }
             });
         }
@@ -70,7 +68,7 @@ export default function Forgot() {
         <div className="forgot-wrapper layout-wrapper">
             <HeadMetadata title="Forgot Password | HeckarNews" />
             <AlternateHeader displayMessage="Reset Password" />
-            {state.success ? (
+            {success ? (
                 <div className="forgot-success-msg">
                     <span>
                         Password recovery message sent. If you do not see it,
@@ -79,17 +77,17 @@ export default function Forgot() {
                 </div>
             ) : (
                 <>
-                    {state.noEmailError ? (
+                    {error.noEmailError ? (
                         <div className="forgot-error-msg">
                             <span>No valid email address in profile.</span>
                         </div>
                     ) : null}
-                    {state.userNotFoundError ? (
+                    {error.userNotFoundError ? (
                         <div className="forgot-error-msg">
                             <span>User not found.</span>
                         </div>
                     ) : null}
-                    {state.submitError ? (
+                    {error.submitError ? (
                         <div className="forgot-error-msg">
                             <span>An error occurred.</span>
                         </div>
@@ -104,7 +102,7 @@ export default function Forgot() {
                         <div className="forgot-input-item-input">
                             <input
                                 type="text"
-                                value={state.usernameInputValue}
+                                value={usernameInputValue}
                                 onChange={updateUsernameInputValue}
                             />
                         </div>
@@ -114,7 +112,7 @@ export default function Forgot() {
                                 value="Send reset email"
                                 onClick={() => submitRequest()}
                             />
-                            {state.loading && <span> loading...</span>}
+                            {loading && <span> loading...</span>}
                         </div>
                     </div>
                 </>
