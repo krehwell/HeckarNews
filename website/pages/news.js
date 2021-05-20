@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import HeadMetadata from "../components/headMetadata.js";
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
