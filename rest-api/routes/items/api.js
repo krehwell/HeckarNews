@@ -1113,4 +1113,112 @@ module.exports = {
             };
         }
     },
+
+    getItemsBySiteDomain: async (domain, page, authUser) => {
+        if (!authUser.userSignedIn) {
+            /// GET ITEM BY SITE FOR A NON-SIGNED-IN USER
+            const [items, totalItemCount] = await Promise.all([
+                ItemModel.find({ domain: domain, dead: false })
+                    .sort({ _id: -1 })
+                    .skip((page - 1) * config.itemsPerPage)
+                    .limit(config.itemsPerPage)
+                    .lean(),
+                ItemModel.countDocuments({
+                    domain: domain,
+                    dead: false,
+                }).lean(),
+            ]);
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        } else {
+            /// GET ITEM BY SITE FOR A SIGNED-IN USER
+            const hiddenDocs = await UserHiddenModel.find({
+                username: authUser.username,
+            })
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfHiddenItems = [];
+
+            for (let i = 0; i < hiddenDocs.length; i++) {
+                arrayOfHiddenItems.push(hiddenDocs[i].id);
+            }
+
+            let itemsDbQuery = {
+                domain: domain,
+                id: {
+                    $nin: arrayOfHiddenItems,
+                },
+            };
+
+            if (!authUser.showDead) itemsDbQuery.dead = false;
+
+            const items = await ItemModel.find(itemsDbQuery)
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfItemIds = [];
+
+            for (let i = 0; i < items.length; i++) {
+                arrayOfItemIds.push(items[i].id);
+            }
+
+            const [userItemVoteDocs, totalItemCount] = await Promise.all([
+                UserVoteModel.find({
+                    username: authUser.username,
+                    id: { $in: arrayOfItemIds },
+                    type: "item",
+                }).lean(),
+                ItemModel.countDocuments(itemsDbQuery).lean(),
+            ]);
+
+            for (let i = 0; i < items.length; i++) {
+                // is item allowed to be edited or deleted?
+                if (items[i].by === authUser.username) {
+                    const hasEditAndDeleteExpired =
+                        items[i].created +
+                            3600 * config.hrsUntilEditAndDeleteExpires <
+                            moment().unix() || items[i].commentCount > 0;
+
+                    items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+                }
+
+                const voteDoc = userItemVoteDocs.find((voteDoc) => {
+                    return voteDoc.id === items[i].id;
+                });
+
+                if (voteDoc) {
+                    items[i].votedOnByUser = true;
+                    items[i].unvoteExpired =
+                        voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                        moment().unix()
+                            ? true
+                            : false;
+                }
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        }
+    },
 };

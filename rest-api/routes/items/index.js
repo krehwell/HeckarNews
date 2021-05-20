@@ -390,4 +390,28 @@ app.get("/items/get-ranked-ask-items-by-page", authUser, async (req, res) => {
     }
 });
 
+app.get("/items/get-items-by-site-domain", authUser, async (req, res) => {
+    try {
+        if (!req.query.domain || !req.query.page) {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+
+        const response = await api.getItemsBySiteDomain(
+            req.query.domain,
+            req.query.page,
+            res.locals
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        // console.log("ERR:", error);
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;
