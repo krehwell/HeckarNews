@@ -17,16 +17,22 @@ export default function User({
     notFoundError,
     goToString,
 }) {
-    const [state, setState] = useState({
-        aboutInputValue: userData ? userData.about : "",
-        emailInputValue: userData ? userData.email : "",
-        showDeadValue: userData && userData.showDead ? "yes" : "no",
-        loading: false,
+    const [aboutInputValue, setAboutInputValue] = useState(
+        userData ? userData.about : ""
+    );
+    const [emailInputValue, setEmailInputValue] = useState(
+        userData ? userData.email : ""
+    );
+    const [loading, setLoading] = useState(false);
+    const [showDeadValue, setShowDeadValue] = useState(
+        userData && userData.showDead ? "yes" : "no"
+    );
+    const [error, setError] = useState({
         submitError: false,
     });
 
     const updateAboutInputValue = (event) => {
-        setState({ ...state, aboutInputValue: event.target.value });
+        setAboutInputValue(event.target.value);
     };
 
     const setInitialTextareaHeight = () => {
@@ -40,33 +46,28 @@ export default function User({
     };
 
     const updateEmailInputValue = (event) => {
-        setState({ ...state, emailInputValue: event.target.value });
+        setEmailInputValue(event.target.value);
     };
 
     const updateShowDeadValue = (event) => {
-        setState({ ...state, showDeadValue: event.target.value });
+        setShowDeadValue(event.target.value);
     };
 
     const submitUpdateRequest = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        setState({ ...state, loading: true });
+        setLoading(true);
 
         const inputData = {
-            about: state.aboutInputValue,
-            email: state.emailInputValue,
-            showDead: state.showDeadValue === "yes" ? true : false,
+            about: aboutInputValue,
+            email: emailInputValue,
+            showDead: showDeadValue === "yes" ? true : false,
         };
 
-        // console.log("input data", inputData);
-
         updateUserData(inputData, (response) => {
+            setLoading(false);
             if (response.submitError) {
-                setState({
-                    ...state,
-                    loading: false,
-                    submitError: true,
-                });
+                setError({ submitError: true });
             } else {
                 window.location.href = "";
             }
@@ -156,7 +157,7 @@ export default function User({
                                                 rows={setInitialTextareaHeight()}
                                                 wrap="virtual"
                                                 type="text"
-                                                value={state.aboutInputValue}
+                                                value={aboutInputValue}
                                                 onChange={updateAboutInputValue}
                                             />
                                             <span className="user-item-about-help">
@@ -173,7 +174,7 @@ export default function User({
                                         <div className="user-item-content email">
                                             <input
                                                 type="text"
-                                                value={state.emailInputValue}
+                                                value={emailInputValue}
                                                 onChange={updateEmailInputValue}
                                             />
                                         </div>
@@ -186,7 +187,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content email">
                                             <select
-                                                value={state.showDeadValue}
+                                                value={showDeadValue}
                                                 onChange={updateShowDeadValue}>
                                                 <option value="no">no</option>
                                                 <option value="yes">yes</option>
@@ -310,9 +311,9 @@ export default function User({
                                             onClick={() =>
                                                 submitUpdateRequest()
                                             }
-                                        />
+                                        />{loading && <span> loading...</span>}
                                     </div>
-                                    {state.submitError ? (
+                                    {error.submitError ? (
                                         <div className="user-submit-error-msg">
                                             <span>An error occurred.</span>
                                         </div>
@@ -441,7 +442,7 @@ export async function getServerSideProps({ req, query }) {
         props: {
             username: query.id,
             userData: apiResult.user || {},
-            showPrivateUserData: apiResult && apiResult.showPrivateUserData,
+            showPrivateUserData: (apiResult && apiResult.showPrivateUserData) || false,
             authUserData:
                 apiResult && apiResult.authUser ? apiResult.authUser : {},
             getDataError: apiResult.getDataError || false,
