@@ -16,7 +16,7 @@ export default function Newest({
 }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata title="Newest Items | Coder News" />
+            <HeadMetadata title="Newest Items | HeckarNews" />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}

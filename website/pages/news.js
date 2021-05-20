@@ -17,7 +17,7 @@ export default function News({
 }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata title="Coder News" />
+            <HeadMetadata title="HeckarNews" />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
