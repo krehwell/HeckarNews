@@ -1,5 +1,3 @@
-import { Component } from "react";
-
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
