@@ -7,69 +7,62 @@ import authUser from "../api/users/authUser.js";
 import changePassword from "../api/users/changePassword.js";
 
 export default function ChangePw({ userContainsEmail, username }) {
-    const [state, setState] = useState({
-        currentInputValue: "",
-        newInputValue: "",
-        loading: false,
+    const [currentInputValue, setCurrentInputValue] = useState("");
+    const [newInputValue, setNewInputValue] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState({
         invalidCurrentPassword: false,
         newPasswordLengthError: false,
         submitError: false,
     });
 
     const updateCurrentInputValue = (event) => {
-        setState({ ...state, currentInputValue: event.target.value });
+        setCurrentInputValue(event.target.value);
     };
 
     const updateNewInputValue = (event) => {
-        setState({ ...state, newInputValue: event.target.value });
+        setNewInputValue(event.target.value);
     };
 
     const submitRequest = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        const currentPassword = state.currentInputValue;
-        const newPassword = state.newInputValue;
+        const currentPassword = currentInputValue;
+        const newPassword = newInputValue;
 
         if (!currentPassword) {
-            setState({
-                ...state,
+            setError({
                 invalidCurrentPassword: true,
                 newPasswordLengthError: false,
                 submitError: false,
             });
         } else if (newPassword.length < 8) {
-            setState({
-                ...state,
+            setError({
                 invalidCurrentPassword: false,
                 newPasswordLengthError: true,
                 submitError: false,
             });
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             changePassword(currentPassword, newPassword, (response) => {
+                setLoading(false);
                 if (response.authError) {
                     window.location.href = "/login?goto=changepw";
                 } else if (response.newPasswordLengthError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         invalidCurrentPassword: false,
                         newPasswordLengthError: true,
                         submitError: false,
                     });
                 } else if (response.invalidCurrentPassword) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         invalidCurrentPassword: true,
                         newPasswordLengthError: false,
                         submitError: false,
                     });
                 } else if (response.submitError || !response.success) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         invalidCurrentPassword: false,
                         newPasswordLengthError: false,
                         submitError: true,
@@ -91,7 +84,7 @@ export default function ChangePw({ userContainsEmail, username }) {
                 {!userContainsEmail && (
                     <div className="changepw-error-msg">
                         <span>
-                            First, please put a valid email address in your
+                            First, please put a valid email address in your{" "}
                             <a href={`/user?id=${username}`}>profile</a>.
                             Otherwise you could lose your account if you mistype
                             your new password.
@@ -100,17 +93,17 @@ export default function ChangePw({ userContainsEmail, username }) {
                 )}
 
                 {/* ERROR INFO AREA */}
-                {state.invalidCurrentPassword ? (
+                {error.invalidCurrentPassword ? (
                     <div className="changepw-error-msg">
                         <span>Invalid current password.</span>
                     </div>
                 ) : null}
-                {state.newPasswordLengthError ? (
+                {error.newPasswordLengthError ? (
                     <div className="changepw-error-msg">
                         <span>Passwords should be at least 8 characters.</span>
                     </div>
                 ) : null}
-                {state.submitError ? (
+                {error.submitError ? (
                     <div className="changepw-error-msg">
                         <span>An error occurred.</span>
                     </div>
@@ -124,7 +117,7 @@ export default function ChangePw({ userContainsEmail, username }) {
                     <div className="changepw-input-item-input">
                         <input
                             type="password"
-                            value={state.currentInputValue}
+                            value={currentInputValue}
                             onChange={updateCurrentInputValue}
                         />
                     </div>
@@ -138,7 +131,7 @@ export default function ChangePw({ userContainsEmail, username }) {
                     <div className="changepw-input-item-input">
                         <input
                             type="password"
-                            value={state.newInputValue}
+                            value={newInputValue}
                             onChange={updateNewInputValue}
                         />
                     </div>
@@ -151,7 +144,7 @@ export default function ChangePw({ userContainsEmail, username }) {
                         value="Change"
                         onClick={() => submitRequest()}
                     />
-                    {state.loading && <span> loading...</span>}
+                    {loading && <span> loading...</span>}
                 </div>
             </div>
         </div>
