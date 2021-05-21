@@ -370,7 +370,7 @@ app.get("/items/get-newest-show-items-by-page", authUser, async (req, res) => {
 app.get("/items/get-ranked-ask-items-by-page", authUser, async (req, res) => {
     try {
         if (!req.query.page) {
-            res.json({ getDataError: true, authUser: res.locals });
+            throw { getDataError: true, authUser: res.locals };
         }
 
         const response = await api.getRankedAskItemsByPage(
@@ -393,7 +393,7 @@ app.get("/items/get-ranked-ask-items-by-page", authUser, async (req, res) => {
 app.get("/items/get-items-by-site-domain", authUser, async (req, res) => {
     try {
         if (!req.query.domain || !req.query.page) {
-            res.json({ getDataError: true, authUser: res.locals });
+            throw { getDataError: true, authUser: res.locals };
         }
 
         const response = await api.getItemsBySiteDomain(
@@ -417,7 +417,7 @@ app.get("/items/get-items-by-site-domain", authUser, async (req, res) => {
 app.get("/items/get-items-submitted-by-user", authUser, async (req, res) => {
     try {
         if (!req.query.userId || !req.query.page) {
-            res.json({ getDataError: true, authUser: res.locals });
+            throw { getDataError: true, authUser: res.locals };
         }
 
         const response = await api.getItemsSubmittedByUser(
@@ -440,8 +440,8 @@ app.get("/items/get-items-submitted-by-user", authUser, async (req, res) => {
 
 app.get("/items/get-ranked-items-by-day", authUser, async (req, res) => {
     try {
-        if (!req.query.userId || !req.query.page) {
-            res.json({ getDataError: true, authUser: res.locals });
+        if (!req.query.day || !req.query.page) {
+            throw { getDataError: true, authUser: res.locals };
         }
 
         const response = await api.getRankedItemsByDay(
@@ -452,7 +452,6 @@ app.get("/items/get-ranked-items-by-day", authUser, async (req, res) => {
         response.authUser = res.locals;
         res.json(response);
     } catch (error) {
-        // console.log("ERR:", error);
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
             res.json(error);

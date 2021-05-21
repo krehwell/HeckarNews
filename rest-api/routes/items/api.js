@@ -1441,7 +1441,7 @@ module.exports = {
                 }
 
                 // user has voted this item?
-                const voteDoc = userItemVoteDocs.find(function (voteDoc) {
+                const voteDoc = userItemVoteDocs.find((voteDoc) => {
                     return voteDoc.id === items[i].id;
                 });
 
