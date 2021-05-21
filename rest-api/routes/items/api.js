@@ -1221,4 +1221,117 @@ module.exports = {
             };
         }
     },
+
+    getItemsSubmittedByUser: async (userId, page, authUser) => {
+        if (!authUser.userSignedIn) {
+            /// GET SUBMITTED ITEM IF USER NOT LOGGED IN
+            const [items, totalItemCount] = await Promise.all([
+                ItemModel.find({ by: userId, dead: false })
+                    .sort({ _id: -1 })
+                    .skip((page - 1) * config.itemsPerPage)
+                    .limit(config.itemsPerPage)
+                    .lean(),
+                ItemModel.countDocuments({ by: userId, dead: false }).lean(),
+            ]);
+
+            for (i = 0; i < items.length; i++) {
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        } else {
+            /// GET SUBMITTED ITEM IF USER LOGGED IN
+            const hiddenDocs = await UserHiddenModel.find({
+                username: authUser.username,
+            })
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfHiddenItems = [];
+
+            for (let i = 0; i < hiddenDocs.length; i++) {
+                arrayOfHiddenItems.push(hiddenDocs[i].id);
+            }
+
+            let itemsDbQuery = {
+                by: userId,
+                id: {
+                    $nin: arrayOfHiddenItems,
+                },
+            };
+
+            if (!authUser.showDead) itemsDbQuery.dead = false;
+
+            const items = await ItemModel.find(itemsDbQuery)
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfItemIds = [];
+
+            for (let i = 0; i < items.length; i++) {
+                arrayOfItemIds.push(items[i].id);
+            }
+
+            const [userItemVoteDocs, totalItemCount] = await Promise.all([
+                UserVoteModel.find({
+                    username: authUser.username,
+                    id: { $in: arrayOfItemIds },
+                    type: "item",
+                }).lean(),
+                ItemModel.countDocuments(itemsDbQuery).lean(),
+            ]);
+
+            for (let i = 0; i < items.length; i++) {
+                // rank each item
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+
+                // item allow edit or deleted?
+                if (items[i].by === authUser.username) {
+                    const hasEditAndDeleteExpired =
+                        items[i].created +
+                            3600 * config.hrsUntilEditAndDeleteExpires <
+                            moment().unix() || items[i].commentCount > 0;
+
+                    items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+                }
+
+                // user has voted it?
+                const voteDoc = userItemVoteDocs.find((voteDoc) => {
+                    return voteDoc.id === items[i].id;
+                });
+
+                if (voteDoc) {
+                    items[i].votedOnByUser = true;
+                    items[i].unvoteExpired =
+                        voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                        moment().unix()
+                            ? true
+                            : false;
+                }
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        }
+    },
 };
