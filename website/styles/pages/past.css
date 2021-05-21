@@ -1,0 +1,23 @@
+.past-items-top-header,
+.past-items-bottom-header {
+    margin-top: 10px;
+    margin-left: 47.5px;
+    color: #828282;
+    font-size: 13.5px;
+}
+
+.past-items-bottom-header {
+    margin-bottom: 15px;
+}
+
+.past-items-bottom-header a {
+    text-decoration: underline;
+    color: #828282;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .past-items-top-header,
+    .past-items-bottom-header {
+        margin-left: 52.5px;
+    }
+}
