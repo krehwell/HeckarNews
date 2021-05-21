@@ -1,0 +1,57 @@
+.favorites-top-links {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    color: #828282;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.favorites-top-links.items {
+    margin-left: 47.5px;
+}
+
+.favorites-top-links.comments {
+    margin-left: 20px;
+}
+
+.favorites-top-links span.active a,
+.favorites-top-links span.active a:visited {
+    color: rgb(0, 0, 0);
+}
+
+.favorites-top-links a,
+.favorites-top-links a:visited {
+    text-decoration: none;
+    color: #828282;
+}
+
+.favorites-none-found-msg {
+    font-size: 13.5px;
+    color: #828282;
+    margin-bottom: 10px;
+}
+
+.favorites-none-found-msg.items {
+    margin-left: 47.5px;
+}
+
+.favorites-none-found-msg.comments {
+    margin-left: 20px;
+}
+
+.favorites-none-found-msg p {
+    margin-bottom: 15px;
+}
+
+.favorites-error-msg {
+    margin: 8px;
+    color: #828282;
+    font-size: 13.5px;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .favorites-top-links.items,
+    .favorites-none-found-msg.items {
+        margin-left: 52.5px;
+    }
+}

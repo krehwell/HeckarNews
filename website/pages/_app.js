@@ -18,6 +18,7 @@ import "../styles/pages/edit-item.css";
 import "../styles/pages/delete-item.css";
 import "../styles/pages/show.css";
 import "../styles/pages/past.css";
+import "../styles/pages/favorites.css";
 
 export default function MyApp({ Component, pageProps }) {
     return <Component {...pageProps} />;
