@@ -1030,14 +1030,12 @@ module.exports = {
                 .lean()
                 .exec();
 
-            // collect each item id to retrieve user upvote next
             let arrayOfHiddenItems = [];
 
             for (let i = 0; i < hiddenDocs.length; i++) {
                 arrayOfHiddenItems.push(hiddenDocs[i].id);
             }
 
-            // query to get the item with type ask
             let itemsDbQuery = {
                 type: "ask",
                 created: {
@@ -1146,7 +1144,6 @@ module.exports = {
                 .lean()
                 .exec();
 
-            // collect each item id to retrieve user upvote next
             let arrayOfHiddenItems = [];
 
             for (let i = 0; i < hiddenDocs.length; i++) {
@@ -1255,7 +1252,6 @@ module.exports = {
                 .lean()
                 .exec();
 
-            // collect each item id to retrieve user upvote next
             let arrayOfHiddenItems = [];
 
             for (let i = 0; i < hiddenDocs.length; i++) {
@@ -1383,14 +1379,12 @@ module.exports = {
                 .lean()
                 .exec();
 
-            // collect each item id to retrieve user upvote next
             let arrayOfHiddenItems = [];
 
             for (let i = 0; i < hiddenDocs.length; i++) {
                 arrayOfHiddenItems.push(hiddenDocs[i].id);
             }
 
-            // query to get the item with type ask
             let itemsDbQuery = {
                 created: {
                     $gte: startTimestamp,
@@ -1460,6 +1454,122 @@ module.exports = {
                 items: items,
                 isMore:
                     totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        }
+    },
+
+    getUserFavoritedItemsByPage: async (username, page, authUser) => {
+        const user = await UserModel.findOne({ username: username });
+
+        if (!user) {
+            throw { notFoundError: true };
+        }
+
+        const [
+            userFavoriteItemsDocs,
+            totalFavoriteItemsCount,
+        ] = await Promise.all([
+            UserFavoriteModel.find({ username: username, type: "item" })
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
+                .lean(),
+            UserFavoriteModel.countDocuments({
+                username: username,
+                type: "item",
+            }).lean(),
+        ]);
+
+        // get items
+        let arrayOfItemIds = [];
+
+        for (i = 0; i < userFavoriteItemsDocs.length; i++) {
+            arrayOfItemIds.push(userFavoriteItemsDocs[i].id);
+        }
+
+        let itemsDbQuery = {
+            id: {
+                $in: arrayOfItemIds,
+            },
+        };
+
+        if (!authUser.showDead) itemsDbQuery.dead = false;
+
+        const items = await ItemModel.aggregate([
+            {
+                $match: itemsDbQuery,
+            },
+            {
+                $addFields: {
+                    __order: {
+                        $indexOfArray: [arrayOfItemIds, "$id"],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    __order: 1,
+                },
+            },
+        ]).exec();
+
+        for (i = 0; i < items.length; i++) {
+            items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+        }
+
+        if (!authUser.userSignedIn) {
+            /// GET USER FAVORITE ITEMS FOR NON-SIGNED-IN USER
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalFavoriteItemsCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        } else {
+            /// GET USER FAVORITE ITEMS FOR SIGNED-IN USER
+            const userItemVoteDocs = await UserVoteModel.find({
+                username: authUser.username,
+                id: { $in: arrayOfItemIds },
+                type: "item",
+            })
+                .lean()
+                .exec();
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].by === authUser.username) {
+                    const hasEditAndDeleteExpired =
+                        items[i].created +
+                            3600 * config.hrsUntilEditAndDeleteExpires <
+                            moment().unix() || items[i].commentCount > 0;
+
+                    items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+                }
+
+                const voteDoc = userItemVoteDocs.find(function (voteDoc) {
+                    return voteDoc.id === items[i].id;
+                });
+
+                if (voteDoc) {
+                    items[i].votedOnByUser = true;
+                    items[i].unvoteExpired =
+                        voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                        moment().unix()
+                            ? true
+                            : false;
+                }
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalFavoriteItemsCount >
                     (page - 1) * config.itemsPerPage + config.itemsPerPage
                         ? true
                         : false,

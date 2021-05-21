@@ -461,4 +461,31 @@ app.get("/items/get-ranked-items-by-day", authUser, async (req, res) => {
     }
 });
 
+app.get(
+    "/items/get-user-favorited-items-by-page",
+    authUser,
+    async (req, res) => {
+        try {
+            if (!req.query.userId || !req.query.page) {
+                throw { getDataError: true, authUser: res.locals };
+            }
+
+            const response = await api.getUserFavoritedItemsByPage(
+                req.query.userId,
+                req.query.page,
+                res.locals
+            );
+            response.authUser = res.locals;
+            res.json(response);
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                error.authUser = res.locals;
+                res.json(error);
+            } else {
+                res.json({ getDataError: true, authUser: res.locals });
+            }
+        }
+    }
+);
+
 module.exports = app;
