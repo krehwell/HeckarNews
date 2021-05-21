@@ -44,4 +44,8 @@ module.exports = {
             return "ask";
         }
     },
+
+    isValidDate: (dateString) => {
+        return validator.isISO8601(dateString);
+    },
 };

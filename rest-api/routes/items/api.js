@@ -1334,4 +1334,136 @@ module.exports = {
             };
         }
     },
+
+    getRankedItemsByDay: async (day, page, authUser) => {
+        const isValidDate = utils.isValidDate(day);
+        if (!isValidDate) {
+            throw { invalidDateError: true };
+        }
+
+        const startTimestamp = moment(day).startOf("day").unix();
+        const endTimestamp = moment(day).endOf("day").unix();
+
+        if (!authUser.userSignedIn) {
+            /// GET ITEM BY DAY FOR A NON-SIGNED-IN USER
+            const [items, totalItemCount] = await Promise.all([
+                ItemModel.find({
+                    created: { $gte: startTimestamp, $lte: endTimestamp },
+                    dead: false,
+                })
+                    .sort({ points: -1, _id: -1 })
+                    .skip((page - 1) * config.itemsPerPage)
+                    .limit(config.itemsPerPage)
+                    .lean(),
+                ItemModel.countDocuments({
+                    created: { $gte: startTimestamp, $lte: endTimestamp },
+                    dead: false,
+                }).lean(),
+            ]);
+
+            for (i = 0; i < items.length; i++) {
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        } else {
+            /// GET ITEM BY DAY FOR SIGNED-IN USER
+            const hiddenDocs = await UserHiddenModel.find({
+                username: authUser.username,
+                itemCreationDate: { $gte: startTimestamp, $lte: endTimestamp },
+            })
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfHiddenItems = [];
+
+            for (let i = 0; i < hiddenDocs.length; i++) {
+                arrayOfHiddenItems.push(hiddenDocs[i].id);
+            }
+
+            // query to get the item with type ask
+            let itemsDbQuery = {
+                created: {
+                    $gte: startTimestamp,
+                    $lte: endTimestamp,
+                },
+                id: {
+                    $nin: arrayOfHiddenItems,
+                },
+            };
+
+            if (!authUser.showDead) itemsDbQuery.dead = false;
+
+            const items = await ItemModel.find(itemsDbQuery)
+                .sort({ points: -1, _id: -1 })
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
+                .lean()
+                .exec();
+
+            // collect each item id to retrieve user upvote next
+            let arrayOfItemIds = [];
+
+            for (let i = 0; i < items.length; i++) {
+                arrayOfItemIds.push(items[i].id);
+            }
+
+            const [userItemVoteDocs, totalItemCount] = await Promise.all([
+                UserVoteModel.find({
+                    username: authUser.username,
+                    id: { $in: arrayOfItemIds },
+                    type: "item",
+                }).lean(),
+                ItemModel.countDocuments(itemsDbQuery).lean(),
+            ]);
+
+            for (let i = 0; i < items.length; i++) {
+                // assign rank to each item
+                items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+
+                // is item allowed to be edited or deleted?
+                if (items[i].by === authUser.username) {
+                    const hasEditAndDeleteExpired =
+                        items[i].created +
+                            3600 * config.hrsUntilEditAndDeleteExpires <
+                            moment().unix() || items[i].commentCount > 0;
+
+                    items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+                }
+
+                // user has voted this item?
+                const voteDoc = userItemVoteDocs.find(function (voteDoc) {
+                    return voteDoc.id === items[i].id;
+                });
+
+                if (voteDoc) {
+                    items[i].votedOnByUser = true;
+                    items[i].unvoteExpired =
+                        voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                        moment().unix()
+                            ? true
+                            : false;
+                }
+            }
+
+            return {
+                success: true,
+                items: items,
+                isMore:
+                    totalItemCount >
+                    (page - 1) * config.itemsPerPage + config.itemsPerPage
+                        ? true
+                        : false,
+            };
+        }
+    },
 };

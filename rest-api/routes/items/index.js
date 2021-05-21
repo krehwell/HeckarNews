@@ -428,7 +428,31 @@ app.get("/items/get-items-submitted-by-user", authUser, async (req, res) => {
         response.authUser = res.locals;
         res.json(response);
     } catch (error) {
-        console.log("ERR:", error);
+        // console.log("ERR:", error);
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
+app.get("/items/get-ranked-items-by-day", authUser, async (req, res) => {
+    try {
+        if (!req.query.userId || !req.query.page) {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+
+        const response = await api.getRankedItemsByDay(
+            req.query.day,
+            req.query.page,
+            res.locals
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        // console.log("ERR:", error);
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
             res.json(error);
