@@ -488,4 +488,32 @@ app.get(
     }
 );
 
+app.get("/items/get-user-hidden-items-by-page", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.query.page) {
+            throw { getDataError: true, authUser: res.locals };
+        }
+
+        const response = await api.getUserHiddenItemsByPage(
+            req.query.page,
+            res.locals,
+            function (response) {
+                response.authUser = res.locals;
+                res.json(response);
+            }
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;

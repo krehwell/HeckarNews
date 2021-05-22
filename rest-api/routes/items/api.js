@@ -1551,7 +1551,7 @@ module.exports = {
                     items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
                 }
 
-                const voteDoc = userItemVoteDocs.find(function (voteDoc) {
+                const voteDoc = userItemVoteDocs.find((voteDoc) => {
                     return voteDoc.id === items[i].id;
                 });
 
@@ -1575,5 +1575,101 @@ module.exports = {
                         : false,
             };
         }
+    },
+
+    getUserHiddenItemsByPage: async (page, authUser) => {
+        const hiddenDocs = await UserHiddenModel.find({
+            username: authUser.username,
+        })
+            .sort({ _id: -1 })
+            .skip((page - 1) * config.itemsPerPage)
+            .limit(config.itemsPerPage)
+            .lean()
+            .exec();
+
+        if (!hiddenDocs) {
+            throw { success: true, items: [], isMore: false };
+        }
+
+        let arrayOfItemIds = [];
+
+        for (i = 0; i < hiddenDocs.length; i++) {
+            arrayOfItemIds.push(hiddenDocs[i].id);
+        }
+
+        let itemsDbQuery = {
+            id: {
+                $in: arrayOfItemIds,
+            },
+        };
+
+        if (!authUser.showDead) itemsDbQuery.dead = false;
+
+        const items = await ItemModel.aggregate([
+            {
+                $match: itemsDbQuery,
+            },
+            {
+                $addFields: {
+                    __order: {
+                        $indexOfArray: [arrayOfItemIds, "$id"],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    __order: 1,
+                },
+            },
+        ]);
+
+        const [userItemVoteDocs, totalNumOfHiddenItems] = await Promise.all([
+            UserVoteModel.find({
+                username: authUser.username,
+                id: { $in: arrayOfItemIds },
+                type: "item",
+            }).lean(),
+            UserHiddenModel.countDocuments({
+                username: authUser.username,
+            }).lean(),
+        ]);
+
+        for (let i = 0; i < items.length; i++) {
+            items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+
+            items[i].hiddenByUser = true;
+
+            if (items[i].by === authUser.username) {
+                const hasEditAndDeleteExpired =
+                    items[i].created +
+                        3600 * config.hrsUntilEditAndDeleteExpires <
+                        moment().unix() || items[i].commentCount > 0;
+
+                items[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+            }
+
+            const voteDoc = userItemVoteDocs.find((voteDoc) => {
+                return voteDoc.id === items[i].id;
+            });
+
+            if (voteDoc) {
+                items[i].votedOnByUser = true;
+                items[i].unvoteExpired =
+                    voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                    moment().unix()
+                        ? true
+                        : false;
+            }
+        }
+
+        return {
+            success: true,
+            items: items,
+            isMore:
+                totalNumOfHiddenItems >
+                (page - 1) * config.itemsPerPage + config.itemsPerPage
+                    ? true
+                    : false,
+        };
     },
 };
