@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import upvoteItem from "../api/items/upvoteItem.js";
 import unvoteItem from "../api/items/unvoteItem.js";
@@ -201,25 +202,27 @@ export default function ItemsList({
                                           {/* ITEM TITLE, URL | CONTENT */}
                                           <td>
                                               <span className="listed-item-title">
-                                                  <a
+                                                  <Link
                                                       href={
                                                           item.url
                                                               ? item.url
                                                               : `/item?id=${item.id}`
                                                       }>
-                                                      {item.dead
-                                                          ? "[dead] "
-                                                          : null}
-                                                      {item.title}
-                                                  </a>
+                                                      <a>
+                                                          {item.dead
+                                                              ? "[dead] "
+                                                              : null}
+                                                          {item.title}
+                                                      </a>
+                                                  </Link>
                                               </span>
                                               {item.url ? (
                                                   <span className="listed-item-domain">
                                                       (
-                                                      <a
+                                                      <Link
                                                           href={`/from?site=${item.domain}`}>
                                                           {item.domain}
-                                                      </a>
+                                                      </Link>
                                                       )
                                                   </span>
                                               ) : null}
@@ -242,20 +245,20 @@ export default function ItemsList({
                                               <span>
                                                   {" "}
                                                   by{" "}
-                                                  <a
+                                                  <Link
                                                       href={`/user?id=${item.by}`}>
                                                       {item.by}
-                                                  </a>{" "}
+                                                  </Link>{" "}
                                               </span>
 
                                               {/* CREATED TIME */}
                                               <span className="listed-item-time">
-                                                  <a
+                                                  <Link
                                                       href={`/item?id=${item.id}`}>
                                                       {renderCreatedTime(
                                                           item.created
                                                       )}
-                                                  </a>{" "}
+                                                  </Link>{" "}
                                               </span>
 
                                               {/* SHOW LINK */}
@@ -263,10 +266,10 @@ export default function ItemsList({
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <a
+                                                          <Link
                                                               href={`/search?q=${item.title}`}>
                                                               past
-                                                          </a>
+                                                          </Link>
                                                       </span>
                                                   </>
                                               ) : null}
@@ -274,10 +277,10 @@ export default function ItemsList({
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <a
+                                                          <Link
                                                               href={`https://www.google.com/search?q=${item.title}`}>
                                                               web
-                                                          </a>
+                                                          </Link>
                                                       </span>
                                                   </>
                                               ) : null}
@@ -357,10 +360,10 @@ export default function ItemsList({
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <a
+                                                          <Link
                                                               href={`/edit-item?id=${item.id}`}>
                                                               edit
-                                                          </a>
+                                                          </Link>
                                                       </span>
                                                   </>
                                               ) : null}
@@ -372,14 +375,14 @@ export default function ItemsList({
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <a
+                                                          <Link
                                                               href={`/delete-item?id=${
                                                                   item.id
                                                               }&goto=${encodeURIComponent(
                                                                   goToString
                                                               )}`}>
                                                               delete
-                                                          </a>
+                                                          </Link>
                                                       </span>
                                                   </>
                                               ) : null}
@@ -391,27 +394,29 @@ export default function ItemsList({
                                                           <>
                                                               <span> | </span>
                                                               <span className="listed-item-comments">
-                                                                  <a
+                                                                  <Link
                                                                       href={`/item?id=${item.id}`}>
-                                                                      {item.commentCount.toLocaleString(
-                                                                          "en"
-                                                                      )}{" "}
-                                                                      comment
-                                                                      {item.commentCount >
-                                                                      1
-                                                                          ? "s"
-                                                                          : null}
-                                                                  </a>
+                                                                      <a>
+                                                                          {item.commentCount.toLocaleString(
+                                                                              "en"
+                                                                          )}{" "}
+                                                                          comment{" "}
+                                                                          {item.commentCount >
+                                                                          1
+                                                                              ? "s"
+                                                                              : null}
+                                                                      </a>
+                                                                  </Link>
                                                               </span>
                                                           </>
                                                       ) : (
                                                           <>
                                                               <span> | </span>
                                                               <span className="listed-item-comments">
-                                                                  <a
+                                                                  <Link
                                                                       href={`/item?id=${item.id}`}>
                                                                       discuss
-                                                                  </a>
+                                                                  </Link>
                                                               </span>
                                                           </>
                                                       )}
@@ -433,9 +438,9 @@ export default function ItemsList({
                             ? "listed-item-more"
                             : "listed-item-more hide-rank"
                     }>
-                    <a href={isMoreLink}>
+                    <Link href={isMoreLink}>
                         <span>More</span>
-                    </a>
+                    </Link>
                 </div>
             ) : null}
         </>

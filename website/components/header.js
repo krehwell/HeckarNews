@@ -22,7 +22,9 @@ export default function Header({
                 <tr>
                     <td className="header-logo">
                         <Link href="/">
-                            <img src="/favicon.ico" />
+                            <a>
+                                <img src="/favicon.ico" />
+                            </a>
                         </Link>
                     </td>
                     <td className="header-links">
@@ -113,7 +115,7 @@ export default function Header({
                                                   encodeURIComponent(goto)
                                                 : ""
                                         }`}>
-                                        <span>login</span>
+                                        login
                                     </Link>
                                 </>
                             )}

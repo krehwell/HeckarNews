@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
+import Link from "next/link";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -161,7 +162,7 @@ export default function User({
                                                 onChange={updateAboutInputValue}
                                             />
                                             <span className="user-item-about-help">
-                                                <a href="/formatdoc">help</a>
+                                                <Link href="/formatdoc">help</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -202,9 +203,9 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a href="/changepw">
+                                                <Link href="/changepw">
                                                     change password
-                                                </a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>
@@ -216,10 +217,10 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/submitted?id=${username}`}>
                                                     submissions
-                                                </a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>
@@ -231,10 +232,10 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/threads?id=${username}`}>
                                                     comments
-                                                </a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>
@@ -246,7 +247,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a href={`/hidden`}>hidden</a>
+                                                <Link href={`/hidden`}>hidden</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -258,17 +259,17 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/upvoted?id=${username}`}>
                                                     upvoted items
-                                                </a>
+                                                </Link>
                                             </span>
                                             <span> / </span>
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/upvoted?id=${username}&comments=t`}>
                                                     comments
-                                                </a>
+                                                </Link>
                                             </span>
                                             <span>
                                                 {" "}
@@ -284,17 +285,17 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/favorites?id=${username}`}>
                                                     favorite items
-                                                </a>
+                                                </Link>
                                             </span>
                                             <span> / </span>
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/favorites?id=${username}&comments=t`}>
                                                     comments
-                                                </a>
+                                                </Link>
                                             </span>
                                             <span>
                                                 {" "}
@@ -378,10 +379,10 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/submitted?id=${username}`}>
                                                     submissions
-                                                </a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>
@@ -393,10 +394,10 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/threads?id=${username}`}>
                                                     comments
-                                                </a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>
@@ -408,10 +409,10 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <a
+                                                <Link
                                                     href={`/favorites?id=${username}`}>
                                                     favorites
-                                                </a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>

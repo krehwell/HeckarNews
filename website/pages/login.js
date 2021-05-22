@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
@@ -213,7 +214,7 @@ export default function Login({ goto }) {
             </div>
             <div className="login-input-item-forgot-text">
                 <span>
-                    <a href="/forgot">Forgot your Password?</a>
+                    <Link href="/forgot">Forgot your Password?</Link>
                 </span>
             </div>
 
