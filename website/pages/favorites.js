@@ -2,6 +2,7 @@ import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
+import Link from "next/link";
 
 import getUserFavoritedItemsByPage from "../api/items/getUserFavoritedItemsByPage.js";
 
@@ -45,15 +46,15 @@ export default function Favorites({
                                     : "favorites-top-links comments"
                             }>
                             <span className={showItems ? "active" : null}>
-                                <a href={`/favorites?id=${userId}`}>
+                                <Link href={`/favorites?id=${userId}`}>
                                     submissions
-                                </a>
+                                </Link>
                             </span>
                             <span> | </span>
                             <span className={showComments ? "active" : null}>
-                                <a href={`/favorites?id=${userId}&comments=t`}>
+                                <Link href={`/favorites?id=${userId}&comments=t`}>
                                     comments
-                                </a>
+                                </Link>
                             </span>
                         </div>
 
