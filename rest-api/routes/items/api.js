@@ -511,7 +511,7 @@ module.exports = {
             /// GET DATA FOR A NON-SIGNED-IN USER
             const [items, totalItemCount] = await Promise.all([
                 ItemModel.find({ created: { $gt: startDate }, dead: false })
-                    .sort({ points: -1, _id: -1 })
+                    .sort({ score: -1, _id: -1 })
                     .skip((page - 1) * config.itemsPerPage)
                     .limit(config.itemsPerPage)
                     .lean(),
@@ -564,7 +564,7 @@ module.exports = {
             if (!authUser.showDead) itemsDbQuery.dead = false;
 
             const items = await ItemModel.find(itemsDbQuery)
-                .sort({ points: -1, _id: -1 })
+                .sort({ score: -1, _id: -1 })
                 .skip((page - 1) * config.itemsPerPage)
                 .limit(config.itemsPerPage)
                 .lean()
@@ -753,7 +753,7 @@ module.exports = {
                     created: { $gte: startDate },
                     dead: false,
                 })
-                    .sort({ points: -1, _id: -1 })
+                    .sort({ score: -1, _id: -1 })
                     .skip((page - 1) * config.itemsPerPage)
                     .limit(config.itemsPerPage)
                     .lean(),
@@ -808,7 +808,7 @@ module.exports = {
             if (!authUser.showDead) itemsDbQuery.dead = false;
 
             const items = await ItemModel.find(itemsDbQuery)
-                .sort({ points: -1, _id: -1 })
+                .sort({ score: -1, _id: -1 })
                 .skip((page - 1) * config.itemsPerPage)
                 .limit(config.itemsPerPage)
                 .lean()
@@ -1001,7 +1001,7 @@ module.exports = {
                     created: { $gt: startDate },
                     dead: false,
                 })
-                    .sort({ points: -1, _id: -1 })
+                    .sort({ score: -1, _id: -1 })
                     .skip((page - 1) * config.itemsPerPage)
                     .limit(config.itemsPerPage)
                     .lean(),
@@ -1049,7 +1049,7 @@ module.exports = {
             if (!authUser.showDead) itemsDbQuery.dead = false;
 
             const items = await ItemModel.find(itemsDbQuery)
-                .sort({ points: -1, _id: -1 })
+                .sort({ score: -1, _id: -1 })
                 .skip((page - 1) * config.itemsPerPage)
                 .limit(config.itemsPerPage)
                 .lean()
