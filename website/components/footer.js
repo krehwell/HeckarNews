@@ -1,10 +1,11 @@
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Footer({}) {
     const [searchInputValue, setSearchInputValue] = useState("");
 
     const updateSearchInputValue = (event) => {
-        setSearchInputValue(event.target.value)
+        setSearchInputValue(event.target.value);
     };
 
     const listenForEnterKeyPress = (event) => {
@@ -17,25 +18,19 @@ export default function Footer({}) {
         <div className="footer-wrapper">
             <div className="footer-link-list">
                 <div className="footer-link-list-item">
-                    <a href="/newsguidelines">
-                        <span>Guidelines</span>
-                    </a>
+                    <Link href="/newsguidelines">Guidelines</Link>
                 </div>
                 <div className="footer-link-list-item">
                     <span>|</span>
                 </div>
                 <div className="footer-link-list-item">
-                    <a href="/newsfaq">
-                        <span>FAQ</span>
-                    </a>
+                    <Link href="/newsfaq">FAQ</Link>
                 </div>
                 <div className="footer-link-list-item">
                     <span>|</span>
                 </div>
                 <div className="footer-link-list-item">
-                    <a href="me@krehwell.com">
-                        <span>Contact</span>
-                    </a>
+                    <Link href="me@krehwell.com">Contact</Link>
                 </div>
             </div>
 

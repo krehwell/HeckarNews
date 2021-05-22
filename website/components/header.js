@@ -1,5 +1,6 @@
-import logoutUser from "../api/users/logoutUser";
 import Link from "next/link";
+
+import logoutUser from "../api/users/logoutUser";
 
 export default function Header({
     userSignedIn,
