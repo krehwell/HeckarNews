@@ -549,7 +549,7 @@ app.get("/items/get-user-upvoted-items-by-page", authUser, async (req, res) => {
 /// UPDATE ITEM SCORE EVERY X | 10 Minutes
 cron.schedule(`*/${config.updateScoreTimeScheduleInMinute} * * * *`, async () => {
     const response = await api.updateScoreForItems();
-    console.log("Cron Job Updating Item Score: ", response);
+    console.log("Cron Job Updating Item Score:", response);
 });
 
 module.exports = app;
