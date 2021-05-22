@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
@@ -82,17 +83,17 @@ export default function DeleteItem({
                                         </td>
                                         <td>
                                             <span className="delete-item-title">
-                                                <a href={item.url}>
+                                                <Link href={item.url}>
                                                     {item.title}
-                                                </a>
+                                                </Link>
                                             </span>
                                             {item.url ? (
                                                 <span className="delete-item-domain">
                                                     (
-                                                    <a
+                                                    <Link
                                                         href={`/from?site=${item.domain}`}>
                                                         {item.domain}
-                                                    </a>
+                                                    </Link>
                                                     )
                                                 </span>
                                             ) : null}
@@ -112,28 +113,28 @@ export default function DeleteItem({
                                             <span>
                                                 {" "}
                                                 by{" "}
-                                                <a href={`/user?id=${item.by}`}>
+                                                <Link href={`/user?id=${item.by}`}>
                                                     {item.by}
-                                                </a>{" "}
+                                                </Link>{" "}
                                             </span>
                                             <span className="delete-item-time">
-                                                <a href={`/item?id=${item.id}`}>
+                                                <Link href={`/item?id=${item.id}`}>
                                                     {renderCreatedTime(
                                                         item.created
                                                     )}
-                                                </a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
                                             <span className="delete-item-edit">
-                                                <a
+                                                <Link
                                                     href={`/edit-item?id=${item.id}`}>
                                                     edit
-                                                </a>
+                                                </Link>
                                             </span>
-                                            <span> | </span>
-                                            <span>
-                                                <a href="">delete</a>
-                                            </span>
+                                            {/* <span> | </span> */}
+                                            {/* <span> */}
+                                            {/*     <Link href="">delete</Link> */}
+                                            {/* </span> */}
                                         </td>
                                     </tr>
                                 </tbody>
