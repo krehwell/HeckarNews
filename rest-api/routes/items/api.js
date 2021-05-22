@@ -1749,4 +1749,44 @@ module.exports = {
                     : false,
         };
     },
+
+    /**
+     * Calculate Score is how to rank the item on /, /news, /show, /ask"
+     * score = (P - 1) / (T + 2)^G
+     * where:
+     * P = points the item has received from upvotes (the -1 negates the submitter's vote that is automatically applied to the item when it is created).
+     * T = amount of time that has passed since the item was created (in hours).
+     * G = gravity, which defaults to 1.8 in the Hacker News algorithm. This determines how fast an item will fall down the rankings as time passes.
+     * Step 1 - Query the database for items
+     *          Items must have the following qualities:
+     *          - Submitted in the past X amount of days.
+     *          - Points value greater than 1. Items that haven't been upvoted will automatically have a score of 0.
+     *          - Not dead (killed by a moderator). Killed items will automatically be removed from the rankings.
+     * Step 2 - Calculate the score for each item and save the item change to the database.
+     */
+    updateScoreForItems: async () => {
+        const startDate =
+            moment().unix() - 86400 * config.maxAgeOfRankedItemsInDays;
+
+        const items = await ItemModel.find({
+            created: { $gt: startDate },
+            points: { $gt: 1 },
+            dead: false,
+        }).exec();
+
+        // here is the implementation of the algorithm above
+        items.map(async (item) => {
+            const ageInHours = (moment().unix() - item.created) / 3600;
+
+            const gravity = config.scoreGravity;
+
+            const score = (item.points - 1) / Math.pow(ageInHours + 2, gravity);
+
+            item.score = score.toFixed(3);
+
+            const saveItem = await item.save();
+        });
+
+        return { success: true };
+    },
 };
