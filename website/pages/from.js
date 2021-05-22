@@ -59,7 +59,7 @@ export async function getServerSideProps({ req, query }) {
 
     return {
         props: {
-            items: (apiResult && apiResult.items) || {},
+            items: (apiResult && apiResult.items) || [],
             authUserData:
                 apiResult && apiResult.authUser ? apiResult.authUser : {},
             site: site || "",
