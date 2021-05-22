@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
@@ -236,22 +237,24 @@ export default function ItemComponent({
                         <td>
                             {/* IS ITEM DEAD? */}
                             <span className="item-title">
-                                <a
+                                <Link
                                     href={
                                         item.url
                                             ? item.url
                                             : `/item?id=${item.id}`
                                     }>
-                                    {item.dead ? "[dead] " : null}
-                                    {item.title}
-                                </a>
+                                    <a>
+                                        {item.dead ? "[dead] " : null}
+                                        {item.title}
+                                    </a>
+                                </Link>
                             </span>
                             {item.url ? (
                                 <span className="item-domain">
                                     (
-                                    <a href={`/from?site=${item.domain}`}>
+                                    <Link href={`/from?site=${item.domain}`}>
                                         {item.domain}
-                                    </a>
+                                    </Link>
                                     )
                                 </span>
                             ) : null}
@@ -268,14 +271,17 @@ export default function ItemComponent({
                             &nbsp;
                             {/* ITEM MADE BY */}
                             <span>
-                                by <a href={`/user?id=${item.by}`}>{item.by}</a>
+                                by{" "}
+                                <Link href={`/user?id=${item.by}`}>
+                                    {item.by}
+                                </Link>
                                 &nbsp;
                             </span>
                             {/* ITEM CREATED DATE */}
                             <span>
-                                <a href={`/item?id=${item.id}`}>
+                                <Link href={`/item?id=${item.id}`}>
                                     {renderCreatedTime(item.created)}
-                                </a>
+                                </Link>
                             </span>
                             {/* UNVOTE */}
                             {item.votedOnByUser &&
@@ -313,14 +319,16 @@ export default function ItemComponent({
                             {/* SEARCH SIMILAR ITEM */}
                             <span> | </span>
                             <span>
-                                <a href={`/search?q=${item.title}`}>past</a>
+                                <Link href={`/search?q=${item.title}`}>
+                                    past
+                                </Link>
                             </span>
                             <span> | </span>
                             <span>
-                                <a
+                                <Link
                                     href={`https://www.google.com/search?q=${item.title}`}>
                                     web
-                                </a>
+                                </Link>
                             </span>
                             {/* FAVORITE THIS ITEM? */}
                             {!item.favoritedByUser ? (
@@ -349,9 +357,9 @@ export default function ItemComponent({
                                 <>
                                     <span> | </span>
                                     <span className="item-edit">
-                                        <a href={`/edit-item?id=${item.id}`}>
+                                        <Link href={`/edit-item?id=${item.id}`}>
                                             edit
-                                        </a>
+                                        </Link>
                                     </span>
                                 </>
                             ) : null}
@@ -362,14 +370,14 @@ export default function ItemComponent({
                                 <>
                                     <span> | </span>
                                     <span className="item-delete">
-                                        <a
+                                        <Link
                                             href={`/delete-item?id=${
                                                 item.id
                                             }&goto=${encodeURIComponent(
                                                 goToString
                                             )}`}>
                                             delete
-                                        </a>
+                                        </Link>
                                     </span>
                                 </>
                             ) : null}
@@ -380,22 +388,26 @@ export default function ItemComponent({
                                         <>
                                             <span> | </span>
                                             <span className="item-comments">
-                                                <a href={`/item?id=${item.id}`}>
-                                                    {item.commentCount.toLocaleString()}{" "}
-                                                    comment
-                                                    {item.commentCount > 1
-                                                        ? "s"
-                                                        : null}
-                                                </a>
+                                                <Link
+                                                    href={`/item?id=${item.id}`}>
+                                                    <a>
+                                                        {item.commentCount.toLocaleString()}{" "}
+                                                        comment
+                                                        {item.commentCount > 1
+                                                            ? "s"
+                                                            : null}
+                                                    </a>
+                                                </Link>
                                             </span>
                                         </>
                                     ) : (
                                         <>
                                             <span> | </span>
                                             <span className="item-comments">
-                                                <a href={`/item?id=${item.id}`}>
+                                                <Link
+                                                    href={`/item?id=${item.id}`}>
                                                     discuss
-                                                </a>
+                                                </Link>
                                             </span>
                                         </>
                                     )}
