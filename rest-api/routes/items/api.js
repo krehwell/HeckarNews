@@ -1672,4 +1672,81 @@ module.exports = {
                     : false,
         };
     },
+
+    /**
+     * Get The User Upvote Items.
+     * User only can see his own upvote items.
+     * if User try to see other user's upvote, return { notAllowedError: true } from item routes
+     */
+    getUserUpvotedItemsByPage: async (page, authUser) => {
+        const [voteDocs, totalItemCount] = await Promise.all([
+            UserVoteModel.find({
+                username: authUser.username,
+                upvote: true,
+                type: "item",
+            })
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.itemsPerPage)
+                .limit(config.itemsPerPage)
+                .lean(),
+            UserVoteModel.countDocuments({
+                username: authUser.username,
+                upvote: true,
+                type: "item",
+            }).exec(),
+        ]);
+
+        let arrayOfItemIds = [];
+
+        for (i = 0; i < voteDocs.length; i++) {
+            arrayOfItemIds.push(voteDocs[i].id);
+        }
+
+        let itemsDbQuery = {
+            id: {
+                $in: arrayOfItemIds,
+            },
+        };
+
+        if (!authUser.showDead) itemsDbQuery.dead = false;
+
+        const items = await ItemModel.aggregate([
+            {
+                $match: itemsDbQuery,
+            },
+            {
+                $addFields: {
+                    __order: {
+                        $indexOfArray: [arrayOfItemIds, "$id"],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    __order: 1,
+                },
+            },
+        ]).exec();
+
+        for (i = 0; i < items.length; i++) {
+            items[i].rank = (page - 1) * config.itemsPerPage + (i + 1);
+
+            items[i].votedOnByUser = true;
+            items[i].unvoteExpired =
+                voteDocs[i].date + 3600 * config.hrsUntilUnvoteExpires <
+                moment().unix()
+                    ? true
+                    : false;
+        }
+
+        return {
+            success: true,
+            items: items,
+            isMore:
+                totalItemCount >
+                (page - 1) * config.itemsPerPage + config.itemsPerPage
+                    ? true
+                    : false,
+        };
+    },
 };
