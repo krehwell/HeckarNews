@@ -1,8 +1,5 @@
-/**
- * WARNING: NEVER PRETTIER THIS CODE!!!!
- */
-
 import logoutUser from "../api/users/logoutUser";
+import Link from "next/link";
 
 export default function Header({
     userSignedIn,
@@ -10,76 +7,119 @@ export default function Header({
     karma,
     goto,
     pageName,
-    label
+    label,
 }) {
-
     const requestLogout = () => {
         logoutUser(() => {
             window.location.reload();
         });
-    }
+    };
 
     return (
         <table className="header-wrapper">
             <tbody>
                 <tr>
                     <td className="header-logo">
-                        <a href="/">
+                        <Link href="/">
                             <img src="/favicon.ico" />
-                        </a>
+                        </Link>
                     </td>
                     <td className="header-links">
                         <span className="header-links-items">
                             <b className="header-links-name">
-                                <a href="/news">HeckarNews</a>
+                                <Link href="/news">HeckarNews</Link>
                             </b>
-                            <a className={pageName === "newest" ? "white-text" : null} href="/newest">new</a>
+                            <Link href="/newest">new</Link>
                             <span> | </span>
-                            {
-                                userSignedIn ?
-                                    <>
-                                        <a className={pageName === "threads" ? "white-text" : null} href={`/threads?id=${username}`}>threads</a>
-                                        <span> | </span>
-                                    </> : null
-                            }
-                            <a href="/past">past</a>
+                            {userSignedIn ? (
+                                <>
+                                    <Link
+                                        className={
+                                            pageName === "threads"
+                                                ? "white-text"
+                                                : null
+                                        }
+                                        href={`/threads?id=${username}`}>
+                                        threads
+                                    </Link>
+                                    <span> | </span>
+                                </>
+                            ) : null}
+                            <Link href="/past">past</Link>
                             <span> | </span>
-                            <a className={pageName === "newcomments" ? "white-text" : null} href="/newcomments">comments</a>
+                            <Link
+                                className={
+                                    pageName === "newcomments"
+                                        ? "white-text"
+                                        : null
+                                }
+                                href="/newcomments">
+                                comments
+                            </Link>
                             <span> | </span>
-                            <a className={pageName === "ask" ? "white-text" : null} href="/ask">ask</a>
+                            <Link
+                                className={
+                                    pageName === "ask" ? "white-text" : null
+                                }
+                                href="/ask">
+                                ask
+                            </Link>
                             <span> | </span>
-                            <a className={pageName === "show" ? "white-text" : null} href="/show">show</a>
+                            <Link
+                                className={
+                                    pageName === "show" ? "white-text" : null
+                                }
+                                href="/show">
+                                show
+                            </Link>
                             <span> | </span>
-                            <a className={pageName === "submit" ? "white-text" : null} href="/submit">submit</a>
-                            {
-                                label ?
-                                    <>
-                                        <span> | </span>
-                                        <span className="white-text">{label}</span>
-                                    </> : null
-                            }
+                            <Link
+                                className={
+                                    pageName === "submit" ? "white-text" : null
+                                }
+                                href="/submit">
+                                submit
+                            </Link>
+                            {label ? (
+                                <>
+                                    <span> | </span>
+                                    <span className="white-text">{label}</span>
+                                </>
+                            ) : null}
                         </span>
                     </td>
                     <td className="header-right-nav-links">
                         <span className="header-right-nav-links-items">
-                            {
-                                userSignedIn ?
-                                    <>
-                                        <a href={`/user?id=${username}`}>{username}</a>
-                                        <span> ({karma.toLocaleString()})</span>
-                                        <span> | </span>
-                                        <span className="header-logout" onClick={() => requestLogout()}>logout</span>
-                                    </> :
-                                    <>
-                                        <a href={`/login${goto ? "?goto=" + encodeURIComponent(goto) : ""}`}>
-                                            <span>login</span>
-                                        </a>
-                                    </>
-                            }
+                            {userSignedIn ? (
+                                <>
+                                    <Link href={`/user?id=${username}`}>
+                                        {username}
+                                    </Link>
+                                    <span> ({karma.toLocaleString()})</span>
+                                    <span> | </span>
+                                    <span
+                                        className="header-logout"
+                                        onClick={() => requestLogout()}>
+                                        logout
+                                    </span>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        href={`/login${
+                                            goto
+                                                ? "?goto=" +
+                                                  encodeURIComponent(goto)
+                                                : ""
+                                        }`}>
+                                        <span>login</span>
+                                    </Link>
+                                </>
+                            )}
                         </span>
                     </td>
                 </tr>
             </tbody>
         </table>
-    )
+    );
 }
