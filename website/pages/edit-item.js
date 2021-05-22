@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -137,22 +138,22 @@ export default function EditItem({
                                     </td>
                                     <td>
                                         <span className="edit-item-title">
-                                            <a
+                                            <Link
                                                 href={
                                                     item.url
                                                         ? item.url
                                                         : `/item?id=${item.id}`
                                                 }>
                                                 {item.title}
-                                            </a>
+                                            </Link>
                                         </span>
                                         {item.url ? (
                                             <span className="edit-item-domain">
                                                 (
-                                                <a
+                                                <Link
                                                     href={`/from?site=${item.domain}`}>
                                                     {item.domain}
-                                                </a>
+                                                </Link>
                                                 )
                                             </span>
                                         ) : null}
@@ -170,27 +171,27 @@ export default function EditItem({
                                         <span>
                                             {" "}
                                             by{" "}
-                                            <a href={`/user?id=${item.by}`}>
+                                            <Link href={`/user?id=${item.by}`}>
                                                 {item.by}
-                                            </a>{" "}
+                                            </Link>{" "}
                                         </span>
                                         <span className="edit-item-time">
-                                            <a href={`/item?id=${item.id}`}>
+                                            <Link href={`/item?id=${item.id}`}>
                                                 {renderCreatedTime(
                                                     item.created
                                                 )}
-                                            </a>
+                                            </Link>
                                         </span>
-                                        <span> | </span>
-                                        <span className="edit-item-edit">
-                                            <a href="">edit</a>
-                                        </span>
+                                        {/* <span> | </span> */}
+                                        {/* <span className="edit-item-edit"> */}
+                                        {/*     <Link href="">edit</Link> */}
+                                        {/* </span> */}
                                         <span> | </span>
                                         <span>
-                                            <a
+                                            <Link
                                                 href={`/delete-item?id=${item.id}`}>
                                                 delete
-                                            </a>
+                                            </Link>
                                         </span>
                                     </td>
                                 </tr>
