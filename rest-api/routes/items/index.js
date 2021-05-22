@@ -5,6 +5,7 @@ const app = express.Router();
 
 const api = require("./api.js");
 const authUser = require("../../middlewares/index.js").authUser;
+const config = require("../../config.js");
 
 /**
  * IMPORTANT: make sure to always send bad response from a known error
