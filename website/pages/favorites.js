@@ -24,8 +24,8 @@ export default function Favorites({
             <HeadMetadata
                 title={
                     !notFoundError
-                        ? `${userId}'s favorites | Coder News`
-                        : "Coder News"
+                        ? `${userId}'s favorites | HeckarNews`
+                        : "HeckarNews"
                 }
             />
             <Header
