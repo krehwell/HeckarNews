@@ -12,7 +12,7 @@ const config = {
 
     /// ITEM SCORE ALGORITHM CONFIGURATION
     scoreGravity: 1.8,
-    updateScoreTimeScheduleInMinute: 10
+    updateScoreTimeScheduleInMinute: 10,
 };
 
 module.exports = config;
