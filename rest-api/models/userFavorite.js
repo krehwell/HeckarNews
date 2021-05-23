@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
 
+/**
+ * @property username: the username of the user who favorite this item
+ * @property type: type of favorited item
+ * @property id: the id of the hidden item
+ * @property date: a UNIX timestamp that represents when the user set this item to be hidden
+ */
 const UserFavoriteSchema = new mongoose.Schema({
     username: {
         type: String,

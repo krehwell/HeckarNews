@@ -1,6 +1,19 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+/**
+ * @property username
+ * @property password
+ * @property authToken: user login information
+ * @property authTokenExpiration: expiration long of user token in UNIX timestamp
+ * @property resetPasswordToken: token email sent about reset password information
+ * @property resetPasswordTokenExpiration: expiration long of resetPasswordToken is valid
+ * @property email
+ * @property created: user created date in UNIX timestamp
+ * @property karma: user karma, calculated by number of vote user received
+ * @property about: user bio
+ * @property showDead: option to show/hide item has been killed by moderator
+ */
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -66,6 +79,10 @@ UserSchema.pre("save", function (next) {
     }
 });
 
+/**
+ * Compare the request password with the current user password
+ * @returns true on bcrypt.compareSync(req.password, user.password) is true;
+ */
 UserSchema.methods.comparePassword = async function (pw) {
     const passwordIsMatch = bcrypt.compareSync(pw, this.password)
 
