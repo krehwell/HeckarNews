@@ -5,7 +5,14 @@ const app = express.Router();
 const api = require("./api.js");
 const authUser = require("../../middlewares/index.js").authUser;
 
+/**
+ * IMPORTANT: make sure to always send bad response from a known error
+ *            catch error and return to be a suitable response instead
+ * @param error, expected type to be a object {userNotFoundError: true}, etc.
+ * else @returns/response {submitError: true}
+ */
 /// COMMENT ENDPOINT
+
 app.post("/comments/add-new-comment", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn) {

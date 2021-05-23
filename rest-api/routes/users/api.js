@@ -8,7 +8,7 @@ const config = require("../../config.js");
 const UserModel = require("../../models/user.js");
 const emailApi = require("../emails/api.js");
 
-// API FUNCTIONS
+// USER API
 module.exports = {
     createNewUser: async (username, password) => {
         if (username.length < 2 || password.length > 15) {

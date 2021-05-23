@@ -13,7 +13,7 @@ const authUser = require("../../middlewares/index.js").authUser;
  * @param error, expected type to be a object {userNotFoundError: true}, etc.
  * else @returns/response {submitError: true}
  */
-/// USER API ENDPOINT GOES HERE
+/// USER ENDPOINT
 
 app.post("/users/create-new-user", async (req, res) => {
     try {
