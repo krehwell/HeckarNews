@@ -9,6 +9,7 @@ import favoriteItem from "../api/items/favoriteItem.js";
 import unfavoriteItem from "../api/items/unfavoriteItem.js";
 import hideItem from "../api/items/hideItem.js";
 import unhideItem from "../api/items/unhideItem.js";
+import addNewComment from "../api/comments/addNewComment.js";
 
 export default function ItemComponent({
     item,
@@ -16,7 +17,7 @@ export default function ItemComponent({
     goToString,
     userSignedIn,
 }) {
-    const [state, setState] = useState({ loading: false });
+    const [loading, setLoading] = useState(false);
     const [numOfVote, setNumOfVote] = useState(item.points);
     const [commentInputValue, setCommentInputValue] = useState("");
     const [error, setError] = useState({
@@ -26,14 +27,14 @@ export default function ItemComponent({
     });
 
     const requestUpvoteItem = () => {
-        if (state.loading) return;
+        if (loading) return;
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
                 goToString
             )}`;
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             item.votedOnByUser = true;
 
@@ -43,7 +44,7 @@ export default function ItemComponent({
                         goToString
                     )}`;
                 } else {
-                    setState({ ...state, loading: false });
+                    setLoading(false);
                     setNumOfVote(numOfVote + 1);
                 }
             });
@@ -51,14 +52,14 @@ export default function ItemComponent({
     };
 
     const requestUnvoteItem = () => {
-        if (state.loading) return;
+        if (loading) return;
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
                 goToString
             )}`;
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             item.votedOnByUser = false;
 
@@ -68,7 +69,7 @@ export default function ItemComponent({
                         goToString
                     )}`;
                 } else {
-                    setState({ ...state, loading: false });
+                    setLoading(false);
                     setNumOfVote(numOfVote - 1);
                 }
             });
@@ -76,14 +77,14 @@ export default function ItemComponent({
     };
 
     const requestFavoriteItem = () => {
-        if (state.loading) return;
+        if (loading) return;
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
                 goToString
             )}`;
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             favoriteItem(item.id, (response) => {
                 if (response.authError) {
@@ -100,14 +101,14 @@ export default function ItemComponent({
     };
 
     const requestUnfavoriteItem = () => {
-        if (state.loading) return;
+        if (loading) return;
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
                 goToString
             )}`;
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             unfavoriteItem(item.id, (response) => {
                 if (response.authError) {
@@ -124,14 +125,14 @@ export default function ItemComponent({
     };
 
     const requestHideItem = () => {
-        if (state.loading) return;
+        if (loading) return;
 
         if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
                 goToString
             )}`;
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             item.hiddenByUser = true;
 
@@ -143,16 +144,16 @@ export default function ItemComponent({
                 } else if (!response.success) {
                     window.location.href = "";
                 } else {
-                    setState({ ...state, loading: false });
+                    setLoading(false);
                 }
             });
         }
     };
 
     const requestUnhideItem = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        setState({ ...state, loading: true });
+        setLoading(true);
 
         item.hiddenByUser = false;
 
@@ -164,7 +165,7 @@ export default function ItemComponent({
             } else if (!response.success) {
                 window.location.href = "";
             } else {
-                setState({ ...state, loading: false });
+                setLoading(false);
             }
         });
     };
@@ -174,28 +175,26 @@ export default function ItemComponent({
     };
 
     const requestAddNewComment = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        if (userSignedIn) {
+        if (!userSignedIn) {
             window.location.href = `/login?goto=${encodeURIComponent(
                 goToString
             )}`;
         } else if (!commentInputValue) {
             setError({
-                ...error,
                 commentTextRequiredError: true,
                 commentTextTooLongError: false,
                 commentSubmitError: false,
             });
         } else if (commentInputValue.length > 5000) {
             setError({
-                ...error,
                 commentTextRequiredError: false,
                 commentTextTooLongError: true,
                 commentSubmitError: false,
             });
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
             const commentData = {
                 parentItemId: item.id,
@@ -204,7 +203,34 @@ export default function ItemComponent({
                 text: commentInputValue,
             };
 
-            // call to the REST API goes here
+            addNewComment(commentData, (response) => {
+                setLoading(false);
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(
+                        goToString
+                    )}`;
+                } else if (response.textRequiredError) {
+                    setError({
+                        commentTextRequiredError: true,
+                        commentTextTooLongError: false,
+                        commentSubmitError: false,
+                    });
+                } else if (response.textTooLongError) {
+                    setError({
+                        commentTextRequiredError: false,
+                        commentTextTooLongError: true,
+                        commentSubmitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    setError({
+                        commentTextRequiredError: false,
+                        commentTextTooLongError: false,
+                        commentSubmitError: true,
+                    });
+                } else {
+                    window.location.href = "";
+                }
+            });
         }
     };
 

@@ -15,7 +15,9 @@ export default function Item({
     return (
         <div className="layout-wrapper">
             <HeadMetadata
-                title={!!item.title ? `${item.title} | HeckarNews` : "HeckarNews"}
+                title={
+                    !!item.title ? `${item.title} | HeckarNews` : "HeckarNews"
+                }
             />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
@@ -54,7 +56,7 @@ export async function getServerSideProps({ req, query }) {
 
     return {
         props: {
-            item: apiResult && apiResult.item || {},
+            item: (apiResult && apiResult.item) || {},
             authUserData:
                 apiResult && apiResult.authUser ? apiResult.authUser : {},
             getDataError: (apiResult && apiResult.getDataError) || false,
