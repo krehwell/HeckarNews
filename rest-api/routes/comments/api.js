@@ -28,9 +28,6 @@ module.exports = {
         commentData.text = linkifyUrls(commentData.text);
         commentData.text = xss(commentData.text);
 
-        const linkifyUrls = require("linkify-urls");
-        const xss = require("xss");
-
         const newComment = await CommentModel({
             id: utils.generateUniqueId(12),
             by: authUser.username,
