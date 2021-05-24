@@ -1,0 +1,249 @@
+.comment-content {
+    color: #828282;
+    font-size: 11px;
+}
+
+.comment-content a,
+.comment-content a:visited {
+    text-decoration: none;
+    color: #828282;
+}
+
+.comment-content a:hover {
+    text-decoration: underline;
+}
+
+.comment-content-star {
+    display: inline-block;
+    color: rgb(255, 102, 0);
+    width: 20px;
+    text-align: center;
+    font-size: 13.5px;
+    margin-top: -1px;
+}
+
+.comment-content-upvote {
+    color: #828282;
+    background: url("/upvote-arrow.png") no-repeat;
+    background-position: center;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+    margin: -1px 5px 1px 5px;
+    cursor: pointer;
+}
+
+.comment-content-downvote {
+    width: 10px;
+    height: 10px;
+    border: 0px;
+    margin: 3px 5px 1px 5px;
+    cursor: pointer;
+    background: url("/upvote-arrow.png") no-repeat;
+    transform: rotate(180deg);
+}
+
+.comment-content-upvote.hide,
+.comment-content-downvote.hide {
+    background: none;
+    width: 10px;
+    height: 10px;
+    cursor: default;
+}
+
+.comment-content-details {
+    padding-right: 5px;
+}
+
+.comment-content-time {
+    margin-left: 2.5px;
+}
+
+.comment-content-unvote {
+    cursor: pointer;
+}
+
+.comment-content-unvote:hover {
+    text-decoration: underline;
+}
+
+.comment-content-favorite {
+    cursor: pointer;
+}
+
+.comment-content-favorite:hover {
+    text-decoration: underline;
+}
+
+.comment-content-kill {
+    cursor: pointer;
+    color: #b82727;
+}
+
+.comment-content-kill:hover {
+    text-decoration: underline;
+}
+
+.comment-content-text {
+    padding-top: 7.5px;
+    padding-bottom: 15px;
+    padding-right: 15px;
+    color: #000000;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.comment-content-text a {
+    color: #000000;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+.comment-content-text a:link {
+    text-decoration: underline;
+}
+
+.comment-content-text a:visited {
+    color: #828282;
+}
+
+.comment-content-repy-box {
+    margin-left: 20px;
+}
+
+.comment-content-repy-box textarea {
+    width: 500px;
+    max-width: 98%;
+    height: 90px;
+    vertical-align: middle;
+    -webkit-writing-mode: horizontal-tb;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    -webkit-appearance: textarea;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    flex-direction: column;
+    resize: auto;
+    cursor: text;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    margin: 0em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(169, 169, 169);
+    border-image: initial;
+    padding: 2px 0px 0px 2px;
+}
+
+.comment-content-repy-box textarea[type="text"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.comment-content-reply-btn {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.comment-content-reply-btn input {
+    -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+}
+
+.comment-content-reply-btn input[type="submit"] {
+    font-family: monospace;
+    font-size: 13.5px;
+}
+
+.comment-content-reply-btn input[type="submit"]:active {
+    border-style: inset;
+}
+
+.comment-content-reply-error-msg {
+    color: #828282;
+    font-size: 13.5px;
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .comment-content-upvote {
+        background: url("/upvote-arrow-mobile.png") no-repeat;
+        transform: scale(1.3, 1.3);
+        background-size: 10px;
+    }
+
+    .comment-content-downvote {
+        background: url("/upvote-arrow-mobile.png") no-repeat;
+        transform: rotate(180deg) scale(1.3, 1.3);
+        background-size: 10px;
+        margin-top: 7.5px;
+    }
+
+    .comment-content-text {
+        font-size: 13.5px;
+    }
+
+    .comment-content-text a {
+        max-width: 250px;
+    }
+
+    .comment-content-repy-box textarea {
+        width: 90%;
+        height: 120px;
+    }
+
+    .comment-content-repy-box textarea[type="text"] {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 700px) and (min-width: 600px) {
+    .comment-content-text {
+        max-width: 580px;
+    }
+}
+
+@media only screen and (max-width: 600px) and (min-width: 500px) {
+    .comment-content-text {
+        max-width: 480px;
+    }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 400px) {
+    .comment-content-text {
+        max-width: 380px;
+    }
+}
+
+@media only screen and (max-width: 400px) and (min-width: 300px) {
+    .comment-content-text {
+        max-width: 280px;
+    }
+}

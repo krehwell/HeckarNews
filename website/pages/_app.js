@@ -11,6 +11,7 @@ import "../styles/components/footer.css";
 import "../styles/components/alternateHeader.css";
 import "../styles/components/item.css";
 import "../styles/components/itemsList.css";
+import "../styles/components/comment.css";
 
 /// PAGES STYLES
 import "../styles/pages/_error.css";
@@ -26,6 +27,7 @@ import "../styles/pages/delete-item.css";
 import "../styles/pages/show.css";
 import "../styles/pages/past.css";
 import "../styles/pages/favorites.css";
+import "../styles/pages/comment.css";
 
 /// NProgress CONFIG
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
