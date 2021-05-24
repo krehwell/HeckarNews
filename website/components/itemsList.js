@@ -309,8 +309,9 @@ export default function ItemsList({
                                                               <span className="listed-item-comments">
                                                                   <Link href={`/item?id=${item.id}`}>
                                                                       <a>
-                                                                          {item.commentCount.toLocaleString("en")}&nbsp;
-                                                                          comment{item.commentCount > 1 ? "s" : null}
+                                                                          {item.commentCount.toLocaleString("en")}
+                                                                          &nbsp;comment
+                                                                          {item.commentCount > 1 ? "s" : null}
                                                                       </a>
                                                                   </Link>
                                                               </span>
