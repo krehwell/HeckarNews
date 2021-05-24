@@ -11,12 +11,7 @@ import hideItem from "../api/items/hideItem.js";
 import unhideItem from "../api/items/unhideItem.js";
 import addNewComment from "../api/comments/addNewComment.js";
 
-export default function ItemComponent({
-    item,
-    currUsername,
-    goToString,
-    userSignedIn,
-}) {
+export default function ItemComponent({ item, currUsername, goToString, userSignedIn }) {
     const [loading, setLoading] = useState(false);
     const [numOfVote, setNumOfVote] = useState(item.points);
     const [commentInputValue, setCommentInputValue] = useState("");
@@ -30,9 +25,7 @@ export default function ItemComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
@@ -40,9 +33,7 @@ export default function ItemComponent({
 
             upvoteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else {
                     setLoading(false);
                     setNumOfVote(numOfVote + 1);
@@ -55,9 +46,7 @@ export default function ItemComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
@@ -65,9 +54,7 @@ export default function ItemComponent({
 
             unvoteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else {
                     setLoading(false);
                     setNumOfVote(numOfVote - 1);
@@ -80,17 +67,13 @@ export default function ItemComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
             favoriteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else if (!response.success) {
                     window.location.href = "";
                 } else {
@@ -104,17 +87,13 @@ export default function ItemComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
             unfavoriteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else if (!response.success) {
                     window.location.href = "";
                 } else {
@@ -128,9 +107,7 @@ export default function ItemComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
@@ -138,9 +115,7 @@ export default function ItemComponent({
 
             hideItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else if (!response.success) {
                     window.location.href = "";
                 } else {
@@ -159,9 +134,7 @@ export default function ItemComponent({
 
         unhideItem(item.id, (response) => {
             if (response.authError) {
-                window.location.href = `/login?goto=${encodeURIComponent(
-                    goToString
-                )}`;
+                window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
             } else if (!response.success) {
                 window.location.href = "";
             } else {
@@ -178,9 +151,7 @@ export default function ItemComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else if (!commentInputValue) {
             setError({
                 commentTextRequiredError: true,
@@ -206,9 +177,7 @@ export default function ItemComponent({
             addNewComment(commentData, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else if (response.textRequiredError) {
                     setError({
                         commentTextRequiredError: true,
@@ -251,11 +220,7 @@ export default function ItemComponent({
                                     {item.votedOnByUser || item.dead ? (
                                         <span className="item-upvote hide"></span>
                                     ) : (
-                                        <span
-                                            className="item-upvote"
-                                            onClick={() =>
-                                                requestUpvoteItem()
-                                            }></span>
+                                        <span className="item-upvote" onClick={() => requestUpvoteItem()}></span>
                                     )}
                                 </>
                             ) : null}
@@ -263,12 +228,7 @@ export default function ItemComponent({
                         <td>
                             {/* IS ITEM DEAD? */}
                             <span className="item-title">
-                                <Link
-                                    href={
-                                        item.url
-                                            ? item.url
-                                            : `/item?id=${item.id}`
-                                    }>
+                                <Link href={item.url ? item.url : `/item?id=${item.id}`}>
                                     <a>
                                         {item.dead ? "[dead] " : null}
                                         {item.title}
@@ -277,11 +237,7 @@ export default function ItemComponent({
                             </span>
                             {item.url ? (
                                 <span className="item-domain">
-                                    (
-                                    <Link href={`/from?site=${item.domain}`}>
-                                        {item.domain}
-                                    </Link>
-                                    )
+                                    (<Link href={`/from?site=${item.domain}`}>{item.domain}</Link>)
                                 </span>
                             ) : null}
                         </td>
@@ -291,33 +247,23 @@ export default function ItemComponent({
                         <td>
                             {/* ITEM POINTS | NUM OF VOTE */}
                             <span>
-                                {numOfVote.toLocaleString()}{" "}
-                                {numOfVote === 1 ? "point" : "points"}
+                                {numOfVote.toLocaleString()} {numOfVote === 1 ? "point" : "points"}
                             </span>
                             &nbsp;
                             {/* ITEM MADE BY */}
                             <span>
-                                by{" "}
-                                <Link href={`/user?id=${item.by}`}>
-                                    {item.by}
-                                </Link>
+                                by <Link href={`/user?id=${item.by}`}>{item.by}</Link>
                                 &nbsp;
                             </span>
                             {/* ITEM CREATED DATE */}
                             <span>
-                                <Link href={`/item?id=${item.id}`}>
-                                    {renderCreatedTime(item.created)}
-                                </Link>
+                                <Link href={`/item?id=${item.id}`}>{renderCreatedTime(item.created)}</Link>
                             </span>
                             {/* UNVOTE */}
-                            {item.votedOnByUser &&
-                            !item.unvoteExpired &&
-                            !item.dead ? (
+                            {item.votedOnByUser && !item.unvoteExpired && !item.dead ? (
                                 <>
                                     <span> | </span>
-                                    <span
-                                        className="item-unvote"
-                                        onClick={() => requestUnvoteItem()}>
+                                    <span className="item-unvote" onClick={() => requestUnvoteItem()}>
                                         un-vote
                                     </span>
                                 </>
@@ -326,18 +272,14 @@ export default function ItemComponent({
                             {!item.hiddenByUser ? (
                                 <>
                                     <span> | </span>
-                                    <span
-                                        className="item-hide"
-                                        onClick={() => requestHideItem()}>
+                                    <span className="item-hide" onClick={() => requestHideItem()}>
                                         hide
                                     </span>
                                 </>
                             ) : (
                                 <>
                                     <span> | </span>
-                                    <span
-                                        className="item-hide"
-                                        onClick={() => requestUnhideItem()}>
+                                    <span className="item-hide" onClick={() => requestUnhideItem()}>
                                         un-hide
                                     </span>
                                 </>
@@ -345,63 +287,44 @@ export default function ItemComponent({
                             {/* SEARCH SIMILAR ITEM */}
                             <span> | </span>
                             <span>
-                                <Link href={`/search?q=${item.title}`}>
-                                    past
-                                </Link>
+                                <Link href={`/search?q=${item.title}`}>past</Link>
                             </span>
                             <span> | </span>
                             <span>
-                                <Link
-                                    href={`https://www.google.com/search?q=${item.title}`}>
-                                    web
-                                </Link>
+                                <Link href={`https://www.google.com/search?q=${item.title}`}>web</Link>
                             </span>
                             {/* FAVORITE THIS ITEM? */}
                             {!item.favoritedByUser ? (
                                 <>
                                     <span> | </span>
-                                    <span
-                                        className="item-favorite"
-                                        onClick={() => requestFavoriteItem()}>
+                                    <span className="item-favorite" onClick={() => requestFavoriteItem()}>
                                         favorite
                                     </span>
                                 </>
                             ) : (
                                 <>
                                     <span> | </span>
-                                    <span
-                                        className="item-favorite"
-                                        onClick={() => requestUnfavoriteItem()}>
+                                    <span className="item-favorite" onClick={() => requestUnfavoriteItem()}>
                                         un-favorite
                                     </span>
                                 </>
                             )}
                             {/* AUTHOR? EDIT THIS ITEM */}
-                            {item.by === currUsername &&
-                            !item.editAndDeleteExpired &&
-                            !item.dead ? (
+                            {item.by === currUsername && !item.editAndDeleteExpired && !item.dead ? (
                                 <>
                                     <span> | </span>
                                     <span className="item-edit">
-                                        <Link href={`/edit-item?id=${item.id}`}>
-                                            edit
-                                        </Link>
+                                        <Link href={`/edit-item?id=${item.id}`}>edit</Link>
                                     </span>
                                 </>
                             ) : null}
                             {/* AUTHOR? DELETE ITEM */}
-                            {item.by === currUsername &&
-                            !item.editAndDeleteExpired &&
-                            !item.dead ? (
+                            {item.by === currUsername && !item.editAndDeleteExpired && !item.dead ? (
                                 <>
                                     <span> | </span>
                                     <span className="item-delete">
                                         <Link
-                                            href={`/delete-item?id=${
-                                                item.id
-                                            }&goto=${encodeURIComponent(
-                                                goToString
-                                            )}`}>
+                                            href={`/delete-item?id=${item.id}&goto=${encodeURIComponent(goToString)}`}>
                                             delete
                                         </Link>
                                     </span>
@@ -414,14 +337,10 @@ export default function ItemComponent({
                                         <>
                                             <span> | </span>
                                             <span className="item-comments">
-                                                <Link
-                                                    href={`/item?id=${item.id}`}>
+                                                <Link href={`/item?id=${item.id}`}>
                                                     <a>
-                                                        {item.commentCount.toLocaleString()}{" "}
-                                                        comment
-                                                        {item.commentCount > 1
-                                                            ? "s"
-                                                            : null}
+                                                        {item.commentCount.toLocaleString()} comment
+                                                        {item.commentCount > 1 ? "s" : null}
                                                     </a>
                                                 </Link>
                                             </span>
@@ -430,10 +349,7 @@ export default function ItemComponent({
                                         <>
                                             <span> | </span>
                                             <span className="item-comments">
-                                                <Link
-                                                    href={`/item?id=${item.id}`}>
-                                                    discuss
-                                                </Link>
+                                                <Link href={`/item?id=${item.id}`}>discuss</Link>
                                             </span>
                                         </>
                                     )}
@@ -447,8 +363,7 @@ export default function ItemComponent({
             {/* ITEM CONTENT */}
             {!item.url && item.text ? (
                 <div className="item-text-content">
-                    <span
-                        dangerouslySetInnerHTML={{ __html: item.text }}></span>
+                    <span dangerouslySetInnerHTML={{ __html: item.text }}></span>
                 </div>
             ) : null}
 
@@ -456,18 +371,10 @@ export default function ItemComponent({
             {!item.dead ? (
                 <>
                     <div className="item-comment-box">
-                        <textarea
-                            type="text"
-                            value={commentInputValue}
-                            onChange={updateCommentInputValue}
-                        />
+                        <textarea type="text" value={commentInputValue} onChange={updateCommentInputValue} />
                     </div>
                     <div className="item-add-comment-btn">
-                        <input
-                            type="submit"
-                            value="add comment"
-                            onClick={() => requestAddNewComment()}
-                        />
+                        <input type="submit" value="add comment" onClick={() => requestAddNewComment()} />
                     </div>
                     {error.commentTextTooLongError ? (
                         <div className="item-add-comment-error">

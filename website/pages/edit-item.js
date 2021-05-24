@@ -10,14 +10,7 @@ import editItem from "../api/items/editItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
-export default function EditItem({
-    item,
-    authUserData,
-    notAllowedError,
-    getDataError,
-    notFoundError,
-    goToString,
-}) {
+export default function EditItem({ item, authUserData, notAllowedError, getDataError, notFoundError, goToString }) {
     const [titleInputValue, setTitleInputValue] = useState(item.title || "");
     const [textInputValue, setTextInputValue] = useState(item.text || "");
     const [loading, setLoading] = useState(false);
@@ -138,23 +131,11 @@ export default function EditItem({
                                     </td>
                                     <td>
                                         <span className="edit-item-title">
-                                            <Link
-                                                href={
-                                                    item.url
-                                                        ? item.url
-                                                        : `/item?id=${item.id}`
-                                                }>
-                                                {item.title}
-                                            </Link>
+                                            <Link href={item.url ? item.url : `/item?id=${item.id}`}>{item.title}</Link>
                                         </span>
                                         {item.url ? (
                                             <span className="edit-item-domain">
-                                                (
-                                                <Link
-                                                    href={`/from?site=${item.domain}`}>
-                                                    {item.domain}
-                                                </Link>
-                                                )
+                                                (<Link href={`/from?site=${item.domain}`}>{item.domain}</Link>)
                                             </span>
                                         ) : null}
                                     </td>
@@ -163,24 +144,13 @@ export default function EditItem({
                                     <td colSpan="1"></td>
                                     <td>
                                         <span className="edit-item-score">
-                                            {item.points.toLocaleString()}{" "}
-                                            {item.points === 1
-                                                ? "point"
-                                                : "points"}
+                                            {item.points.toLocaleString()} {item.points === 1 ? "point" : "points"}
                                         </span>
                                         <span>
-                                            {" "}
-                                            by{" "}
-                                            <Link href={`/user?id=${item.by}`}>
-                                                {item.by}
-                                            </Link>{" "}
+                                            &nbsp; by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
                                         </span>
                                         <span className="edit-item-time">
-                                            <Link href={`/item?id=${item.id}`}>
-                                                {renderCreatedTime(
-                                                    item.created
-                                                )}
-                                            </Link>
+                                            <Link href={`/item?id=${item.id}`}>{renderCreatedTime(item.created)}</Link>
                                         </span>
                                         {/* <span> | </span> */}
                                         {/* <span className="edit-item-edit"> */}
@@ -188,10 +158,7 @@ export default function EditItem({
                                         {/* </span> */}
                                         <span> | </span>
                                         <span>
-                                            <Link
-                                                href={`/delete-item?id=${item.id}`}>
-                                                delete
-                                            </Link>
+                                            <Link href={`/delete-item?id=${item.id}`}>delete</Link>
                                         </span>
                                     </td>
                                 </tr>
@@ -211,34 +178,22 @@ export default function EditItem({
                             <tbody>
                                 {/* TITLE EDIT */}
                                 <tr>
-                                    <td className="edit-item-title-input-label">
-                                        title:
-                                    </td>
+                                    <td className="edit-item-title-input-label">title:</td>
                                     <td className="edit-item-title-input">
-                                        <input
-                                            type="text"
-                                            value={titleInputValue}
-                                            onChange={updateTitleInputValue}
-                                        />
+                                        <input type="text" value={titleInputValue} onChange={updateTitleInputValue} />
                                     </td>
                                 </tr>
                                 {/* URL EXIST? EDIT URL */}
                                 {item.url ? (
                                     <tr>
-                                        <td className="edit-item-url-label">
-                                            url:
-                                        </td>
-                                        <td className="edit-item-url-value">
-                                            {item.url}
-                                        </td>
+                                        <td className="edit-item-url-label">url:</td>
+                                        <td className="edit-item-url-value">{item.url}</td>
                                     </tr>
                                 ) : null}
                                 {/* TEXT EXIST? EDIT TEXT */}
                                 {!item.url ? (
                                     <tr>
-                                        <td className="edit-item-text-input-label">
-                                            text:
-                                        </td>
+                                        <td className="edit-item-text-input-label">text:</td>
                                         <td className="edit-item-text-input">
                                             <textarea
                                                 type="text"
@@ -253,11 +208,9 @@ export default function EditItem({
                             </tbody>
                         </table>
                         <div className="edit-item-submit-btn">
-                            <input
-                                type="submit"
-                                value="update"
-                                onClick={() => submitEditItem()}
-                            /> {loading && <span> loading...</span>}
+                            <input type="submit" value="update" onClick={() => submitEditItem()} />
+                            &nbsp;
+                            {loading && <span> loading...</span>}
                         </div>
                         {error.submitError ? (
                             <div className="edit-item-submit-error-msg">
@@ -271,16 +224,12 @@ export default function EditItem({
                         ) : null}
                         {error.titleTooLongError ? (
                             <div className="edit-item-submit-error-msg">
-                                <span>
-                                    Title exceeds limit of 80 characters.
-                                </span>
+                                <span>Title exceeds limit of 80 characters.</span>
                             </div>
                         ) : null}
                         {error.textTooLongError ? (
                             <div className="edit-item-submit-error-msg">
-                                <span>
-                                    Text exceeds limit of 5,000 characters.
-                                </span>
+                                <span>Text exceeds limit of 5,000 characters.</span>
                             </div>
                         ) : null}
                         {error.notAllowedError ? (
@@ -291,15 +240,9 @@ export default function EditItem({
                     </>
                 ) : (
                     <div className="edit-item-error-msg">
-                        {error.getDataError ? (
-                            <span>An error occurred.</span>
-                        ) : null}
-                        {notAllowedError ? (
-                            <span>You can’t edit that item.</span>
-                        ) : null}
-                        {error.notFoundError ? (
-                            <span>Item not found.</span>
-                        ) : null}
+                        {error.getDataError ? <span>An error occurred.</span> : null}
+                        {notAllowedError ? <span>You can’t edit that item.</span> : null}
+                        {error.notFoundError ? <span>Item not found.</span> : null}
                     </div>
                 )}
             </div>
@@ -315,8 +258,7 @@ export async function getServerSideProps({ query, req }) {
     return {
         props: {
             item: (apiResult && apiResult.item) || {},
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             notAllowedError: (apiResult && apiResult.notAllowedError) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,
             notFoundError: (apiResult && apiResult.notFoundError) || false,

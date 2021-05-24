@@ -18,16 +18,10 @@ export default function User({
     notFoundError,
     goToString,
 }) {
-    const [aboutInputValue, setAboutInputValue] = useState(
-        userData ? userData.about : ""
-    );
-    const [emailInputValue, setEmailInputValue] = useState(
-        userData ? userData.email : ""
-    );
+    const [aboutInputValue, setAboutInputValue] = useState(userData ? userData.about : "");
+    const [emailInputValue, setEmailInputValue] = useState(userData ? userData.email : "");
     const [loading, setLoading] = useState(false);
-    const [showDeadValue, setShowDeadValue] = useState(
-        userData && userData.showDead ? "yes" : "no"
-    );
+    const [showDeadValue, setShowDeadValue] = useState(userData && userData.showDead ? "yes" : "no");
     const [error, setError] = useState({
         submitError: false,
     });
@@ -77,13 +71,7 @@ export default function User({
 
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title={
-                    userData
-                        ? `Profile: ${username} | HeckarNews`
-                        : "User Profile | HeckarNews"
-                }
-            />
+            <HeadMetadata title={userData ? `Profile: ${username} | HeckarNews` : "User Profile | HeckarNews"} />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
@@ -100,13 +88,9 @@ export default function User({
                                     {!userData.email ? (
                                         <div className="user-add-email-address-msg">
                                             <span>
-                                                Please put a valid address in
-                                                the email field, or we won't be
-                                                able to send you a new password
-                                                if you forget yours. Your
-                                                address is only visible to you
-                                                and us. Crawlers and other users
-                                                can't see it.
+                                                Please put a valid address in the email field, or we won't be able to
+                                                send you a new password if you forget yours. Your address is only
+                                                visible to you and us. Crawlers and other users can't see it.
                                             </span>
                                         </div>
                                     ) : null}
@@ -127,11 +111,7 @@ export default function User({
                                             <span>created:</span>
                                         </div>
                                         <div className="user-item-content created">
-                                            <span>
-                                                {moment
-                                                    .unix(userData.created)
-                                                    .format("MMM D, YYYY")}
-                                            </span>
+                                            <span>{moment.unix(userData.created).format("MMM D, YYYY")}</span>
                                         </div>
                                     </div>
 
@@ -141,9 +121,7 @@ export default function User({
                                             <span>karma:</span>
                                         </div>
                                         <div className="user-item-content karma">
-                                            <span>
-                                                {userData.karma.toLocaleString()}
-                                            </span>
+                                            <span>{userData.karma.toLocaleString()}</span>
                                         </div>
                                     </div>
 
@@ -187,9 +165,7 @@ export default function User({
                                             <span>showdead:</span>
                                         </div>
                                         <div className="user-item-content email">
-                                            <select
-                                                value={showDeadValue}
-                                                onChange={updateShowDeadValue}>
+                                            <select value={showDeadValue} onChange={updateShowDeadValue}>
                                                 <option value="no">no</option>
                                                 <option value="yes">yes</option>
                                             </select>
@@ -203,9 +179,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link href="/changepw">
-                                                    change password
-                                                </Link>
+                                                <Link href="/changepw">change password</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -217,10 +191,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/submitted?id=${username}`}>
-                                                    submissions
-                                                </Link>
+                                                <Link href={`/submitted?id=${username}`}>submissions</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -232,10 +203,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/threads?id=${username}`}>
-                                                    comments
-                                                </Link>
+                                                <Link href={`/threads?id=${username}`}>comments</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -259,20 +227,13 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/upvoted?id=${username}`}>
-                                                    upvoted items
-                                                </Link>
+                                                <Link href={`/upvoted?id=${username}`}>upvoted items</Link>
                                             </span>
                                             <span> / </span>
                                             <span>
-                                                <Link
-                                                    href={`/upvoted?id=${username}&comments=t`}>
-                                                    comments
-                                                </Link>
+                                                <Link href={`/upvoted?id=${username}&comments=t`}>comments</Link>
                                             </span>
                                             <span>
-                                                {" "}
                                                 <i>(private)</i>
                                             </span>
                                         </div>
@@ -285,20 +246,13 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/favorites?id=${username}`}>
-                                                    favorite items
-                                                </Link>
+                                                <Link href={`/favorites?id=${username}`}>favorite items</Link>
                                             </span>
                                             <span> / </span>
                                             <span>
-                                                <Link
-                                                    href={`/favorites?id=${username}&comments=t`}>
-                                                    comments
-                                                </Link>
+                                                <Link href={`/favorites?id=${username}&comments=t`}>comments</Link>
                                             </span>
                                             <span>
-                                                {" "}
                                                 <i>(shared)</i>
                                             </span>
                                         </div>
@@ -306,13 +260,8 @@ export default function User({
 
                                     {/* SUBMIT FORM SECTION */}
                                     <div className="user-submit-btn">
-                                        <input
-                                            type="submit"
-                                            value="update"
-                                            onClick={() =>
-                                                submitUpdateRequest()
-                                            }
-                                        />{loading && <span> loading...</span>}
+                                        <input type="submit" value="update" onClick={() => submitUpdateRequest()} />
+                                        {loading && <span> loading...</span>}
                                     </div>
                                     {error.submitError ? (
                                         <div className="user-submit-error-msg">
@@ -339,11 +288,7 @@ export default function User({
                                             <span>created:</span>
                                         </div>
                                         <div className="user-item-content created">
-                                            <span>
-                                                {moment
-                                                    .unix(userData.created)
-                                                    .format("MMM D, YYYY")}
-                                            </span>
+                                            <span>{moment.unix(userData.created).format("MMM D, YYYY")}</span>
                                         </div>
                                     </div>
 
@@ -353,9 +298,7 @@ export default function User({
                                             <span>karma:</span>
                                         </div>
                                         <div className="user-item-content karma">
-                                            <span>
-                                                {userData.karma.toLocaleString()}
-                                            </span>
+                                            <span>{userData.karma.toLocaleString()}</span>
                                         </div>
                                     </div>
 
@@ -379,10 +322,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/submitted?id=${username}`}>
-                                                    submissions
-                                                </Link>
+                                                <Link href={`/submitted?id=${username}`}>submissions</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -394,10 +334,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/threads?id=${username}`}>
-                                                    comments
-                                                </Link>
+                                                <Link href={`/threads?id=${username}`}>comments</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -409,10 +346,7 @@ export default function User({
                                         </div>
                                         <div className="user-item-content">
                                             <span>
-                                                <Link
-                                                    href={`/favorites?id=${username}`}>
-                                                    favorites
-                                                </Link>
+                                                <Link href={`/favorites?id=${username}`}>favorites</Link>
                                             </span>
                                         </div>
                                     </div>
@@ -422,11 +356,7 @@ export default function User({
                     </>
                 ) : (
                     <div className="user-get-data-error-msg">
-                        {notFoundError ? (
-                            <span>User not found.</span>
-                        ) : (
-                            <span>An error occurred.</span>
-                        )}
+                        {notFoundError ? <span>User not found.</span> : <span>An error occurred.</span>}
                     </div>
                 )}
             </div>
@@ -444,8 +374,7 @@ export async function getServerSideProps({ req, query }) {
             username: query.id,
             userData: apiResult.user || {},
             showPrivateUserData: (apiResult && apiResult.showPrivateUserData) || false,
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             getDataError: apiResult.getDataError || false,
             notFoundError: apiResult.notFoundError || false,
             goToString: `user?id=${query.id}`,

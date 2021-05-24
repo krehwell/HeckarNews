@@ -71,8 +71,7 @@ export default function Forgot() {
             {success ? (
                 <div className="forgot-success-msg">
                     <span>
-                        Password recovery message sent. If you do not see it,
-                        you may want to check your spam folder.
+                        Password recovery message sent. If you do not see it, you may want to check your spam folder.
                     </span>
                 </div>
             ) : (
@@ -100,18 +99,10 @@ export default function Forgot() {
                             <span>username:</span>
                         </div>
                         <div className="forgot-input-item-input">
-                            <input
-                                type="text"
-                                value={usernameInputValue}
-                                onChange={updateUsernameInputValue}
-                            />
+                            <input type="text" value={usernameInputValue} onChange={updateUsernameInputValue} />
                         </div>
                         <div className="forgot-submit-btn">
-                            <input
-                                type="submit"
-                                value="Send reset email"
-                                onClick={() => submitRequest()}
-                            />
+                            <input type="submit" value="Send reset email" onClick={() => submitRequest()} />
                             {loading && <span> loading...</span>}
                         </div>
                     </div>

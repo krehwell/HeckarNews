@@ -5,20 +5,10 @@ import ItemsList from "../components/itemsList.js";
 
 import getRankedAskItemsByPage from "../api/items/getRankedAskItemsByPage.js";
 
-export default function Ask({
-    items,
-    authUserData,
-    page,
-    isMore,
-    getDataError,
-    goToString,
-}) {
+export default function Ask({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title="Ask | HeckarNews"
-                description="News and discussion for software engineers."
-            />
+            <HeadMetadata title="Ask | HeckarNews" description="News and discussion for software engineers." />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
@@ -59,8 +49,7 @@ export async function getServerSideProps({ req, query }) {
     return {
         props: {
             items: (apiResult && apiResult.items) || [],
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             page: page || 0,
             isMore: (apiResult && apiResult.isMore) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,

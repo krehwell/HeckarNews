@@ -10,9 +10,7 @@ export default class AlternateHeader extends Component {
                         <img src="/favicon.ico" />
                     </a>
                 </Link>
-                <span className="alternate-header-label">
-                    {this.props.displayMessage}
-                </span>
+                <span className="alternate-header-label">{this.props.displayMessage}</span>
             </div>
         );
     }

@@ -21,11 +21,7 @@ export default function Upvoted({
 }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title={`Upvoted ${
-                    showItems ? "Items" : "Comments"
-                } | HeckarNews`}
-            />
+            <HeadMetadata title={`Upvoted ${showItems ? "Items" : "Comments"} | HeckarNews`} />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
@@ -43,9 +39,7 @@ export default function Upvoted({
                                 userSignedIn={authUserData.userSignedIn}
                                 currUsername={authUserData.username}
                                 showRank={true}
-                                isMoreLink={`/upvoted?id=${userId}&page=${
-                                    page + 1
-                                }`}
+                                isMoreLink={`/upvoted?id=${userId}&page=${page + 1}`}
                                 isMore={isMoreItems}
                             />
                         ) : null}
@@ -53,11 +47,7 @@ export default function Upvoted({
                     </>
                 ) : (
                     <div className="items-list-error-msg">
-                        {notAllowedError ? (
-                            <span>Can’t display that.</span>
-                        ) : (
-                            <span>An error occurred.</span>
-                        )}
+                        {notAllowedError ? <span>Can’t display that.</span> : <span>An error occurred.</span>}
                     </div>
                 )}
             </div>
@@ -86,9 +76,7 @@ export async function getServerSideProps({ req, query }) {
 
     const goToString =
         page > 1
-            ? `upvoted?id=${userId}${
-                  showItems ? "" : "&comments=t"
-              }&page=${page}`
+            ? `upvoted?id=${userId}${showItems ? "" : "&comments=t"}&page=${page}`
             : `upvoted?id=${userId}${showItems ? "" : "&comments=t"}`;
 
     return {
@@ -98,19 +86,12 @@ export async function getServerSideProps({ req, query }) {
             isMoreItems: (itemsApiResult && itemsApiResult.isMore) || false,
             comments: (commentsApiResult && commentsApiResult.comments) || [],
             showComments: !showItems,
-            isMoreComments:
-                (commentsApiResult && commentsApiResult.isMore) || false,
+            isMoreComments: (commentsApiResult && commentsApiResult.isMore) || false,
             authUserData: authUserData || {},
             userId: userId || "",
             page: page || 0,
-            getDataError:
-                itemsApiResult.getDataError ||
-                commentsApiResult.getDataError ||
-                false,
-            notAllowedError:
-                itemsApiResult.notAllowedError ||
-                commentsApiResult.notAllowedError ||
-                false,
+            getDataError: itemsApiResult.getDataError || commentsApiResult.getDataError || false,
+            notAllowedError: itemsApiResult.notAllowedError || commentsApiResult.notAllowedError || false,
             goToString: goToString || "",
         },
     };

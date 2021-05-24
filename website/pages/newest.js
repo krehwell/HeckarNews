@@ -6,14 +6,7 @@ import getNewestItemsByPage from "../api/items/getNewestItemsByPage.js";
 
 import ItemsList from "../components/itemsList.js";
 
-export default function Newest({
-    items,
-    authUserData,
-    page,
-    isMore,
-    getDataError,
-    goToString,
-}) {
+export default function Newest({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (
         <div className="layout-wrapper">
             <HeadMetadata title="Newest Items | HeckarNews" />
@@ -59,8 +52,7 @@ export async function getServerSideProps({ req, query }) {
     return {
         props: {
             items: (apiResult && apiResult.items) || [],
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             page: page || 0,
             isMore: (apiResult && apiResult.isMore) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,

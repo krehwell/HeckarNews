@@ -9,14 +9,7 @@ import deleteItem from "../api/items/deleteItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
-export default function DeleteItem({
-    item,
-    authUserData,
-    getDataError,
-    notAllowedError,
-    notFoundError,
-    goToString,
-}) {
+export default function DeleteItem({ item, authUserData, getDataError, notAllowedError, notFoundError, goToString }) {
     const [error, setError] = useState({
         getDataError,
         notFoundError,
@@ -83,18 +76,11 @@ export default function DeleteItem({
                                         </td>
                                         <td>
                                             <span className="delete-item-title">
-                                                <Link href={item.url}>
-                                                    {item.title}
-                                                </Link>
+                                                <Link href={item.url}>{item.title}</Link>
                                             </span>
                                             {item.url ? (
                                                 <span className="delete-item-domain">
-                                                    (
-                                                    <Link
-                                                        href={`/from?site=${item.domain}`}>
-                                                        {item.domain}
-                                                    </Link>
-                                                    )
+                                                    (<Link href={`/from?site=${item.domain}`}>{item.domain}</Link>)
                                                 </span>
                                             ) : null}
                                         </td>
@@ -105,31 +91,20 @@ export default function DeleteItem({
                                         <td colSpan="1"></td>
                                         <td>
                                             <span className="delete-item-score">
-                                                {item.points.toLocaleString()}{" "}
-                                                {item.points === 1
-                                                    ? "point"
-                                                    : "points"}
+                                                {item.points.toLocaleString()} {item.points === 1 ? "point" : "points"}
                                             </span>
                                             <span>
-                                                {" "}
-                                                by{" "}
-                                                <Link href={`/user?id=${item.by}`}>
-                                                    {item.by}
-                                                </Link>{" "}
+                                                &nbsp;
+                                                by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
                                             </span>
                                             <span className="delete-item-time">
                                                 <Link href={`/item?id=${item.id}`}>
-                                                    {renderCreatedTime(
-                                                        item.created
-                                                    )}
+                                                    {renderCreatedTime(item.created)}
                                                 </Link>
                                             </span>
                                             <span> | </span>
                                             <span className="delete-item-edit">
-                                                <Link
-                                                    href={`/edit-item?id=${item.id}`}>
-                                                    edit
-                                                </Link>
+                                                <Link href={`/edit-item?id=${item.id}`}>edit</Link>
                                             </span>
                                             {/* <span> | </span> */}
                                             {/* <span> */}
@@ -158,11 +133,7 @@ export default function DeleteItem({
                                 className="delete-item-yes-btn"
                                 onClick={submitDeleteItem}
                             />
-                            <input
-                                type="submit"
-                                value="No"
-                                onClick={goBackToOriginPage}
-                            />{" "}
+                            <input type="submit" value="No" onClick={goBackToOriginPage} />&nbsp;
                             {loading && <span> loading...</span>}
                         </div>
                         {error.submitError ? (
@@ -173,15 +144,9 @@ export default function DeleteItem({
                     </>
                 ) : (
                     <div className="delete-item-error-msg">
-                        {error.getDataError ? (
-                            <span>An error occurred.</span>
-                        ) : null}
-                        {error.notAllowedError ? (
-                            <span>You can’t delete that item.</span>
-                        ) : null}
-                        {error.notFoundError ? (
-                            <span>Item not found.</span>
-                        ) : null}
+                        {error.getDataError ? <span>An error occurred.</span> : null}
+                        {error.notAllowedError ? <span>You can’t delete that item.</span> : null}
+                        {error.notFoundError ? <span>Item not found.</span> : null}
                     </div>
                 )}
             </div>
@@ -195,8 +160,7 @@ export async function getServerSideProps({ query, req }) {
     return {
         props: {
             item: (apiResult && apiResult.item) || {},
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             getDataError: (apiResult && apiResult.getDataError) || false,
             notAllowedError: (apiResult && apiResult.notAllowedError) || false,
             notFoundError: (apiResult && apiResult.notFoundError) || false,

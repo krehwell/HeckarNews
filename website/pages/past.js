@@ -8,65 +8,48 @@ import ItemsList from "../components/itemsList.js";
 
 import getRankedItemsByDay from "../api/items/getRankedItemsByDay.js";
 
-export default function Past({
-    items,
-    authUserData,
-    day,
-    page,
-    isMore,
-    getDataError,
-    invalidDateError,
-    goToString,
-}) {
+export default function Past({ items, authUserData, day, page, isMore, getDataError, invalidDateError, goToString }) {
     const renderGoBackwardLinks = () => {
         const backOneDay = moment(day).subtract(1, "day").format("YYYY-MM-DD");
-        const backOneMonth = moment(day)
-            .subtract(1, "month")
-            .format("YYYY-MM-DD");
-        const backOneYear = moment(day)
-            .subtract(1, "year")
-            .format("YYYY-MM-DD");
+        const backOneMonth = moment(day).subtract(1, "month").format("YYYY-MM-DD");
+        const backOneYear = moment(day).subtract(1, "year").format("YYYY-MM-DD");
 
         return (
             <>
                 <span>Go back a </span>
                 <span>
-                    <Link href={`/past?day=${backOneDay}`}>day</Link>,{" "}
+                    <Link href={`/past?day=${backOneDay}`}>day</Link>,&nbsp;
                 </span>
                 <span>
-                    <Link href={`/past?day=${backOneMonth}`}>month</Link>,{" "}
+                    <Link href={`/past?day=${backOneMonth}`}>month</Link>,&nbsp;
                 </span>
                 <span>
-                    or <Link href={`/past?day=${backOneYear}`}>year</Link>.{" "}
+                    or <Link href={`/past?day=${backOneYear}`}>year</Link>.&nbsp;
                 </span>
             </>
         );
     };
 
     const renderGoForwardLinks = () => {
-        const differenceInDays = moment()
-            .startOf("day")
-            .diff(moment(day), "days");
+        const differenceInDays = moment().startOf("day").diff(moment(day), "days");
 
         const forwardOneDay = moment(day).add(1, "day").format("YYYY-MM-DD");
-        const forwardOneMonth = moment(day)
-            .add(1, "month")
-            .format("YYYY-MM-DD");
+        const forwardOneMonth = moment(day).add(1, "month").format("YYYY-MM-DD");
         const forwardOneYear = moment(day).add(1, "year").format("YYYY-MM-DD");
 
         if (differenceInDays >= 365) {
             return (
                 <span>
-                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link>,{" "}
-                    <Link href={`/past?day=${forwardOneMonth}`}>month</Link> or{" "}
+                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link>,&nbsp;
+                    <Link href={`/past?day=${forwardOneMonth}`}>month</Link> or&nbsp;
                     <Link href={`/past?day=${forwardOneYear}`}>year</Link>.
                 </span>
             );
         } else if (differenceInDays >= 30) {
             return (
                 <span>
-                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link>{" "}
-                    or <Link href={`/past?day=${forwardOneMonth}`}>month</Link>.
+                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link> or&nbsp;
+                    <Link href={`/past?day=${forwardOneMonth}`}>month</Link>.
                 </span>
             );
         } else if (differenceInDays > 0) {
@@ -82,13 +65,7 @@ export default function Past({
 
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title={
-                    !invalidDateError
-                        ? `${day} Top Items | HeckarNews`
-                        : "HeckarNews"
-                }
-            />
+            <HeadMetadata title={!invalidDateError ? `${day} Top Items | HeckarNews` : "HeckarNews"} />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
@@ -101,9 +78,7 @@ export default function Past({
                     <>
                         <div className="past-items-top-header">
                             <span>
-                                Stories from{" "}
-                                {moment(day).format("MMMM D, YYYY")}, ordered by
-                                highest point scores.
+                                Stories from {moment(day).format("MMMM D, YYYY")}, ordered by highest point scores.
                             </span>
                         </div>
                         <div className="past-items-bottom-header">
@@ -123,11 +98,7 @@ export default function Past({
                     </>
                 ) : (
                     <div className="items-list-error-msg">
-                        {invalidDateError ? (
-                            <span>Invalid day.</span>
-                        ) : (
-                            <span>An error occured.</span>
-                        )}
+                        {invalidDateError ? <span>Invalid day.</span> : <span>An error occured.</span>}
                     </div>
                 )}
             </div>
@@ -137,9 +108,7 @@ export default function Past({
 }
 
 export async function getServerSideProps({ req, query }) {
-    const day = query.day
-        ? query.day
-        : moment().subtract(1, "day").format("YYYY-MM-DD");
+    const day = query.day ? query.day : moment().subtract(1, "day").format("YYYY-MM-DD");
     const page = query.page ? parseInt(query.page) : 1;
 
     const apiResult = await getRankedItemsByDay(day, page, req);
@@ -148,16 +117,13 @@ export async function getServerSideProps({ req, query }) {
     return {
         props: {
             items: (apiResult && apiResult.items) || [],
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             day: day,
             page: page || 1,
             isMore: (apiResult && apiResult.isMore) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,
-            invalidDateError:
-                (apiResult && apiResult.invalidDateError) || false,
-            goToString:
-                page > 1 ? `past?day=${day}&page=${page}` : `past?day=${day}`,
+            invalidDateError: (apiResult && apiResult.invalidDateError) || false,
+            goToString: page > 1 ? `past?day=${day}&page=${page}` : `past?day=${day}`,
         },
     };
 }

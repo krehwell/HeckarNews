@@ -5,14 +5,7 @@ import ItemsList from "../components/itemsList.js";
 
 import getUserHiddenItemsByPage from "../api/items/getUserHiddenItemsByPage.js";
 
-export default function Hidden({
-    items,
-    authUserData,
-    page,
-    isMore,
-    getDataError,
-    goToString,
-}) {
+export default function Hidden({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (
         <div className="layout-wrapper">
             <HeadMetadata title="Hidden | HeckarNews" />
@@ -67,8 +60,7 @@ export async function getServerSideProps({ req, query, res }) {
     return {
         props: {
             items: (apiResult && apiResult.items) || [],
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             page: page || 0,
             isMore: (apiResult && apiResult.isMore) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,

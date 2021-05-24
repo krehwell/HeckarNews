@@ -5,20 +5,10 @@ import ItemComponent from "../components/item.js";
 
 import getItemById from "../api/items/getItemById.js";
 
-export default function Item({
-    item,
-    authUserData,
-    getDataError,
-    notFoundError,
-    goToString,
-}) {
+export default function Item({ item, authUserData, getDataError, notFoundError, goToString }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title={
-                    !!item.title ? `${item.title} | HeckarNews` : "HeckarNews"
-                }
-            />
+            <HeadMetadata title={!!item.title ? `${item.title} | HeckarNews` : "HeckarNews"} />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
@@ -35,11 +25,7 @@ export default function Item({
                     />
                 ) : (
                     <div className="item-get-data-error-msg">
-                        {notFoundError ? (
-                            <span>No such item.</span>
-                        ) : (
-                            <span>An error occurred.</span>
-                        )}
+                        {notFoundError ? <span>No such item.</span> : <span>An error occurred.</span>}
                     </div>
                 )}
             </div>
@@ -57,8 +43,7 @@ export async function getServerSideProps({ req, query }) {
     return {
         props: {
             item: (apiResult && apiResult.item) || {},
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             getDataError: (apiResult && apiResult.getDataError) || false,
             notFoundError: (apiResult && apiResult.notFoundError) || false,
             goToString: `item?id=${itemId}` || "",

@@ -5,20 +5,10 @@ import ItemsList from "../components/itemsList.js";
 
 import getRankedItemsByPage from "../api/items/getRankedItemsByPage.js";
 
-export default function Index({
-    items,
-    authUserData,
-    page,
-    isMore,
-    getDataError,
-    goToString,
-}) {
+export default function Index({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title="HeckarNews"
-                description="News and Bullshit people having."
-            />
+            <HeadMetadata title="HeckarNews" description="News and Bullshit people having." />
             <Header
                 userSignedIn={authUserData.userSignedIn}
                 username={authUserData.username}
@@ -56,8 +46,7 @@ export async function getServerSideProps({ req, query }) {
     return {
         props: {
             items: (apiResult && apiResult.items) || [],
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             page: page,
             isMore: (apiResult && apiResult.isMore) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,

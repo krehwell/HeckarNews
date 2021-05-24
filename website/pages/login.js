@@ -205,11 +205,7 @@ export default function Login({ goto }) {
                 </div>
             </div>
             <div className="login-submit-btn">
-                <input
-                    type="submit"
-                    value="login"
-                    onClick={() => submitLogin()}
-                />{" "}
+                <input type="submit" value="login" onClick={() => submitLogin()} />&nbsp;
                 {loading && <span> loading...</span>}
             </div>
             <div className="login-input-item-forgot-text">
@@ -233,9 +229,7 @@ export default function Login({ goto }) {
             ) : null}
             {error.createAccountUsernameLengthError ? (
                 <div className="login-error-msg">
-                    <span>
-                        Username must be between 2 and 15 characters long.
-                    </span>
+                    <span>Username must be between 2 and 15 characters long.</span>
                 </div>
             ) : null}
             {error.createAccountPasswordLengthError ? (
@@ -258,9 +252,7 @@ export default function Login({ goto }) {
                 <div className="login-input-item-input">
                     <input
                         type="text"
-                        value={
-                            createAccountState.createAccountUsernameInputValue
-                        }
+                        value={createAccountState.createAccountUsernameInputValue}
                         onChange={updateCreateAccountUsernameInputValue}
                     />
                 </div>
@@ -272,19 +264,13 @@ export default function Login({ goto }) {
                 <div className="login-input-item-input">
                     <input
                         type="password"
-                        value={
-                            createAccountState.createAcountPasswordInputValue
-                        }
+                        value={createAccountState.createAcountPasswordInputValue}
                         onChange={updateCreateAccountPasswordInputValue}
                     />
                 </div>
             </div>
             <div className="login-submit-btn">
-                <input
-                    type="submit"
-                    value="create account"
-                    onClick={() => submitCreateAccount()}
-                />{" "}
+                <input type="submit" value="create account" onClick={() => submitCreateAccount()} />&nbsp;
                 {loading && <span> loading...</span>}
             </div>
         </div>

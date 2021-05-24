@@ -30,9 +30,7 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
@@ -44,9 +42,7 @@ export default function ItemsList({
                 setLoading(false);
 
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 }
             });
         }
@@ -56,9 +52,7 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
@@ -70,9 +64,7 @@ export default function ItemsList({
                 setLoading(false);
 
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 }
             });
         }
@@ -82,15 +74,11 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             unfavoriteItem(itemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else {
                     window.location.href = "";
                 }
@@ -102,9 +90,7 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
@@ -122,9 +108,7 @@ export default function ItemsList({
             hideItem(itemId, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 }
             });
         }
@@ -134,17 +118,13 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(
-                goToString
-            )}`;
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
         } else {
             setLoading(true);
 
             unhideItem(itemId, function (response) {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(
-                        goToString
-                    )}`;
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else {
                     window.location.href = "";
                 }
@@ -162,15 +142,8 @@ export default function ItemsList({
                                   <tbody>
                                       <tr>
                                           {/* RANK NUM */}
-                                          <td
-                                              className={
-                                                  showRank
-                                                      ? "listed-item-rank"
-                                                      : "listed-item-rank hide"
-                                              }>
-                                              {showRank ? (
-                                                  <span>{item.rank}.</span>
-                                              ) : null}
+                                          <td className={showRank ? "listed-item-rank" : "listed-item-rank hide"}>
+                                              {showRank ? <span>{item.rank}.</span> : null}
                                           </td>
 
                                           {/* VOTE BTN */}
@@ -182,18 +155,12 @@ export default function ItemsList({
                                               ) : null}
                                               {currUsername !== item.by ? (
                                                   <>
-                                                      {item.votedOnByUser ||
-                                                      item.dead ? (
+                                                      {item.votedOnByUser || item.dead ? (
                                                           <span className="listed-item-upvote hide"></span>
                                                       ) : (
                                                           <span
                                                               className="listed-item-upvote"
-                                                              onClick={() =>
-                                                                  requestUpvoteItem(
-                                                                      item.id,
-                                                                      index
-                                                                  )
-                                                              }></span>
+                                                              onClick={() => requestUpvoteItem(item.id, index)}></span>
                                                       )}
                                                   </>
                                               ) : null}
@@ -202,28 +169,16 @@ export default function ItemsList({
                                           {/* ITEM TITLE, URL | CONTENT */}
                                           <td>
                                               <span className="listed-item-title">
-                                                  <Link
-                                                      href={
-                                                          item.url
-                                                              ? item.url
-                                                              : `/item?id=${item.id}`
-                                                      }>
+                                                  <Link href={item.url ? item.url : `/item?id=${item.id}`}>
                                                       <a>
-                                                          {item.dead
-                                                              ? "[dead] "
-                                                              : null}
+                                                          {item.dead ? "[dead] " : null}
                                                           {item.title}
                                                       </a>
                                                   </Link>
                                               </span>
                                               {item.url ? (
                                                   <span className="listed-item-domain">
-                                                      (
-                                                      <Link
-                                                          href={`/from?site=${item.domain}`}>
-                                                          {item.domain}
-                                                      </Link>
-                                                      )
+                                                      (<Link href={`/from?site=${item.domain}`}>{item.domain}</Link>)
                                                   </span>
                                               ) : null}
                                           </td>
@@ -235,30 +190,21 @@ export default function ItemsList({
                                           <td>
                                               {/* POINST | NUM OF VOTE */}
                                               <span>
-                                                  {item.points.toLocaleString()}{" "}
-                                                  {item.points === 1
-                                                      ? "point"
-                                                      : "points"}
+                                                  {item.points.toLocaleString()}&nbsp;
+                                                  {item.points === 1 ? "point" : "points"}
                                               </span>
 
                                               {/* AUTHOR | BY */}
                                               <span>
-                                                  {" "}
-                                                  by{" "}
-                                                  <Link
-                                                      href={`/user?id=${item.by}`}>
-                                                      {item.by}
-                                                  </Link>{" "}
+                                                  &nbsp; by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
                                               </span>
 
                                               {/* CREATED TIME */}
                                               <span className="listed-item-time">
-                                                  <Link
-                                                      href={`/item?id=${item.id}`}>
-                                                      {renderCreatedTime(
-                                                          item.created
-                                                      )}
-                                                  </Link>{" "}
+                                                  <Link href={`/item?id=${item.id}`}>
+                                                      {renderCreatedTime(item.created)}
+                                                  </Link>
+                                                  &nbsp;
                                               </span>
 
                                               {/* SHOW LINK */}
@@ -266,10 +212,7 @@ export default function ItemsList({
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <Link
-                                                              href={`/search?q=${item.title}`}>
-                                                              past
-                                                          </Link>
+                                                          <Link href={`/search?q=${item.title}`}>past</Link>
                                                       </span>
                                                   </>
                                               ) : null}
@@ -277,8 +220,7 @@ export default function ItemsList({
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <Link
-                                                              href={`https://www.google.com/search?q=${item.title}`}>
+                                                          <Link href={`https://www.google.com/search?q=${item.title}`}>
                                                               web
                                                           </Link>
                                                       </span>
@@ -286,19 +228,12 @@ export default function ItemsList({
                                               ) : null}
 
                                               {/* UNVOTE BTN */}
-                                              {item.votedOnByUser &&
-                                              !item.unvoteExpired &&
-                                              !item.dead ? (
+                                              {item.votedOnByUser && !item.unvoteExpired && !item.dead ? (
                                                   <>
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-unvote"
-                                                          onClick={() =>
-                                                              requestUnvoteItem(
-                                                                  item.id,
-                                                                  index
-                                                              )
-                                                          }>
+                                                          onClick={() => requestUnvoteItem(item.id, index)}>
                                                           un-vote
                                                       </span>
                                                   </>
@@ -310,11 +245,7 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-unfavorite"
-                                                          onClick={() =>
-                                                              requestUnfavoriteItem(
-                                                                  item.id
-                                                              )
-                                                          }>
+                                                          onClick={() => requestUnfavoriteItem(item.id)}>
                                                           un-favorite
                                                       </span>
                                                   </>
@@ -326,12 +257,7 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-hide"
-                                                          onClick={() =>
-                                                              requestHideItem(
-                                                                  item.id,
-                                                                  index
-                                                              )
-                                                          }>
+                                                          onClick={() => requestHideItem(item.id, index)}>
                                                           hide
                                                       </span>
                                                   </>
@@ -343,44 +269,31 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-unhide"
-                                                          onClick={() =>
-                                                              requestUnhideItem(
-                                                                  item.id
-                                                              )
-                                                          }>
+                                                          onClick={() => requestUnhideItem(item.id)}>
                                                           un-hide
                                                       </span>
                                                   </>
                                               ) : null}
 
                                               {/* AUTHOR? EDIT ITEM */}
-                                              {item.by === currUsername &&
-                                              !item.editAndDeleteExpired &&
-                                              !item.dead ? (
+                                              {item.by === currUsername && !item.editAndDeleteExpired && !item.dead ? (
                                                   <>
                                                       <span> | </span>
                                                       <span>
-                                                          <Link
-                                                              href={`/edit-item?id=${item.id}`}>
-                                                              edit
-                                                          </Link>
+                                                          <Link href={`/edit-item?id=${item.id}`}>edit</Link>
                                                       </span>
                                                   </>
                                               ) : null}
 
                                               {/* AUTHOR? DELETE ITEM */}
-                                              {item.by === currUsername &&
-                                              !item.editAndDeleteExpired &&
-                                              !item.dead ? (
+                                              {item.by === currUsername && !item.editAndDeleteExpired && !item.dead ? (
                                                   <>
                                                       <span> | </span>
                                                       <span>
                                                           <Link
                                                               href={`/delete-item?id=${
                                                                   item.id
-                                                              }&goto=${encodeURIComponent(
-                                                                  goToString
-                                                              )}`}>
+                                                              }&goto=${encodeURIComponent(goToString)}`}>
                                                               delete
                                                           </Link>
                                                       </span>
@@ -394,17 +307,10 @@ export default function ItemsList({
                                                           <>
                                                               <span> | </span>
                                                               <span className="listed-item-comments">
-                                                                  <Link
-                                                                      href={`/item?id=${item.id}`}>
+                                                                  <Link href={`/item?id=${item.id}`}>
                                                                       <a>
-                                                                          {item.commentCount.toLocaleString(
-                                                                              "en"
-                                                                          )}{" "}
-                                                                          comment{" "}
-                                                                          {item.commentCount >
-                                                                          1
-                                                                              ? "s"
-                                                                              : null}
+                                                                          {item.commentCount.toLocaleString("en")}&nbsp;
+                                                                          comment{item.commentCount > 1 ? "s" : null}
                                                                       </a>
                                                                   </Link>
                                                               </span>
@@ -413,10 +319,7 @@ export default function ItemsList({
                                                           <>
                                                               <span> | </span>
                                                               <span className="listed-item-comments">
-                                                                  <Link
-                                                                      href={`/item?id=${item.id}`}>
-                                                                      discuss
-                                                                  </Link>
+                                                                  <Link href={`/item?id=${item.id}`}>discuss</Link>
                                                               </span>
                                                           </>
                                                       )}
@@ -432,12 +335,7 @@ export default function ItemsList({
                 : null}
             {/* PAGINATION */}
             {isMore ? (
-                <div
-                    className={
-                        showRank
-                            ? "listed-item-more"
-                            : "listed-item-more hide-rank"
-                    }>
+                <div className={showRank ? "listed-item-more" : "listed-item-more hide-rank"}>
                     <Link href={isMoreLink}>
                         <span>More</span>
                     </Link>

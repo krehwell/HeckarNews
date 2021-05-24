@@ -32,49 +32,44 @@ export default function Reset({ resetToken, username }) {
         } else {
             setLoading(true);
 
-            resetPassword(
-                username,
-                passwordInputValue,
-                resetToken,
-                (response) => {
-                    setLoading(false);
-                    if (response.invalidTokenError) {
-                        setError({
-                            ...error,
-                            passwordLengthError: false,
-                            expiredTokenError: false,
-                            invalidTokenError: true,
-                            submitError: false,
-                        });
-                    } else if (response.expiredTokenError) {
-                        setError({
-                            ...error,
-                            passwordLengthError: false,
-                            expiredTokenError: true,
-                            invalidTokenError: false,
-                            submitError: false,
-                        });
-                    } else if (response.passwordLengthError) {
-                        setError({
-                            ...error,
-                            passwordLengthError: true,
-                            expiredTokenError: false,
-                            invalidTokenError: false,
-                            submitError: false,
-                        });
-                    } else if (response.submitError || !response.success) {
-                        setError({
-                            ...error,
-                            passwordLengthError: false,
-                            expiredTokenError: false,
-                            invalidTokenError: false,
-                            submitError: true,
-                        });
-                    } else {
-                        window.location.href = "/login";
-                    }
+            resetPassword(username, passwordInputValue, resetToken, (response) => {
+                setLoading(false);
+                if (response.invalidTokenError) {
+                    setError({
+                        ...error,
+                        passwordLengthError: false,
+                        expiredTokenError: false,
+                        invalidTokenError: true,
+                        submitError: false,
+                    });
+                } else if (response.expiredTokenError) {
+                    setError({
+                        ...error,
+                        passwordLengthError: false,
+                        expiredTokenError: true,
+                        invalidTokenError: false,
+                        submitError: false,
+                    });
+                } else if (response.passwordLengthError) {
+                    setError({
+                        ...error,
+                        passwordLengthError: true,
+                        expiredTokenError: false,
+                        invalidTokenError: false,
+                        submitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    setError({
+                        ...error,
+                        passwordLengthError: false,
+                        expiredTokenError: false,
+                        invalidTokenError: false,
+                        submitError: true,
+                    });
+                } else {
+                    window.location.href = "/login";
                 }
-            );
+            });
         }
     };
 
@@ -108,19 +103,11 @@ export default function Reset({ resetToken, username }) {
                         <span>New Password:</span>
                     </div>
                     <div className="reset-password-input-item-input">
-                        <input
-                            type="password"
-                            value={passwordInputValue}
-                            onChange={updatePasswordInputValue}
-                        />
+                        <input type="password" value={passwordInputValue} onChange={updatePasswordInputValue} />
                     </div>
                 </div>
                 <div className="reset-password-submit-btn">
-                    <input
-                        type="submit"
-                        value="Change"
-                        onClick={() => submitRequest()}
-                    />
+                    <input type="submit" value="Change" onClick={() => submitRequest()} />
                     {loading && <span> loading...</span>}
                 </div>
             </div>

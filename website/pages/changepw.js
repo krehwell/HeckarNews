@@ -77,17 +77,13 @@ export default function ChangePw({ userContainsEmail, username }) {
     return (
         <div className="layout-wrapper">
             <HeadMetadata title="Change Password | HeckarNews" />
-            <AlternateHeader
-                displayMessage={`Change Password for ${username}`}
-            />
+            <AlternateHeader displayMessage={`Change Password for ${username}`} />
             <div className="changepw-content-container">
                 {!userContainsEmail && (
                     <div className="changepw-error-msg">
                         <span>
-                            First, please put a valid email address in your{" "}
-                            <a href={`/user?id=${username}`}>profile</a>.
-                            Otherwise you could lose your account if you mistype
-                            your new password.
+                            First, please put a valid email address in your <a href={`/user?id=${username}`}>profile</a>
+                            . Otherwise you could lose your account if you mistype your new password.
                         </span>
                     </div>
                 )}
@@ -115,11 +111,7 @@ export default function ChangePw({ userContainsEmail, username }) {
                         <span>Current Password:</span>
                     </div>
                     <div className="changepw-input-item-input">
-                        <input
-                            type="password"
-                            value={currentInputValue}
-                            onChange={updateCurrentInputValue}
-                        />
+                        <input type="password" value={currentInputValue} onChange={updateCurrentInputValue} />
                     </div>
                 </div>
 
@@ -129,21 +121,13 @@ export default function ChangePw({ userContainsEmail, username }) {
                         <span>New Password:</span>
                     </div>
                     <div className="changepw-input-item-input">
-                        <input
-                            type="password"
-                            value={newInputValue}
-                            onChange={updateNewInputValue}
-                        />
+                        <input type="password" value={newInputValue} onChange={updateNewInputValue} />
                     </div>
                 </div>
 
                 {/* SUBMIT BTN */}
                 <div className="changepw-submit-btn">
-                    <input
-                        type="submit"
-                        value="Change"
-                        onClick={() => submitRequest()}
-                    />
+                    <input type="submit" value="Change" onClick={() => submitRequest()} />
                     {loading && <span> loading...</span>}
                 </div>
             </div>

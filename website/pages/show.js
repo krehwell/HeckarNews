@@ -5,14 +5,7 @@ import ItemsList from "../components/itemsList.js";
 
 import getRankedShowItemsByPage from "../api/items/getRankedShowItemsByPage.js";
 
-export default function Show({
-    items,
-    authUserData,
-    page,
-    isMore,
-    getDataError,
-    goToString,
-}) {
+export default function Show({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (
         <div className="layout-wrapper">
             <HeadMetadata title="Show | HeckarNews" />
@@ -28,10 +21,8 @@ export default function Show({
                     <>
                         <div className="show-items-top-text">
                             <span>
-                                Please read the{" "}
-                                <a href="/showguidelines">rules</a>. You can
-                                also browse the <a href="/shownew">newest</a>{" "}
-                                Show submissions.
+                                Please read the <a href="/showguidelines">rules</a>. You can also browse the&nbsp;
+                                <a href="/shownew">newest</a> Show submissions.
                             </span>
                         </div>
                         <ItemsList
@@ -65,8 +56,7 @@ export async function getServerSideProps({ req, query }) {
     return {
         props: {
             items: (apiResult && apiResult.items) || [],
-            authUserData:
-                apiResult && apiResult.authUser ? apiResult.authUser : {},
+            authUserData: apiResult && apiResult.authUser ? apiResult.authUser : {},
             page: page || 0,
             isMore: (apiResult && apiResult.isMore) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,

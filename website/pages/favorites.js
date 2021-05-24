@@ -22,13 +22,7 @@ export default function Favorites({
 }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata
-                title={
-                    !notFoundError
-                        ? `${userId}'s favorites | HeckarNews`
-                        : "HeckarNews"
-                }
-            />
+            <HeadMetadata title={!notFoundError ? `${userId}'s favorites | HeckarNews` : "HeckarNews"} />
             <Header
                 userSignedIn={authUserData && authUserData.userSignedIn}
                 username={authUserData && authUserData.username}
@@ -39,22 +33,13 @@ export default function Favorites({
             <div className="items-list-content-container">
                 {!getDataError && !notFoundError ? (
                     <>
-                        <div
-                            className={
-                                showItems
-                                    ? "favorites-top-links items"
-                                    : "favorites-top-links comments"
-                            }>
+                        <div className={showItems ? "favorites-top-links items" : "favorites-top-links comments"}>
                             <span className={showItems ? "active" : null}>
-                                <Link href={`/favorites?id=${userId}`}>
-                                    submissions
-                                </Link>
+                                <Link href={`/favorites?id=${userId}`}>submissions</Link>
                             </span>
                             <span> | </span>
                             <span className={showComments ? "active" : null}>
-                                <Link href={`/favorites?id=${userId}&comments=t`}>
-                                    comments
-                                </Link>
+                                <Link href={`/favorites?id=${userId}&comments=t`}>comments</Link>
                             </span>
                         </div>
 
@@ -67,26 +52,17 @@ export default function Favorites({
                                         goToString={goToString}
                                         userSignedIn={authUserData.userSignedIn}
                                         currUsername={authUserData.username}
-                                        showUnfavoriteOption={
-                                            userId === authUserData.username
-                                        }
+                                        showUnfavoriteOption={userId === authUserData.username}
                                         showRank={true}
-                                        isMoreLink={`/favorites?id=${userId}&page=${
-                                            page + 1
-                                        }`}
+                                        isMoreLink={`/favorites?id=${userId}&page=${page + 1}`}
                                         isMore={isMoreItems}
                                     />
                                 ) : (
                                     <div className="favorites-none-found-msg items">
+                                        <p>{userId} hasn’t added any favorite submissions yet.</p>
                                         <p>
-                                            {userId} hasn’t added any favorite
-                                            submissions yet.
-                                        </p>
-                                        <p>
-                                            To add an item to your own
-                                            favorites, click on its timestamp to
-                                            go to its page, then click
-                                            'favorite' at the top.
+                                            To add an item to your own favorites, click on its timestamp to go to its
+                                            page, then click 'favorite' at the top.
                                         </p>
                                     </div>
                                 )}
@@ -96,11 +72,7 @@ export default function Favorites({
                     </>
                 ) : (
                     <div className="items-list-error-msg">
-                        {notFoundError ? (
-                            <span>No such user.</span>
-                        ) : (
-                            <span>An error occurred.</span>
-                        )}
+                        {notFoundError ? <span>No such user.</span> : <span>An error occurred.</span>}
                     </div>
                 )}
             </div>
@@ -134,9 +106,7 @@ export async function getServerSideProps({ req, query }) {
 
     const goToString =
         page > 1
-            ? `favorites?id=${userId}${
-                  showItems ? "" : "&comments=t"
-              }&page=${page}`
+            ? `favorites?id=${userId}${showItems ? "" : "&comments=t"}&page=${page}`
             : `favorites?id=${userId}${showItems ? "" : "&comments=t"}`;
 
     // console.log(itemsApiResult);
@@ -148,19 +118,12 @@ export async function getServerSideProps({ req, query }) {
             isMoreItems: (itemsApiResult && itemsApiResult.isMore) || false,
             comments: (commentsApiResult && commentsApiResult.comments) || [],
             showComments: !showItems,
-            isMoreComments:
-                (commentsApiResult && commentsApiResult.isMore) || false,
+            isMoreComments: (commentsApiResult && commentsApiResult.isMore) || false,
             userId: userId || "",
             page: page || 0,
             authUserData: authUserData || {},
-            notFoundError:
-                itemsApiResult.notFoundError ||
-                commentsApiResult.notFoundError ||
-                false,
-            getDataError:
-                itemsApiResult.getDataError ||
-                commentsApiResult.getDataError ||
-                false,
+            notFoundError: itemsApiResult.notFoundError || commentsApiResult.notFoundError || false,
+            getDataError: itemsApiResult.getDataError || commentsApiResult.getDataError || false,
             goToString: goToString || "",
         },
     };

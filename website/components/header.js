@@ -2,14 +2,7 @@ import Link from "next/link";
 
 import logoutUser from "../api/users/logoutUser";
 
-export default function Header({
-    userSignedIn,
-    username,
-    karma,
-    goto,
-    pageName,
-    label,
-}) {
+export default function Header({ userSignedIn, username, karma, goto, pageName, label }) {
     const requestLogout = () => {
         logoutUser(() => {
             window.location.reload();
@@ -37,11 +30,7 @@ export default function Header({
                             {userSignedIn ? (
                                 <>
                                     <Link
-                                        className={
-                                            pageName === "threads"
-                                                ? "white-text"
-                                                : null
-                                        }
+                                        className={pageName === "threads" ? "white-text" : null}
                                         href={`/threads?id=${username}`}>
                                         threads
                                     </Link>
@@ -50,37 +39,19 @@ export default function Header({
                             ) : null}
                             <Link href="/past">past</Link>
                             <span> | </span>
-                            <Link
-                                className={
-                                    pageName === "newcomments"
-                                        ? "white-text"
-                                        : null
-                                }
-                                href="/newcomments">
+                            <Link className={pageName === "newcomments" ? "white-text" : null} href="/newcomments">
                                 comments
                             </Link>
                             <span> | </span>
-                            <Link
-                                className={
-                                    pageName === "ask" ? "white-text" : null
-                                }
-                                href="/ask">
+                            <Link className={pageName === "ask" ? "white-text" : null} href="/ask">
                                 ask
                             </Link>
                             <span> | </span>
-                            <Link
-                                className={
-                                    pageName === "show" ? "white-text" : null
-                                }
-                                href="/show">
+                            <Link className={pageName === "show" ? "white-text" : null} href="/show">
                                 show
                             </Link>
                             <span> | </span>
-                            <Link
-                                className={
-                                    pageName === "submit" ? "white-text" : null
-                                }
-                                href="/submit">
+                            <Link className={pageName === "submit" ? "white-text" : null} href="/submit">
                                 submit
                             </Link>
                             {label ? (
@@ -95,28 +66,16 @@ export default function Header({
                         <span className="header-right-nav-links-items">
                             {userSignedIn ? (
                                 <>
-                                    <Link href={`/user?id=${username}`}>
-                                        {username}
-                                    </Link>
+                                    <Link href={`/user?id=${username}`}>{username}</Link>
                                     <span> ({karma.toLocaleString()})</span>
                                     <span> | </span>
-                                    <span
-                                        className="header-logout"
-                                        onClick={() => requestLogout()}>
+                                    <span className="header-logout" onClick={() => requestLogout()}>
                                         logout
                                     </span>
                                 </>
                             ) : (
                                 <>
-                                    <Link
-                                        href={`/login${
-                                            goto
-                                                ? "?goto=" +
-                                                  encodeURIComponent(goto)
-                                                : ""
-                                        }`}>
-                                        login
-                                    </Link>
+                                    <Link href={`/login${goto ? "?goto=" + encodeURIComponent(goto) : ""}`}>login</Link>
                                 </>
                             )}
                         </span>

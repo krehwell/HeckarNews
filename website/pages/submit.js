@@ -80,84 +80,79 @@ export default function Submit({}) {
         } else {
             setState({ ...state, loading: true });
 
-            submitNewItem(
-                state.titleInputValue,
-                state.urlInputValue,
-                state.textInputValue,
-                (response) => {
-                    if (response.authError) {
-                        window.location.href = "/login?goto=submit";
-                    } else if (response.titleRequiredError) {
-                        setState({
-                            ...state,
-                            loading: false,
-                            titleRequiredError: true,
-                            titleTooLongError: false,
-                            invalidUrlError: false,
-                            urlAndTextError: false,
-                            textTooLongError: false,
-                            submitError: false,
-                        });
-                    } else if (response.urlAndTextError) {
-                        setState({
-                            ...state,
-                            loading: false,
-                            titleRequiredError: false,
-                            titleTooLongError: false,
-                            invalidUrlError: false,
-                            urlAndTextError: true,
-                            textTooLongError: false,
-                            submitError: false,
-                        });
-                    } else if (response.invalidUrlError) {
-                        setState({
-                            ...state,
-                            loading: false,
-                            titleRequiredError: false,
-                            titleTooLongError: false,
-                            invalidUrlError: true,
-                            urlAndTextError: false,
-                            textTooLongError: false,
-                            submitError: false,
-                        });
-                    } else if (response.titleTooLongError) {
-                        setState({
-                            ...state,
-                            loading: false,
-                            titleRequiredError: false,
-                            titleTooLongError: true,
-                            invalidUrlError: false,
-                            urlAndTextError: false,
-                            textTooLongError: false,
-                            submitError: false,
-                        });
-                    } else if (response.textTooLongError) {
-                        setState({
-                            ...state,
-                            loading: false,
-                            titleRequiredError: false,
-                            titleTooLongError: false,
-                            invalidUrlError: false,
-                            urlAndTextError: false,
-                            textTooLongError: true,
-                            submitError: false,
-                        });
-                    } else if (response.submitError || !response.success) {
-                        setState({
-                            ...state,
-                            loading: false,
-                            titleRequiredError: false,
-                            titleTooLongError: false,
-                            invalidUrlError: false,
-                            urlAndTextError: false,
-                            textTooLongError: false,
-                            submitError: true,
-                        });
-                    } else {
-                        window.location.href = "/newest";
-                    }
+            submitNewItem(state.titleInputValue, state.urlInputValue, state.textInputValue, (response) => {
+                if (response.authError) {
+                    window.location.href = "/login?goto=submit";
+                } else if (response.titleRequiredError) {
+                    setState({
+                        ...state,
+                        loading: false,
+                        titleRequiredError: true,
+                        titleTooLongError: false,
+                        invalidUrlError: false,
+                        urlAndTextError: false,
+                        textTooLongError: false,
+                        submitError: false,
+                    });
+                } else if (response.urlAndTextError) {
+                    setState({
+                        ...state,
+                        loading: false,
+                        titleRequiredError: false,
+                        titleTooLongError: false,
+                        invalidUrlError: false,
+                        urlAndTextError: true,
+                        textTooLongError: false,
+                        submitError: false,
+                    });
+                } else if (response.invalidUrlError) {
+                    setState({
+                        ...state,
+                        loading: false,
+                        titleRequiredError: false,
+                        titleTooLongError: false,
+                        invalidUrlError: true,
+                        urlAndTextError: false,
+                        textTooLongError: false,
+                        submitError: false,
+                    });
+                } else if (response.titleTooLongError) {
+                    setState({
+                        ...state,
+                        loading: false,
+                        titleRequiredError: false,
+                        titleTooLongError: true,
+                        invalidUrlError: false,
+                        urlAndTextError: false,
+                        textTooLongError: false,
+                        submitError: false,
+                    });
+                } else if (response.textTooLongError) {
+                    setState({
+                        ...state,
+                        loading: false,
+                        titleRequiredError: false,
+                        titleTooLongError: false,
+                        invalidUrlError: false,
+                        urlAndTextError: false,
+                        textTooLongError: true,
+                        submitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    setState({
+                        ...state,
+                        loading: false,
+                        titleRequiredError: false,
+                        titleTooLongError: false,
+                        invalidUrlError: false,
+                        urlAndTextError: false,
+                        textTooLongError: false,
+                        submitError: true,
+                    });
+                } else {
+                    window.location.href = "/newest";
                 }
-            );
+            });
         }
     };
 
@@ -184,9 +179,8 @@ export default function Submit({}) {
                 {state.urlAndTextError ? (
                     <div className="submit-content-error-msg">
                         <span>
-                            Submissions can’t have both urls and text, so you
-                            need to pick one. If you keep the url, you can
-                            always post your text as a comment in the thread.
+                            Submissions can’t have both urls and text, so you need to pick one. If you keep the url, you
+                            can always post your text as a comment in the thread.
                         </span>
                     </div>
                 ) : null}
@@ -207,11 +201,7 @@ export default function Submit({}) {
                         <span>title</span>
                     </div>
                     <div className="submit-content-input-item-input">
-                        <input
-                            type="text"
-                            value={state.titleInputValue}
-                            onChange={updateTitleInputValue}
-                        />
+                        <input type="text" value={state.titleInputValue} onChange={updateTitleInputValue} />
                     </div>
                 </div>
 
@@ -221,11 +211,7 @@ export default function Submit({}) {
                         <span>url</span>
                     </div>
                     <div className="submit-content-input-item-input">
-                        <input
-                            type="text"
-                            value={state.urlInputValue}
-                            onChange={updateUrlInputValue}
-                        />
+                        <input type="text" value={state.urlInputValue} onChange={updateUrlInputValue} />
                     </div>
                 </div>
 
@@ -239,28 +225,19 @@ export default function Submit({}) {
                         <span>text</span>
                     </div>
                     <div className="submit-content-text-input-item-input">
-                        <textarea
-                            type="text"
-                            value={state.textInputValue}
-                            onChange={updateTextInputValue}
-                        />
+                        <textarea type="text" value={state.textInputValue} onChange={updateTextInputValue} />
                     </div>
                 </div>
 
                 {/* SUBMIT BTN */}
                 <div className="submit-content-input-btn">
-                    <input
-                        type="submit"
-                        value="submit"
-                        onClick={() => submitRequest()}
-                    />
+                    <input type="submit" value="submit" onClick={() => submitRequest()} />
                     {state.loading && <span> loading...</span>}
                 </div>
                 <div className="submit-content-bottom-instructions">
                     <span>
-                        Leave url blank to submit a question for discussion. If
-                        there is no url, the text (if any) will appear at the
-                        top of the thread.
+                        Leave url blank to submit a question for discussion. If there is no url, the text (if any) will
+                        appear at the top of the thread.
                     </span>
                 </div>
             </div>
