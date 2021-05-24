@@ -78,6 +78,6 @@ module.exports = {
 
         comment.pageMetadataTitle = comment.text.replace(/<[^>]+>/g, "");
 
-        return {success: true, comment: comment};
+        return { success: true, comment: comment };
     },
 };
