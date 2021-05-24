@@ -29,10 +29,28 @@ app.post("/comments/add-new-comment", authUser, async (req, res) => {
         );
         res.json(response);
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
             res.json({ submitError: true });
+        }
+    }
+});
+
+app.get("/comments/get-comment-by-id", authUser, async (req, res) => {
+    try {
+        if (!req.query.id) {
+            throw { notFoundError: true, authUser: res.locals };
+        }
+        const response = await api.getCommentById(req.query.id, res.locals);
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ getDataError: true });
         }
     }
 });

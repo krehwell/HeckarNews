@@ -40,7 +40,7 @@ module.exports = {
             created: moment().unix(),
         });
 
-        const saveComment = await newComment.save();
+        const newCommentDoc = await newComment.save();
 
         const promises = [
             UserModel.findOneAndUpdate(
@@ -65,5 +65,19 @@ module.exports = {
         await Promise.all(promises);
 
         return { success: true };
+    },
+
+    getCommentById: async (commentId, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId })
+            .lean()
+            .exec();
+
+        if (!comment) {
+            throw { notFoundError: true };
+        }
+
+        comment.pageMetadataTitle = comment.text.replace(/<[^>]+>/g, "");
+
+        return {success: true, comment: comment};
     },
 };
