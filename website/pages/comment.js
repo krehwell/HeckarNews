@@ -27,6 +27,7 @@ export default function Comment({ comment, authUserData, notFoundError, getDataE
                             userSignedIn={authUserData.userSignedIn}
                             currUsername={authUserData.username}
                             goToString={goToString}
+                            showDownvote={authUserData.showDownvote}
                         />
                     </>
                 ) : (

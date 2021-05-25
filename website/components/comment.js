@@ -7,10 +7,19 @@ import truncateItemTitle from "../utils/truncateItemTitle.js";
 
 import addNewComment from "../api/comments/addNewComment.js";
 import upvoteComment from "../api/comments/upvoteComment.js";
+import downvoteComment from "../api/comments/downvoteComment.js";
 
-export default function CommentComponent({ comment, currUsername, showFavoriteOption, goToString, userSignedIn }) {
+export default function CommentComponent({
+    comment,
+    currUsername,
+    showFavoriteOption,
+    goToString,
+    userSignedIn,
+    showDownvote,
+}) {
     const [replyInputValue, setReplyInputValue] = useState("");
     const [loading, setLoading] = useState(false);
+    const [numOfVote, setNumOfVote] = useState(comment.points);
     const [error, setError] = useState({
         replyTextRequiredError: false,
         replyTextTooLongError: false,
@@ -48,8 +57,7 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                 text: replyInputValue,
             };
 
-            addNewComment(commentData, function (response) {
-                console.log(response);
+            addNewComment(commentData, (response) => {
                 setLoading(false);
                 if (response.authError) {
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
@@ -92,6 +100,28 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                 if (response.authError) {
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else {
+                    setNumOfVote(numOfVote + 1);
+                    setLoading(false);
+                }
+            });
+        }
+    };
+
+    const requestDownvoteComment = () => {
+        if (loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+        } else {
+            setLoading(true);
+
+            comment.votedOnByUser = true;
+
+            downvoteComment(comment.id, comment.parentItemId, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                } else {
+                    setNumOfVote(numOfVote - 1);
                     setLoading(false);
                 }
             });
@@ -111,6 +141,7 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                             ) : null}
                             {comment.by !== currUsername ? (
                                 <>
+                                    {/* COMMENT UPVOTE BUTTON */}
                                     {comment.votedOnByUser || comment.dead ? (
                                         <>
                                             <div className="comment-content-upvote hide">
@@ -130,7 +161,8 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                             ) : null}
                             {comment.by !== currUsername ? (
                                 <>
-                                    {comment.votedOnByUser || comment.dead ? (
+                                    {/* COMMENT DOWNVOTE BUTTON */}
+                                    {comment.votedOnByUser || comment.dead || !showDownvote ? (
                                         <>
                                             <div className="comment-content-downvote hide">
                                                 <span></span>
@@ -138,7 +170,9 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                                         </>
                                     ) : (
                                         <>
-                                            <div className="comment-content-downvote">
+                                            <div
+                                                className="comment-content-downvote"
+                                                onClick={() => requestDownvoteComment()}>
                                                 <span></span>
                                             </div>
                                         </>
