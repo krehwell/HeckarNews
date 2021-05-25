@@ -6,6 +6,7 @@ import renderCreatedTime from "../utils/renderCreatedTime.js";
 import truncateItemTitle from "../utils/truncateItemTitle.js";
 
 import addNewComment from "../api/comments/addNewComment.js";
+import upvoteComment from "../api/comments/upvoteComment.js";
 
 export default function CommentComponent({ comment, currUsername, showFavoriteOption, goToString, userSignedIn }) {
     const [replyInputValue, setReplyInputValue] = useState("");
@@ -77,6 +78,26 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
         }
     };
 
+    const requestUpvoteComment = () => {
+        if (loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+        } else {
+            setLoading(true);
+
+            comment.votedOnByUser = true;
+
+            upvoteComment(comment.id, comment.parentItemId, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                } else {
+                    setLoading(false);
+                }
+            });
+        }
+    };
+
     return (
         <div className="comment-content">
             <table>
@@ -98,7 +119,9 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                                         </>
                                     ) : (
                                         <>
-                                            <div className="comment-content-upvote">
+                                            <div
+                                                className="comment-content-upvote"
+                                                onClick={() => requestUpvoteComment()}>
                                                 <span></span>
                                             </div>
                                         </>
