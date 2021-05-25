@@ -146,4 +146,48 @@ module.exports = {
 
         return { success: true };
     },
+
+    downvoteComment: async (commentId, parentItemId, authUser) => {
+        const [comment, voteDoc] = await Promise.all([
+            CommentModel.findOne({ id: commentId }),
+            UserVoteModel.findOne({
+                username: authUser.username,
+                id: commentId,
+                type: "comment",
+            }).lean(),
+        ]);
+
+        if (!comment || comment.by === authUser.username || comment.dead) {
+            throw { submitError: true };
+        }
+
+        if (voteDoc) {
+            throw { submitError: true };
+        }
+
+        const newUserVoteDoc = new UserVoteModel({
+            username: authUser.username,
+            type: "comment",
+            id: commentId,
+            parentItemId: parentItemId,
+            upvote: false,
+            downvote: true,
+            date: moment().unix(),
+        });
+
+        await newUserVoteDoc.save();
+
+        comment.points = comment.points - 1;
+
+        await comment.save();
+
+        await UserModel.findOneAndUpdate(
+            { username: comment.by },
+            { $inc: { karma: -1 } }
+        )
+            .lean()
+            .exec();
+
+        return { success: true };
+    },
 };
