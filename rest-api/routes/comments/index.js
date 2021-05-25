@@ -55,4 +55,26 @@ app.get("/comments/get-comment-by-id", authUser, async (req, res) => {
     }
 });
 
+app.post("/comments/upvote-comment", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id || !req.body.parentItemId) {
+            throw { submitError: true };
+        }
+        const response = await api.upvoteComment(
+            req.body.id,
+            req.body.parentItemId,
+            res.locals
+        );
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ getDataError: true });
+        }
+    }
+});
+
 module.exports = app;
