@@ -501,11 +501,7 @@ app.get("/items/get-user-hidden-items-by-page", authUser, async (req, res) => {
 
         const response = await api.getUserHiddenItemsByPage(
             req.query.page,
-            res.locals,
-            function (response) {
-                response.authUser = res.locals;
-                res.json(response);
-            }
+            res.locals
         );
         response.authUser = res.locals;
         res.json(response);
@@ -547,13 +543,16 @@ app.get("/items/get-user-upvoted-items-by-page", authUser, async (req, res) => {
 });
 
 /// UPDATE ITEM SCORE EVERY X | 10 Minutes
-cron.schedule(`*/${config.updateScoreTimeScheduleInMinute} * * * *`, async () => {
-    try {
-        const response = await api.updateScoreForItems();
-        console.log("Cron Job Updating Item Score:", response);
-    } catch (error) {
-        console.log("Cron Job Error:", error);
+cron.schedule(
+    `*/${config.updateScoreTimeScheduleInMinute} * * * *`,
+    async () => {
+        try {
+            const response = await api.updateScoreForItems();
+            console.log("Cron Job Updating Item Score:", response);
+        } catch (error) {
+            console.log("Cron Job Error:", error);
+        }
     }
-});
+);
 
 module.exports = app;

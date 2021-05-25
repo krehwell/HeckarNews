@@ -13,6 +13,9 @@ const config = {
     /// ITEM SCORE ALGORITHM CONFIGURATION
     scoreGravity: 1.8,
     updateScoreTimeScheduleInMinute: 10,
+
+    /// VOTE CONFIGURATION
+    minimumKarmaToDownvote: 0,
 };
 
 module.exports = config;

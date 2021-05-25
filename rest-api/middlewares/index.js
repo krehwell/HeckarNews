@@ -1,5 +1,7 @@
 const usersApi = require("../routes/users/api.js");
 
+const config = require("../config.js");
+
 /**
  * Step 1 - Parse the username and authentication tokens from the cookie data inside the request.
  *          Authentication will be deemed unsuccessful if any of that data is missing.
@@ -41,6 +43,8 @@ module.exports = {
             res.locals.karma = authResponse.karma;
             res.locals.containsEmail = authResponse.containsEmail;
             res.locals.showDead = authResponse.showDead;
+            res.locals.showDownvote =
+                authResponse.karma >= config.minimumKarmaToDownvote;
 
             next();
         } catch (error) {
@@ -48,6 +52,7 @@ module.exports = {
             res.locals.username = null;
             res.locals.karma = null;
             res.locals.showDead = false;
+            res.locals.showDownvote = false;
 
             next();
         }
