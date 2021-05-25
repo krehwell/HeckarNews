@@ -148,12 +148,15 @@ export default function CommentComponent({ comment, currUsername, showFavoriteOp
                         </td>
                         <td>
                             <div className="comment-content-details">
-                                {currUsername === comment.by ? (
+                                {/* {currUsername === comment.by ? ( */}
+                                {/*     <span> */}
+                                {/*         {comment.points.toLocaleString()} {renderPointsString(comment.points)} by&nbsp; */}
+                                {/*     </span> */}
+                                {/* ) : null} */}
+                                <span className="comment-content-author">
                                     <span>
                                         {comment.points.toLocaleString()} {renderPointsString(comment.points)} by&nbsp;
                                     </span>
-                                ) : null}
-                                <span className="comment-content-author">
                                     <Link href={`/user?id=${comment.by}`}>{comment.by}</Link>
                                 </span>
                                 <span className="comment-content-time">
