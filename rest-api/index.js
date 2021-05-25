@@ -1,7 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 require('dotenv').config();
@@ -43,8 +42,8 @@ app.use(cors({
 
 
 /// PARSER
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.use(cookieParser());
 
