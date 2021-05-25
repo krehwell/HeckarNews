@@ -181,22 +181,28 @@ export default function CommentComponent({
                             ) : null}
                         </td>
                         <td>
+                            {/* COMMENT DETAILS */}
                             <div className="comment-content-details">
                                 {/* {currUsername === comment.by ? ( */}
                                 {/*     <span> */}
                                 {/*         {comment.points.toLocaleString()} {renderPointsString(comment.points)} by&nbsp; */}
                                 {/*     </span> */}
                                 {/* ) : null} */}
+                                {/* AUTHOR OF COMMENT */}
                                 <span className="comment-content-author">
                                     <span>
                                         {comment.points.toLocaleString()} {renderPointsString(comment.points)} by&nbsp;
                                     </span>
                                     <Link href={`/user?id=${comment.by}`}>{comment.by}</Link>
                                 </span>
+
+                                {/* COMMENT TIME CREATED */}
                                 <span className="comment-content-time">
                                     <Link href={`/comment?id=${comment.id}`}>{renderCreatedTime(comment.created)}</Link>
                                 </span>
                                 {comment.dead ? <span className="comment-content-dead"> [dead]</span> : null}
+
+                                {/* UNVOTE COMMENT? */}
                                 {comment.votedOnByUser && !comment.unvoteExpired && !comment.dead ? (
                                     <>
                                         <span> | </span>
@@ -204,6 +210,8 @@ export default function CommentComponent({
                                     </>
                                 ) : null}
                                 <span> | </span>
+
+                                {/* PARENT OF COMMENT */}
                                 <span className="comment-content-parent">
                                     <Link
                                         href={
@@ -214,6 +222,8 @@ export default function CommentComponent({
                                         parent
                                     </Link>
                                 </span>
+
+                                {/* FAVORITE THIS COMMENT? */}
                                 {showFavoriteOption ? (
                                     <>
                                         {comment.favoritedByUser ? (
@@ -229,6 +239,8 @@ export default function CommentComponent({
                                         )}
                                     </>
                                 ) : null}
+
+                                {/* EDIT COMMENT */}
                                 {comment.by === currUsername && !comment.editAndDeleteExpired && !comment.dead ? (
                                     <>
                                         <span> | </span>
@@ -237,6 +249,8 @@ export default function CommentComponent({
                                         </span>
                                     </>
                                 ) : null}
+
+                                {/* DELETE COMMENT */}
                                 {comment.by === currUsername && !comment.editAndDeleteExpired && !comment.dead ? (
                                     <>
                                         <span> | </span>
@@ -251,6 +265,8 @@ export default function CommentComponent({
                                     </>
                                 ) : null}
                                 <span> | </span>
+
+                                {/* COMMENT BASED ON POST TITLE */}
                                 <span>
                                     on:&nbsp;
                                     <Link href={`/item?id=${comment.parentItemId}`}>
@@ -258,6 +274,8 @@ export default function CommentComponent({
                                     </Link>
                                 </span>
                             </div>
+
+                            {/* COMMENT CONTENT/TEXT */}
                             <div className="comment-content-text">
                                 <span dangerouslySetInnerHTML={{ __html: comment.text }}></span>
                             </div>
