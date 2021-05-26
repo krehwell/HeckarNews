@@ -5,7 +5,6 @@ const config = {
     userCookieExpirationLengthInDays: 365,
 
     /// ITEM CONFIGURATION
-    hrsUntilUnvoteExpires: 24 * 30,
     hrsUntilEditAndDeleteExpires: 24 * 30,
     maxAgeOfRankedItemsInDays: 360,
     itemsPerPage: 30,
@@ -16,6 +15,7 @@ const config = {
 
     /// VOTE CONFIGURATION
     minimumKarmaToDownvote: 0,
+    hrsUntilUnvoteExpires: 24 * 30,
 };
 
 module.exports = config;

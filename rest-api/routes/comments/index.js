@@ -47,10 +47,12 @@ app.get("/comments/get-comment-by-id", authUser, async (req, res) => {
         response.authUser = res.locals;
         res.json(response);
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
+            error.authUser = res.locals;
             res.json(error);
         } else {
-            res.json({ getDataError: true });
+            res.json({ getDataError: true, authUser: res.locals});
         }
     }
 });
@@ -72,7 +74,7 @@ app.post("/comments/upvote-comment", authUser, async (req, res) => {
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
-            res.json({ getDataError: true });
+            res.json({ submitError: true });
         }
     }
 });
@@ -96,7 +98,26 @@ app.post("/comments/downvote-comment", authUser, async (req, res) => {
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
-            res.json({ getDataError: true });
+            res.json({ submitError: true });
+        }
+    }
+});
+
+app.put("/comments/unvote-comment", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+
+        const response = await api.unvoteComment(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
         }
     }
 });

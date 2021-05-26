@@ -8,6 +8,7 @@ const ItemModel = require("../../models/item.js");
 const UserVoteModel = require("../../models/userVote.js");
 
 const utils = require("../utils.js");
+const config = require("../../config.js");
 
 /// COMMENT API
 module.exports = {
@@ -68,6 +69,17 @@ module.exports = {
         return { success: true };
     },
 
+    /**
+     * Step 1 - Query db for the commentId
+     * Step 2 - Filter any meta text
+     * Step 3 - if user not signed in directly return the comment data
+     * Step 4 - else search if user ever vote this comment before on UserVoteModel
+     *          @returns { success: (false | true), comment }
+     * comment is added with the:
+     *        - upvotedByUser: if user ever upvote this comment
+     *        - downvotedByUser
+     *        - votedOnByUser: user ever do and still currently vote to this comment
+    */
     getCommentById: async (commentId, authUser) => {
         const comment = await CommentModel.findOne({ id: commentId })
             .lean()
@@ -93,6 +105,14 @@ module.exports = {
         ]);
 
         comment.votedOnByUser = commentVoteDoc ? true : false;
+
+        comment.upvotedByUser = commentVoteDoc?.upvote || false;
+        comment.downvotedByUser = commentVoteDoc?.downvote || false;
+
+        comment.unvoteExpired =
+            commentVoteDoc &&
+            commentVoteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                moment().unix();
 
         return { success: true, comment: comment };
     },
@@ -187,6 +207,49 @@ module.exports = {
         )
             .lean()
             .exec();
+
+        return { success: true };
+    },
+
+    unvoteComment: async (commentId, authUser) => {
+        const [comment, voteDoc] = await Promise.all([
+            CommentModel.findOne({ id: commentId }),
+            UserVoteModel.findOne({
+                username: authUser.username,
+                id: commentId,
+                type: "comment",
+            }),
+        ]);
+
+        if (!comment || comment.by === authUser.username || comment.dead) {
+            throw { submitError: true };
+        }
+
+        if (
+            !voteDoc ||
+            voteDoc.date + 3600 * config.hrsUntilUnvoteExpires < moment().unix()
+        ) {
+            throw { submitError: true };
+        }
+
+        await voteDoc.remove();
+
+        comment.points = voteDoc.upvote
+            ? comment.points - 1
+            : comment.points + 1;
+
+        await comment.save();
+
+        const user = await UserModel.findOneAndUpdate(
+            { username: comment.by },
+            { $inc: { karma: voteDoc.upvote ? -1 : 1 } }
+        )
+            .lean()
+            .exec();
+
+        if (!user) {
+            throw { submitError: true };
+        }
 
         return { success: true };
     },
