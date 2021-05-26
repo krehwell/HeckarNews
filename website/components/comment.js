@@ -8,6 +8,7 @@ import truncateItemTitle from "../utils/truncateItemTitle.js";
 import addNewComment from "../api/comments/addNewComment.js";
 import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
+import unvoteComment from "../api/comments/unvoteComment.js";
 
 export default function CommentComponent({
     comment,
@@ -128,6 +129,33 @@ export default function CommentComponent({
         }
     };
 
+    const requestUnvoteComment = () => {
+        if (loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+        } else {
+            setLoading(true);
+
+            comment.votedOnByUser = false;
+
+            unvoteComment(comment.id, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                } else {
+                    if (comment.upvotedByUser) {
+                        setNumOfVote(numOfVote - 1);
+                    } else if (comment.downvotedByUser) {
+                        setNumOfVote(numOfVote + 1);
+                    }
+                    setLoading(false);
+                }
+            });
+        }
+    };
+
+    console.log("COMM", comment);
+
     return (
         <div className="comment-content">
             <table>
@@ -189,9 +217,11 @@ export default function CommentComponent({
                                 {/*     </span> */}
                                 {/* ) : null} */}
                                 {/* AUTHOR OF COMMENT */}
+
+                                {/* NUM OF VOTE */}
                                 <span className="comment-content-author">
                                     <span>
-                                        {comment.points.toLocaleString()} {renderPointsString(comment.points)} by&nbsp;
+                                        {numOfVote.toLocaleString()} {renderPointsString(numOfVote)} by&nbsp;
                                     </span>
                                     <Link href={`/user?id=${comment.by}`}>{comment.by}</Link>
                                 </span>
@@ -206,7 +236,9 @@ export default function CommentComponent({
                                 {comment.votedOnByUser && !comment.unvoteExpired && !comment.dead ? (
                                     <>
                                         <span> | </span>
-                                        <span className="comment-content-unvote">un-vote</span>
+                                        <span className="comment-content-unvote" onClick={() => requestUnvoteComment()}>
+                                            un-vote
+                                        </span>
                                     </>
                                 ) : null}
                                 <span> | </span>
