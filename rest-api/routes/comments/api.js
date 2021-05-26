@@ -89,6 +89,7 @@ module.exports = {
             throw { notFoundError: true };
         }
 
+        // this is for website to put it as title meta data
         comment.pageMetadataTitle = comment.text.replace(/<[^>]+>/g, "");
 
         // user user not signed in then just return comment with no vote checkers
