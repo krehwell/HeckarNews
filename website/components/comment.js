@@ -9,6 +9,7 @@ import addNewComment from "../api/comments/addNewComment.js";
 import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
 import unvoteComment from "../api/comments/unvoteComment.js";
+import favoriteComment from "../api/comments/favoriteComment.js";
 
 export default function CommentComponent({
     comment,
@@ -154,6 +155,26 @@ export default function CommentComponent({
         }
     };
 
+    const requestFavoriteComment = () => {
+        if (loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+        } else {
+            setLoading(true);
+
+            favoriteComment(comment.id, (response) => {
+                console.log(response);
+                setLoading(false);
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                } else {
+                    window.location.href = `/favorites?id=${currUsername}&comments=t`;
+                }
+            });
+        }
+    };
+
     console.log("COMM", comment);
 
     return (
@@ -266,7 +287,11 @@ export default function CommentComponent({
                                         ) : (
                                             <>
                                                 <span> | </span>
-                                                <span className="comment-content-favorite">favorite</span>
+                                                <span
+                                                    className="comment-content-favorite"
+                                                    onClick={() => requestFavoriteComment()}>
+                                                    favorite
+                                                </span>
                                             </>
                                         )}
                                     </>
