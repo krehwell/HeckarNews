@@ -52,7 +52,7 @@ app.get("/comments/get-comment-by-id", authUser, async (req, res) => {
             error.authUser = res.locals;
             res.json(error);
         } else {
-            res.json({ getDataError: true, authUser: res.locals});
+            res.json({ getDataError: true, authUser: res.locals });
         }
     }
 });
@@ -112,6 +112,24 @@ app.put("/comments/unvote-comment", authUser, async (req, res) => {
         }
 
         const response = await api.unvoteComment(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
+
+app.post("/comments/favorite-comment", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+        const response = await api.favoriteComment(req.body.id, res.locals);
         res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {

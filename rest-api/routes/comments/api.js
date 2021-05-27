@@ -6,6 +6,7 @@ const CommentModel = require("../../models/comment.js");
 const UserModel = require("../../models/user.js");
 const ItemModel = require("../../models/item.js");
 const UserVoteModel = require("../../models/userVote.js");
+const UserFavoriteModel = require("../../models/userFavorite.js");
 
 const utils = require("../utils.js");
 const config = require("../../config.js");
@@ -79,7 +80,7 @@ module.exports = {
      *        - upvotedByUser: if user ever upvote this comment
      *        - downvotedByUser
      *        - votedOnByUser: user ever do and still currently vote to this comment
-    */
+     */
     getCommentById: async (commentId, authUser) => {
         const comment = await CommentModel.findOne({ id: commentId })
             .lean()
@@ -251,6 +252,32 @@ module.exports = {
         if (!user) {
             throw { submitError: true };
         }
+
+        return { success: true };
+    },
+
+    favoriteComment: async (commentId, authUser) => {
+        const [comment, favorite] = await Promise.All([
+            CommentModel.findOne({ id: commentId }).lean(),
+            UserFavoriteModel.findOne({
+                username: authUser.username,
+                id: commentId,
+                type: "comment",
+            }),
+        ]);
+
+        if (!comment || favorite) {
+            throw { submitError: true };
+        }
+
+        const newFavoriteDoc = new UserFavoriteModel({
+            username: authUser.username,
+            type: "comment",
+            id: commentId,
+            date: moment().unix(),
+        });
+
+        await newFavoriteDoc.save();
 
         return { success: true };
     },
