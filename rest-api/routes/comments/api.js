@@ -98,8 +98,13 @@ module.exports = {
             return { success: true, comment: comment };
         }
 
-        const [commentVoteDoc] = await Promise.all([
+        const [commentVoteDoc, commentFavoriteDoc] = await Promise.all([
             UserVoteModel.findOne({
+                username: authUser.username,
+                id: commentId,
+                type: "comment",
+            }).lean(),
+            UserFavoriteModel.findOne({
                 username: authUser.username,
                 id: commentId,
                 type: "comment",
@@ -107,9 +112,9 @@ module.exports = {
         ]);
 
         comment.votedOnByUser = commentVoteDoc ? true : false;
-
         comment.upvotedByUser = commentVoteDoc?.upvote || false;
         comment.downvotedByUser = commentVoteDoc?.downvote || false;
+        comment.favoritedByUser = commentFavoriteDoc ? true : false;
 
         comment.unvoteExpired =
             commentVoteDoc &&
