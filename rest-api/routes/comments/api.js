@@ -262,13 +262,13 @@ module.exports = {
     },
 
     favoriteComment: async (commentId, authUser) => {
-        const [comment, favorite] = await Promise.All([
-            CommentModel.findOne({ id: commentId }).lean(),
+        const [comment, favorite] = await Promise.all([
+            CommentModel.findOne({ id: commentId }),
             UserFavoriteModel.findOne({
                 username: authUser.username,
                 id: commentId,
                 type: "comment",
-            }),
+            }).lean(),
         ]);
 
         if (!comment || favorite) {
