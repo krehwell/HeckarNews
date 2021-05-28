@@ -121,6 +121,14 @@ module.exports = {
             commentVoteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
                 moment().unix();
 
+        if (comment.by === authUser.username) {
+            const hasEditAndDeleteExpired =
+                comment.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+                    moment().unix() || comment.children.length > 0;
+
+            comment.editAndDeleteExpired = hasEditAndDeleteExpired;
+        }
+
         return { success: true, comment: comment };
     },
 
@@ -296,5 +304,34 @@ module.exports = {
             .exec();
 
         return { success: true };
+    },
+
+    getEditCommentPageData: async (commentId, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId })
+            .lean()
+            .exec();
+
+        if (!comment) {
+            throw { notFoundError: true };
+        } else if (comment.dead) {
+            throw { notAllowedError: true };
+        } else if (comment.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            comment.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (comment.children.length > 0) {
+            throw { notAllowedError: true };
+        }
+
+        comment.textForEditing = comment.text
+            .replace(/<a\b[^>]*>/g, "")
+            .replace(/<\/a>/g, "")
+            .replace(/<i\b[^>]*>/g, "*")
+            .replace(/<\/i>/g, "*");
+
+        return { success: true, comment: comment };
     },
 };

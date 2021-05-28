@@ -161,4 +161,27 @@ app.put("/comments/unfavorite-comment", authUser, async (req, res) => {
     }
 });
 
+app.get("/comments/get-edit-comment-page-data", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { notAllowedError: true, authUser: res.locals };
+        } else if (!req.query.id) {
+            throw { notFoundError: true, authUser: res.locals };
+        }
+        const response = await api.getEditCommentPageData(
+            req.query.id,
+            res.locals
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;
