@@ -10,6 +10,7 @@ import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
 import unvoteComment from "../api/comments/unvoteComment.js";
 import favoriteComment from "../api/comments/favoriteComment.js";
+import unfavoriteComment from "../api/comments/unfavoriteComment.js";
 
 export default function CommentComponent({
     comment,
@@ -175,6 +176,25 @@ export default function CommentComponent({
         }
     };
 
+    const requestUnfavoriteComment = () => {
+        if (loading) return;
+
+        if (!userSignedIn) {
+            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+        } else {
+            setLoading(true);
+
+            comment.favoritedByUser = false;
+
+            unfavoriteComment(comment.id, function (response) {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                }
+                setLoading(false);
+            });
+        }
+    };
+
     console.log("COMM", comment);
 
     return (
@@ -279,21 +299,29 @@ export default function CommentComponent({
                                 {/* FAVORITE THIS COMMENT? */}
                                 {showFavoriteOption ? (
                                     <>
-                                        {comment.favoritedByUser ? (
+                                        {showFavoriteOption ? (
                                             <>
-                                                <span> | </span>
-                                                <span className="comment-content-favorite">un-favorite</span>
+                                                {comment.favoritedByUser ? (
+                                                    <>
+                                                        <span> | </span>
+                                                        <span
+                                                            className="comment-content-favorite"
+                                                            onClick={() => requestUnfavoriteComment()}>
+                                                            un-favorite
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span> | </span>
+                                                        <span
+                                                            className="comment-content-favorite"
+                                                            onClick={() => requestFavoriteComment()}>
+                                                            favorite
+                                                        </span>
+                                                    </>
+                                                )}
                                             </>
-                                        ) : (
-                                            <>
-                                                <span> | </span>
-                                                <span
-                                                    className="comment-content-favorite"
-                                                    onClick={() => requestFavoriteComment()}>
-                                                    favorite
-                                                </span>
-                                            </>
-                                        )}
+                                        ) : null}
                                     </>
                                 ) : null}
 
