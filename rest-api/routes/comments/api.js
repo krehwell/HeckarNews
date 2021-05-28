@@ -288,11 +288,13 @@ module.exports = {
     },
 
     unfavoriteComment: async (commentId, authUser) => {
-        const favorite = await UserFavoriteModel.findOneAndRemove({
+        await UserFavoriteModel.findOneAndRemove({
             username: authUser.username,
             id: commentId,
         })
             .lean()
             .exec();
+
+        return { success: true };
     },
 };
