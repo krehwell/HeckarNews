@@ -28,6 +28,7 @@ import "../styles/pages/show.css";
 import "../styles/pages/past.css";
 import "../styles/pages/favorites.css";
 import "../styles/pages/comment.css";
+import "../styles/pages/edit-comment.css";
 
 /// NProgress CONFIG
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
