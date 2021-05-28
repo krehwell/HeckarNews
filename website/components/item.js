@@ -374,7 +374,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
                         <textarea type="text" value={commentInputValue} onChange={updateCommentInputValue} />
                     </div>
                     <div className="item-add-comment-btn">
-                        <input type="submit" value="add comment" onClick={() => requestAddNewComment()} />
+                        <input type="submit" value="add comment" onClick={() => requestAddNewComment()} />&nbsp;
+                        {loading && <span> loading...</span>}
                     </div>
                     {error.commentTextTooLongError ? (
                         <div className="item-add-comment-error">
