@@ -286,4 +286,13 @@ module.exports = {
 
         return { success: true };
     },
+
+    unfavoriteComment: async (commentId, authUser) => {
+        const favorite = await UserFavoriteModel.findOneAndRemove({
+            username: authUser.username,
+            id: commentId,
+        })
+            .lean()
+            .exec();
+    },
 };

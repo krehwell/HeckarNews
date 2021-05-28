@@ -142,4 +142,23 @@ app.post("/comments/favorite-comment", authUser, async (req, res) => {
     }
 });
 
+app.put("/comments/unfavorite-comment", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+        const response = await api.unfavoriteComment(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        console.log(error);
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
+
 module.exports = app;
