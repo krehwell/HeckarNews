@@ -184,4 +184,32 @@ app.get("/comments/get-edit-comment-page-data", authUser, async (req, res) => {
     }
 });
 
+app.put("/comments/edit-comment", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { authError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        } else if (!req.body.newCommentText) {
+            throw { textRequiredError: true };
+        } else if (req.body.newCommentText.length > 5000) {
+            throw { textTooLongError: true };
+        }
+        const response = await api.editComment(
+            req.body.id,
+            req.body.newCommentText,
+            res.locals
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;

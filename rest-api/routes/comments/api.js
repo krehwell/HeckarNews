@@ -334,4 +334,35 @@ module.exports = {
 
         return { success: true, comment: comment };
     },
+
+    editComment: async (commentId, newCommentText, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId }).exec();
+
+        if (!comment) {
+            throw { notFoundError: true };
+        } else if (comment.dead) {
+            throw { notAllowedError: true };
+        } else if (comment.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            comment.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (comment.children.length > 0) {
+            throw { notAllowedError: true };
+        }
+
+        newCommentText = newCommentText.trim();
+        newCommentText = newCommentText.replace(/<[^>]+>/g, "");
+        newCommentText = newCommentText.replace(/\*([^*]+)\*/g, "<i>$1</i>");
+        newCommentText = linkifyUrls(newCommentText);
+        newCommentText = xss(newCommentText);
+
+        comment.text = newCommentText;
+
+        await comment.save();
+
+        return { success: true };
+    },
 };
