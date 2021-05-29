@@ -56,6 +56,7 @@ module.exports = {
             ).lean(),
         ];
 
+        // push myself (comment) to be in the array of my parent comment
         if (!commentData.isParent) {
             const commentRefPromise = CommentModel.findOneAndUpdate(
                 { id: commentData.parentCommentId },
@@ -387,5 +388,48 @@ module.exports = {
         }
 
         return { success: true, comment: comment };
+    },
+
+    deleteComment: async (commentId, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId }).exec();
+
+        if (!comment) {
+            throw { submitError: true };
+        } else if (comment.dead) {
+            throw { notAllowedError: true };
+        } else if (comment.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            comment.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (comment.children.length > 0) {
+            throw { notAllowedError: true };
+        }
+
+        await comment.remove();
+
+        const newUserKarmaValue = authUser.karma - comment.points;
+
+        await ItemModel.findOneAndUpdate(
+            { id: comment.parentItemId },
+            { $inc: { commentCount: -1 } }
+        ).lean().exec();
+
+        await UserModel.findOneAndUpdate(
+            { username: authUser.username },
+            { karma: newUserKarmaValue }
+        ).lean().exec();
+
+        // remove this comments (children) from parent
+        if (!comment.isParent) {
+            await CommentModel.findOneAndUpdate(
+                { id: comment.parentCommentId },
+                { $pullAll: { children: [comment._id] } }
+            ).lean().exec();
+        }
+
+        return { success: true };
     },
 };

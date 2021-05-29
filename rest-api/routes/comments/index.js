@@ -206,7 +206,7 @@ app.put("/comments/edit-comment", authUser, async (req, res) => {
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
-            res.json({ getDataError: true, authUser: res.locals });
+            res.json({ submitError: true });
         }
     }
 });
@@ -237,5 +237,24 @@ app.get(
         }
     }
 );
+
+app.put("/comments/delete-comment", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn) {
+            throw { notAllowedError: true };
+        } else if (!req.body.id) {
+            throw { submitError: true };
+        }
+
+        const response = await api.deleteComment(req.body.id, res.locals);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
 
 module.exports = app;
