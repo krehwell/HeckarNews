@@ -1,0 +1,138 @@
+.delete-comment-content-container {
+  padding: 15px 0px 15px 0px;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13.5px;
+  color: #828282;
+}
+
+.delete-comment-top-section {
+  color: #828282;
+  font-size: 10.75px;
+}
+
+.delete-comment-top-section a,
+.delete-comment-top-section a:visited {
+  text-decoration: none;
+  color: #828282;
+}
+
+.delete-comment-top-section a:hover {
+  text-decoration: underline;
+}
+
+.delete-comment-top-section-left-section {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+}
+
+.delete-comment-top-section-star {
+  position:relative;
+  top: -2px;
+  vertical-align: top;
+  text-align: center;
+  color: rgb(255, 102, 0);
+  font-size: 13.5px;
+  width: 20px;
+}
+
+.delete-comment-top-section-right-section {
+  display: inline-block;
+}
+
+.delete-comment-content-text {
+  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+  color: #000000;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+
+.delete-comment-content-text a {
+  color: #000000;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.delete-comment-content-text a:link {
+  text-decoration: underline;
+}
+
+.delete-comment-content-text a:visited {
+  color: #828282;
+}
+
+.delete-comment-confirm-msg {
+  margin-top: 15px;
+  margin-left: 20px;
+  font-size: 13.5px;
+}
+
+.delete-comment-btns {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.delete-comment-btns input {
+  -webkit-appearance: push-button;
+  user-select: none;
+  white-space: pre;
+  align-items: flex-start;
+  text-align: center;
+  cursor: default;
+  color: buttontext;
+  background-color: buttonface;
+  box-sizing: border-box;
+  padding: 1px 6px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonface;
+  border-image: initial;
+}
+
+.delete-comment-btns input[type="submit"] {
+  font-family: monospace;
+  font-size: 13.5px;
+}
+
+.delete-comment-btns input[type="submit"]:active {
+  border-style: inset;
+}
+
+.delete-comment-btns input {
+  font-family: monospace;
+  font-size: 13.5px;
+}
+
+.delete-comment-yes-btn {
+  margin-right: 7.5px;
+}
+
+.delete-comment-submit-error-msg {
+  color: #828282;
+  font-size: 13.5px;
+  margin-top: 15px;
+  margin-left: 20px;
+}
+
+.delete-comment-error-msg {
+  margin: 8px;
+  font-size: 13.5px;
+  color: #828282;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+  .delete-comment-content-text {
+    font-size: 13.5px;
+  }
+
+  .delete-comment-content-text a {
+    max-width: 250px;
+  }
+}
