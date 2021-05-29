@@ -9,6 +9,7 @@ import renderCreatedTime from "../utils/renderCreatedTime.js";
 import truncateItemTitle from "../utils/truncateItemTitle.js";
 
 import getEditCommentPageData from "../api/comments/getEditCommentPageData.js";
+import editComment from "../api/comments/editComment.js";
 
 export default function EditComment({
     comment,
@@ -57,7 +58,37 @@ export default function EditComment({
             });
         } else {
             setLoading(true);
-            //...
+
+            editComment(comment.id, commentInputValue, (response) => {
+                if (response.authError) {
+                    window.location.href = `/login?goto=${goToString}`;
+                } else if (response.notAllowedError) {
+                    setError({ ...error, notAllowedError: true });
+                } else if (response.notFoundError) {
+                    setError({ ...error, notFoundError: true });
+                } else if (response.textRequiredError) {
+                    setError({
+                        textRequiredError: true,
+                        textTooLongError: false,
+                        submitError: false,
+                    });
+                } else if (response.textTooLongError) {
+                    setError({
+                        textRequiredError: false,
+                        textTooLongError: true,
+                        submitError: false,
+                    });
+                } else if (response.submitError || !response.success) {
+                    setError({
+                        textRequiredError: false,
+                        textTooLongError: false,
+                        submitError: true,
+                    });
+                } else {
+                    window.location.href = `/comment?id=${comment.id}`;
+                }
+                setLoading(false);
+            });
         }
     };
 
