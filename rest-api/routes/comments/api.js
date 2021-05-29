@@ -365,4 +365,27 @@ module.exports = {
 
         return { success: true };
     },
+
+    getDeleteCommentPageData: async (commentId, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId })
+            .lean()
+            .exec();
+
+        if (!comment) {
+            throw { notFoundError: true };
+        } else if (comment.dead) {
+            throw { notAllowedError: true };
+        } else if (comment.by !== authUser.username) {
+            throw { notAllowedError: true };
+        } else if (
+            comment.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+            moment().unix()
+        ) {
+            throw { notAllowedError: true };
+        } else if (comment.children.length > 0) {
+            throw { notAllowedError: true };
+        }
+
+        return { success: true, comment: comment };
+    },
 };

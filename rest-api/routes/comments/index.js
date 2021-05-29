@@ -204,12 +204,38 @@ app.put("/comments/edit-comment", authUser, async (req, res) => {
         res.json(response);
     } catch (error) {
         if (!(error instanceof Error)) {
-            error.authUser = res.locals;
             res.json(error);
         } else {
             res.json({ getDataError: true, authUser: res.locals });
         }
     }
 });
+
+app.get(
+    "/comments/get-delete-comment-page-data",
+    authUser,
+    async (req, res) => {
+        try {
+            if (!res.locals.userSignedIn) {
+                throw { notAllowedError: true, authUser: res.locals };
+            } else if (!req.query.id) {
+                throw { notFoundError: true, authUser: res.locals };
+            }
+            const response = await api.getDeleteCommentPageData(
+                req.query.id,
+                res.locals
+            );
+            response.authUser = res.locals;
+            res.json(response);
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                error.authUser = res.locals;
+                res.json(error);
+            } else {
+                res.json({ getDataError: true, authUser: res.locals });
+            }
+        }
+    }
+);
 
 module.exports = app;
