@@ -64,6 +64,7 @@ function autoPopulateChildrenComments(next) {
 
         if (!this.options.showDeadComments) filterObj.dead = false;
 
+        // Mongoose Populate: https://stackoverflow.com/a/53002303/13825733
         this.populate({
             path: "children",
             match: filterObj,

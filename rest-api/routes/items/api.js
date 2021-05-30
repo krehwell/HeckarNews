@@ -1592,11 +1592,14 @@ module.exports = {
 
         const items = await ItemModel.aggregate([
             {
+                // $match: https://docs.mongodb.com/manual/reference/operator/aggregation/match/
                 $match: itemsDbQuery,
             },
             {
+                // $addFields: https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/
                 $addFields: {
                     __order: {
+                        // sort by -> search the arrayOfItemIds match the $id of the doc, it means it is first created
                         $indexOfArray: [arrayOfItemIds, "$id"],
                     },
                 },
@@ -1699,11 +1702,14 @@ module.exports = {
 
         const items = await ItemModel.aggregate([
             {
+                // $match: https://docs.mongodb.com/manual/reference/operator/aggregation/match/
                 $match: itemsDbQuery,
             },
             {
+                // $addFields: https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/
                 $addFields: {
                     __order: {
+                        // sort by -> search the arrayOfItemIds match the $id of the doc, it means it is first created
                         $indexOfArray: [arrayOfItemIds, "$id"],
                     },
                 },
@@ -1804,11 +1810,14 @@ module.exports = {
 
         const items = await ItemModel.aggregate([
             {
+                // $match: https://docs.mongodb.com/manual/reference/operator/aggregation/match/
                 $match: itemsDbQuery,
             },
             {
+                // $addFields: https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/
                 $addFields: {
                     __order: {
+                        // sort by -> search the arrayOfItemIds match the $id of the doc, it means it is first created
                         $indexOfArray: [arrayOfItemIds, "$id"],
                     },
                 },
