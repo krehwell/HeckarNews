@@ -7,6 +7,7 @@ const UserModel = require("../../models/user.js");
 const UserVoteModel = require("../../models/userVote.js");
 const UserFavoriteModel = require("../../models/userFavorite.js");
 const UserHiddenModel = require("../../models/userHidden.js");
+const CommentModel = require("../../models/comment.js");
 
 const utils = require("../utils.js");
 const config = require("../../config.js");
@@ -80,23 +81,58 @@ module.exports = {
         return { success: true };
     },
 
-    getItemById: async (itemId, authUser) => {
-        const item = await ItemModel.findOne({ id: itemId }).exec();
+    getItemById: async (itemId, page, authUser) => {
+        const showDeadComments = authUser.showDead ? true : false;
+
+        let commentsDbQuery = {
+            parentItemId: itemId,
+            isParent: true,
+        };
+
+        if (!showDeadComments) commentsDbQuery.dead = false;
+
+        const [item, comments, totalNumOfComments] = await Promise.all([
+            ItemModel.findOne({ id: itemId }).lean(),
+            CommentModel.find(commentsDbQuery, null, {
+                getChildrenComment: true,
+                showDeadComments: showDeadComments,
+            })
+                .sort({ points: -1, created: -1 })
+                .skip((page - 1) * config.commentsPerPage)
+                .limit(config.commentsPerPage)
+                .lean(),
+            CommentModel.countDocuments(commentsDbQuery).lean(),
+        ]);
 
         if (!item) {
             throw { notFoundError: true };
         }
 
-        // show item even if user not logged in
+        /// IF USER NOT SIGNED IN
         if (!authUser.userSignedIn) {
-            return { success: true, item: item };
+            return {
+                success: true,
+                item: item,
+                comments: comments,
+                isMoreComments:
+                    totalNumOfComments >
+                    (page - 1) * config.commentsPerPage + config.commentsPerPage
+                        ? true
+                        : false,
+            };
         }
 
-        // find user has been voted or favorited the item
-        const [voteDoc, favoriteDoc, hiddenDoc] = await Promise.all([
+        /// IF USER SIGNED IN
+        const [
+            voteDoc,
+            favoriteDoc,
+            hiddenDoc,
+            commentVoteDocs,
+        ] = await Promise.all([
             UserVoteModel.findOne({
                 username: authUser.username,
                 id: itemId,
+                type: "item",
             }).lean(),
             UserFavoriteModel.findOne({
                 username: authUser.username,
@@ -107,39 +143,94 @@ module.exports = {
                 username: authUser.username,
                 id: itemId,
             }).lean(),
+            UserVoteModel.find({
+                username: authUser.username,
+                type: "comment",
+                parentItemId: itemId,
+            }).lean(),
         ]);
 
-        /**
-         * BUG     : don't know why item can't be mutate on first run.
-         * NOT SURE: why below doesnt work?
-         *           item["votedOnByUser"] = voteDoc ? true : false;
-         * SOLUTION: as below, need to find why tho
-         */
-        const itemClone = { ...item._doc };
-
-        itemClone.votedOnByUser = voteDoc ? true : false;
-
-        // if item already 1 hour long, decline any unvote
-        itemClone.unvoteExpired =
+        // setup all item and user relation
+        item.votedOnByUser = voteDoc ? true : false;
+        item.unvoteExpired =
             voteDoc &&
             voteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
                 moment().unix();
+        item.favoritedByUser = favoriteDoc ? true : false;
+        item.hiddenByUser = hiddenDoc ? true : false;
 
-        itemClone.favoritedByUser = favoriteDoc ? true : false;
-
-        itemClone.hiddenByUser = hiddenDoc ? true : false;
-
-        if (itemClone.by === authUser.username) {
+        // is item still able to be edited/deleted
+        if (item.by === authUser.username) {
             const hasEditAndDeleteExpired =
-                itemClone.created + 3600 * config.hrsUntilEditAndDeleteExpires <
-                    moment().unix() || itemClone.commentCount > 0;
+                item.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+                    moment().unix() || item.commentCount > 0;
 
-            itemClone.editAndDeleteExpired = hasEditAndDeleteExpired;
+            item.editAndDeleteExpired = hasEditAndDeleteExpired;
+        }
+
+        // prepare to get item comment
+        let userCommentVotes = [];
+
+        for (let i = 0; i < commentVoteDocs.length; i++) {
+            userCommentVotes.push(commentVoteDocs[i].id);
+        }
+
+        /**
+         * check each comment within comment RECURSIVELY to
+         * update either user has vote it or not
+         * or allow user to edit its own comment or not
+         */
+        const updateComment = (comment) => {
+            if (comment.by === authUser.username) {
+                const hasEditAndDeleteExpired =
+                    comment.created +
+                        3600 * config.hrsUntilEditAndDeleteExpires <
+                        moment().unix() || comment.children.length > 0;
+
+                comment.editAndDeleteExpired = hasEditAndDeleteExpired;
+            }
+
+            if (userCommentVotes.includes(comment.id)) {
+                comment.votedOnByUser = true;
+
+                for (let i = 0; i < commentVoteDocs.length; i++) {
+                    if (comment.id === commentVoteDocs[i].id) {
+                        comment.unvoteExpired =
+                            commentVoteDocs[i].date +
+                                3600 * config.hrsUntilUnvoteExpires <
+                            moment().unix()
+                                ? true
+                                : false;
+                    }
+                }
+            }
+
+            // IMPORTANT: this could be very dangerous if not tested seriously
+            // CAVEAT: make sure comment gotten is limited at CommentModel.findOne({})
+            // TODO: better to limit num of recursive too in the future.
+            if (comment.children) {
+                for (let i = 0; i < comment.children.length; i++) {
+                    updateComment(comment.children[i]);
+                }
+            }
+        };
+
+        // call update comment function above if comment exist on current item
+        if (comments) {
+            for (let i = 0; i < comments.length; i++) {
+                updateComment(comments[i]);
+            }
         }
 
         return {
             success: true,
-            item: itemClone,
+            item: item,
+            comments: comments,
+            isMoreComments:
+                totalNumOfComments >
+                (page - 1) * config.commentsPerPage + config.commentsPerPage
+                    ? true
+                    : false,
         };
     },
 

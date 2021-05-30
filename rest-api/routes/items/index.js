@@ -51,12 +51,16 @@ app.get("/items/get-item-by-id", authUser, async (req, res) => {
             throw { notFoundError: true, authUser: res.locals };
         }
 
-        const response = await api.getItemById(req.query.id, res.locals);
+        const response = await api.getItemById(
+            req.query.id,
+            req.query.page,
+            res.locals
+        );
         response.authUser = res.locals;
-
+        console.log(response);
         res.json(response);
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
             res.json(error);
