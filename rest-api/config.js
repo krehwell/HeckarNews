@@ -16,6 +16,9 @@ const config = {
     /// VOTE CONFIGURATION
     minimumKarmaToDownvote: 0,
     hrsUntilUnvoteExpires: 24 * 30,
+
+    /// COMMENT CONFIGURATION
+    commentsPerPage: 30,
 };
 
 module.exports = config;

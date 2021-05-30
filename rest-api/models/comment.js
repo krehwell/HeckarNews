@@ -58,6 +58,30 @@ const CommentSchema = new mongoose.Schema({
     },
 });
 
+function autoPopulateChildrenComments(next) {
+    if (this.options.getChildrenComment) {
+        let filterObj = {};
+
+        if (!this.options.showDeadComments) filterObj.dead = false;
+
+        this.populate({
+            path: "children",
+            match: filterObj,
+            options: {
+                getChildrenComment: true,
+                showDeadComments: this.options.showDeadComments,
+            },
+        });
+
+        next();
+    } else {
+        next();
+    }
+}
+
+CommentSchema.pre("find", autoPopulateChildrenComments);
+CommentSchema.pre("findOne", autoPopulateChildrenComments);
+
 CommentSchema.index({
     id: 1,
     by: 1,
