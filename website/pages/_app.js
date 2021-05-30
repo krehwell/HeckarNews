@@ -12,6 +12,7 @@ import "../styles/components/alternateHeader.css";
 import "../styles/components/item.css";
 import "../styles/components/itemsList.css";
 import "../styles/components/comment.css";
+import "../styles/components/commentSection.css";
 
 /// PAGES STYLES
 import "../styles/pages/_error.css";
