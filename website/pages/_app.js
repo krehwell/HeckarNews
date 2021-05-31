@@ -39,5 +39,7 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 export default function MyApp({ Component, pageProps }) {
+    console.clear();
+    console.log("\n\n================================================================================================");
     return <Component {...pageProps} />;
 }
