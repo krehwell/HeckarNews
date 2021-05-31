@@ -58,13 +58,25 @@ const CommentSchema = new mongoose.Schema({
     },
 });
 
+/**
+ * CommentModel.Find or CommentModel.FindOne will return
+ * {...data, children: [object]} where `children` is the data of each child comment
+ */
 function autoPopulateChildrenComments(next) {
     if (this.options.getChildrenComment) {
         let filterObj = {};
 
         if (!this.options.showDeadComments) filterObj.dead = false;
 
-        // Mongoose Populate: https://stackoverflow.com/a/53002303/13825733
+        /**
+         * Since inside `children` property saved is the Mongo _id/ObjectId
+         * the data populate will search through the docs and replace it with
+         * comment docs.
+         * before: children: [objectId("8976fdsafskda"), objectId("kljsfd89fdsdfa")]
+         * after: children: [{comment doc}, {comment doc}]
+         *
+         * Reference: Mongoose Populate: https://stackoverflow.com/a/53002303/13825733
+         */
         this.populate({
             path: "children",
             match: filterObj,
