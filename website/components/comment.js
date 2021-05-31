@@ -195,8 +195,6 @@ export default function CommentComponent({
         }
     };
 
-    console.log("COMM", comment);
-
     return (
         <div className="comment-content">
             <table>

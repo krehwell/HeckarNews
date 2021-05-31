@@ -4,38 +4,15 @@ import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
 import unvoteComment from "../api/comments/unvoteComment.js";
 
+import renderPointsString from "../utils/renderPointsString.js";
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 import sortCommentChildren from "../utils/sortCommentChildren.js";
+import getNumberOfChildrenComments from "../utils/getNumberOfChildrenComments.js";
+import generateCommentTextClassName from "../utils/generateCommentTextClassName.js";
 
-function NestedComments({
-    parentCommentIndex,
-    comment,
-    type,
-    currUsername,
-    showDownvote,
-    goToString,
-    requestUpvoteComment,
-    requestDownvoteComment,
-    requestUnvoteComment,
-}) {
-    return (sortCommentChildren(comment.children) || []).map((comment) => {
-        return (
-            <Comment
-                key={comment.id}
-                parentCommentIndex={parentCommentIndex}
-                comment={comment}
-                type="child"
-                currUsername={currUsername}
-                showDownvote={showDownvote}
-                goToString={goToString}
-                requestUpvoteComment={requestUpvoteComment}
-                requestDownvoteComment={requestDownvoteComment}
-                requestUnvoteComment={requestUnvoteComment}
-            />
-        );
-    }, []);
-}
-
+/**
+ * Render each comment item recursively.
+ */
 function Comment({
     parentCommentIndex,
     comment,
@@ -46,114 +23,203 @@ function Comment({
     requestUpvoteComment,
     requestDownvoteComment,
     requestUnvoteComment,
+    collapseComment,
+    uncollapseComment,
 }) {
+    /// EACH COMMENT CHILD
+    const NestedComments = () => {
+        return (sortCommentChildren(comment?.children) || []).map((comment) => {
+            return (
+                <Comment
+                    key={comment.id}
+                    parentCommentIndex={parentCommentIndex}
+                    comment={comment}
+                    type="child"
+                    currUsername={currUsername}
+                    showDownvote={showDownvote}
+                    goToString={goToString}
+                    requestUpvoteComment={requestUpvoteComment}
+                    requestDownvoteComment={requestDownvoteComment}
+                    requestUnvoteComment={requestUnvoteComment}
+                    collapseComment={collapseComment}
+                    uncollapseComment={uncollapseComment}
+                />
+            );
+        }, []);
+    };
+
+    console.log("COMMENT", comment);
+
     return (
         <>
             <div
                 key={comment.id}
                 className={type === "parent" ? "comment-section-comment parent" : "comment-section-comment child"}>
-                <div className="comment-section-comment-details">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td valign="top">
-                                    {comment.by === currUsername ? (
-                                        <div className="comment-section-comment-star">
-                                            <span>*</span>
-                                        </div>
-                                    ) : null}
-                                    {comment.by !== currUsername ? (
-                                        <>
-                                            {comment.votedOnByUser || comment.dead ? (
-                                                <>
-                                                    <div className="comment-section-comment-upvote hide">
-                                                        <span></span>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <div
-                                                        className="comment-section-comment-upvote"
-                                                        onClick={() => requestUpvoteComment(comment.id)}>
-                                                        <span></span>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </>
-                                    ) : null}
-                                    {comment.by !== currUsername ? (
-                                        <>
-                                            {comment.votedOnByUser || !showDownvote || comment.dead ? (
-                                                <>
-                                                    <div className="comment-section-comment-downvote hide">
-                                                        <span></span>
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <div
-                                                        className="comment-section-comment-downvote"
-                                                        onClick={() => requestDownvoteComment(comment.id)}>
-                                                        <span></span>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </>
-                                    ) : null}
-                                </td>
-                                <td>
-                                    <span>
-                                        <a href={`/user?id=${comment.by}`}>{comment.by}</a>
-                                    </span>
-                                    <span>
-                                        <a href={`/comment?id=${comment.id}`}> {renderCreatedTime(comment.created)}</a>
-                                    </span>
-                                    {comment.dead ? <span> [dead]</span> : null}
-                                    {comment.votedOnByUser && !comment.unvoteExpired ? (
-                                        <>
-                                            <span> | </span>
-                                            <span
-                                                className="comment-section-comment-unvote-btn"
-                                                onClick={() => requestUnvoteComment(comment.id)}>
-                                                un-vote
-                                            </span>
-                                        </>
-                                    ) : null}
-                                    {comment.by === currUsername && !comment.editAndDeleteExpired && !comment.dead ? (
-                                        <>
-                                            <span> | </span>
-                                            <span>
-                                                <a href={`/edit-comment?id=${comment.id}`}>edit</a>
-                                            </span>
-                                        </>
-                                    ) : null}
-                                    {comment.by === currUsername && !comment.editAndDeleteExpired && !comment.dead ? (
-                                        <>
-                                            <span> | </span>
-                                            <span>
-                                                <a
-                                                    href={`/delete-comment?id=${comment.id}&goto=${encodeURIComponent(
-                                                        goToString
-                                                    )}`}>
-                                                    delete
-                                                </a>
-                                            </span>
-                                        </>
-                                    ) : null}
-                                    <div className="comment-section-comment-text">
-                                        <span dangerouslySetInnerHTML={{ __html: comment.text }}></span>
-                                    </div>
-                                    <div className="comment-section-comment-reply">
+                {!comment.isCollapsed ? (
+                    <div className="comment-section-comment-details">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td valign="top">
+                                        {/* COMMENT BY USER PUT * START AS VOTE BUTTON */}
+                                        {comment.by === currUsername ? (
+                                            <div className="comment-section-comment-star">
+                                                <span>*</span>
+                                            </div>
+                                        ) : null}
+                                        {/* UPVOTE BUTTON */}
+                                        {comment.by !== currUsername ? (
+                                            <>
+                                                {comment.votedOnByUser || comment.dead ? (
+                                                    <>
+                                                        <div className="comment-section-comment-upvote hide">
+                                                            <span></span>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div
+                                                            className="comment-section-comment-upvote"
+                                                            onClick={() => requestUpvoteComment(comment.id)}>
+                                                            <span></span>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </>
+                                        ) : null}
+                                        {/* DOWNVOTE BUTTON */}
+                                        {comment.by !== currUsername ? (
+                                            <>
+                                                {comment.votedOnByUser || !showDownvote || comment.dead ? (
+                                                    <>
+                                                        <div className="comment-section-comment-downvote hide">
+                                                            <span></span>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div
+                                                            className="comment-section-comment-downvote"
+                                                            onClick={() => requestDownvoteComment(comment.id)}>
+                                                            <span></span>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </>
+                                        ) : null}
+                                    </td>
+                                    <td>
+                                        {/* COMMENT POINT */}
                                         <span>
-                                            <a href={`/reply?id=${comment.id}`}>reply</a>
+                                            {comment.points}&nbsp;
+                                            {renderPointsString(comment.points)}
                                         </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    {NestedComments}
-                </div>
+                                        &nbsp; | &nbsp;
+                                        {/* AUTHOR OF COMMENT | BY */}
+                                        <span>
+                                            <a href={`/user?id=${comment.by}`}>{comment.by}</a>
+                                        </span>
+                                        <span>
+                                            <a href={`/comment?id=${comment.id}`}>
+                                                &nbsp;
+                                                {renderCreatedTime(comment.created)}
+                                            </a>
+                                        </span>
+                                        {/* IS COMMENT DEAD? */}
+                                        {comment.dead ? <span> [dead]</span> : null}
+                                        {/* COMMENT VOTED? PUT UNVOTE */}
+                                        {comment.votedOnByUser && !comment.unvoteExpired ? (
+                                            <>
+                                                <span> | </span>
+                                                <span
+                                                    className="comment-section-comment-unvote-btn"
+                                                    onClick={() => requestUnvoteComment(comment.id)}>
+                                                    un-vote
+                                                </span>
+                                            </>
+                                        ) : null}
+                                        {/* EDIT COMMENT */}
+                                        {comment.by === currUsername &&
+                                        !comment.editAndDeleteExpired &&
+                                        !comment.dead ? (
+                                            <>
+                                                <span> | </span>
+                                                <span>
+                                                    <a href={`/edit-comment?id=${comment.id}`}>edit</a>
+                                                </span>
+                                            </>
+                                        ) : null}
+                                        {/* DELETE COMMENT */}
+                                        {comment.by === currUsername &&
+                                        !comment.editAndDeleteExpired &&
+                                        !comment.dead ? (
+                                            <>
+                                                <span> | </span>
+                                                <span>
+                                                    <a
+                                                        href={`/delete-comment?id=${
+                                                            comment.id
+                                                        }&goto=${encodeURIComponent(goToString)}`}>
+                                                        delete
+                                                    </a>
+                                                </span>
+                                            </>
+                                        ) : null}
+                                        {/* COLLAPSE/EXPAND COMMENT */}
+                                        <span
+                                            className="comment-section-comment-collapse-btn"
+                                            onClick={() => collapseComment(comment.id, parentCommentIndex)}>
+                                            [‒]
+                                        </span>
+                                        {/* COMMENT CONTENT */}
+                                        <div className={generateCommentTextClassName(comment.points)}>
+                                            <span dangerouslySetInnerHTML={{ __html: comment.text }}></span>
+                                        </div>
+                                        {/* GOT TO REPLY COMMENT */}
+                                        <div className="comment-section-comment-reply">
+                                            <span>
+                                                <a href={`/reply?id=${comment.id}`}>reply</a>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        {/* RENDER CHILD COMMENT */}
+                        <NestedComments
+                            key={comment.id}
+                            parentCommentIndex={parentCommentIndex}
+                            comment={comment}
+                            type="child"
+                            currUsername={currUsername}
+                            showDownvote={showDownvote}
+                            goToString={goToString}
+                            requestUpvoteComment={requestUpvoteComment}
+                            requestDownvoteComment={requestDownvoteComment}
+                            requestUnvoteComment={requestUnvoteComment}
+                            collapseComment={collapseComment}
+                            uncollapseComment={uncollapseComment}
+                        />
+                    </div>
+                ) : (
+                    // IF COMMENT IS COLLPASED, SHOW THIS
+                    <div className="comment-section-comment-collapsed">
+                        <span>
+                            <a href={`/user?id=${comment.by}`}>{comment.by} </a>
+                        </span>
+                        <span>
+                            <a href={`/comment?id=${comment.id}`}>{renderCreatedTime(comment.created)}</a>
+                        </span>
+                        <div className="comment-section-comment-collapsed-btn">
+                            <span
+                                className="comment-section-comment-collapsed-btn-value"
+                                onClick={() => uncollapseComment(comment.id, parentCommentIndex)}>
+                                [+{comment.numOfHiddenChildren}]
+                            </span>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
@@ -170,7 +236,7 @@ export default function CommentSection({
     goToString,
 }) {
     const [loading, setLoading] = useState(false);
-    console.log("COMMENT", comments);
+    const [rerender, setrerender] = useState(false);
 
     const requestUpvoteComment = (commentId) => {
         if (loading) return;
@@ -182,6 +248,8 @@ export default function CommentSection({
 
             const findAndUpdateComment = (parentComment) => {
                 if (parentComment.id === commentId) {
+                    parentComment.points += 1;
+                    parentComment.upvotedByUser = true;
                     parentComment.votedOnByUser = true;
                 } else {
                     if (parentComment.children) {
@@ -201,6 +269,7 @@ export default function CommentSection({
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 }
                 setLoading(false);
+                setrerender(!rerender);
             });
         }
     };
@@ -213,11 +282,11 @@ export default function CommentSection({
         } else {
             setLoading(true);
 
-            const findAndUpdateComment = function (parentComment) {
+            const findAndUpdateComment = (parentComment) => {
                 if (parentComment.id === commentId) {
+                    parentComment.points -= 1;
+                    parentComment.downvotedByUser = true;
                     parentComment.votedOnByUser = true;
-
-                    forceUpdate();
                 } else {
                     if (parentComment.children) {
                         for (let i = 0; i < parentComment.children.length; i++) {
@@ -236,6 +305,7 @@ export default function CommentSection({
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 }
                 setLoading(false);
+                setrerender(!rerender);
             });
         }
     };
@@ -248,8 +318,15 @@ export default function CommentSection({
         } else {
             setLoading(true);
 
-            const findAndUpdateComment = function (parentComment) {
+            const findAndUpdateComment = (parentComment) => {
                 if (parentComment.id === commentId) {
+                    if (parentComment.upvotedByUser) {
+                        parentComment.upvotedByUser = !parentComment.upvotedByUser;
+                        parentComment.points -= 1;
+                    } else if (parentComment.downvotedByUser) {
+                        parentComment.downvotedByUser = !parentComment.downvotedByUser;
+                        parentComment.points += 1;
+                    }
                     parentComment.votedOnByUser = false;
                 } else {
                     if (parentComment.children) {
@@ -264,15 +341,58 @@ export default function CommentSection({
                 findAndUpdateComment(comments[i]);
             }
 
-            unvoteComment(commentId, function (response) {
+            unvoteComment(commentId, (response) => {
                 if (response.authError) {
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 }
                 setLoading(false);
+                setrerender(!rerender);
             });
         }
     };
 
+    const collapseComment = (commentId, parentCommentIndex) => {
+        const findAndUpdateComment = (comment) => {
+            if (comment.id === commentId) {
+                comment.isCollapsed = true;
+
+                if (comment.children) {
+                    comment.numOfHiddenChildren = getNumberOfChildrenComments(comment);
+                } else {
+                    comment.numOfHiddenChildren = 0;
+                }
+            } else {
+                if (comment.children) {
+                    for (let i = 0; i < comment.children.length; i++) {
+                        findAndUpdateComment(comment.children[i]);
+                    }
+                }
+            }
+        };
+
+        findAndUpdateComment(comments[parentCommentIndex]);
+        setrerender(!rerender);
+    };
+
+    const uncollapseComment = (commentId, parentCommentIndex) => {
+        const findAndUpdateComment = (parentComment) => {
+            if (parentComment.id === commentId) {
+                parentComment.isCollapsed = false;
+            } else {
+                if (parentComment.children) {
+                    for (let i = 0; i < parentComment.children.length; i++) {
+                        findAndUpdateComment(parentComment.children[i]);
+                    }
+                }
+            }
+        };
+
+        findAndUpdateComment(comments[parentCommentIndex]);
+        setrerender(!rerender);
+    };
+
+    console.clear();
+    console.log("\n\n============================================================================================");
     return (
         <>
             {comments
@@ -289,10 +409,19 @@ export default function CommentSection({
                               requestUpvoteComment={requestUpvoteComment}
                               requestDownvoteComment={requestDownvoteComment}
                               requestUnvoteComment={requestUnvoteComment}
+                              collapseComment={collapseComment}
+                              uncollapseComment={uncollapseComment}
                           />
                       );
                   })
                 : null}
+            {isMore ? (
+                <div className="comment-section-more">
+                    <span>
+                        <a href={isMoreLink}>More</a>
+                    </span>
+                </div>
+            ) : null}
         </>
     );
 }
