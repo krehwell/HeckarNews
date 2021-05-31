@@ -415,21 +415,60 @@ module.exports = {
         await ItemModel.findOneAndUpdate(
             { id: comment.parentItemId },
             { $inc: { commentCount: -1 } }
-        ).lean().exec();
+        )
+            .lean()
+            .exec();
 
         await UserModel.findOneAndUpdate(
             { username: authUser.username },
             { karma: newUserKarmaValue }
-        ).lean().exec();
+        )
+            .lean()
+            .exec();
 
         // remove this comments (children) from parent
         if (!comment.isParent) {
             await CommentModel.findOneAndUpdate(
                 { id: comment.parentCommentId },
                 { $pullAll: { children: [comment._id] } }
-            ).lean().exec();
+            )
+                .lean()
+                .exec();
         }
 
         return { success: true };
+    },
+
+    getReplyPageData: async (commentId, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId })
+            .lean()
+            .exec();
+        if (!comment) {
+            throw { notFoundError: true };
+        }
+
+        if (comment.by === authUser.username) {
+            const hasEditAndDeleteExpired =
+                comment.created + 3600 * config.hrsUntilEditAndDeleteExpires <
+                    moment().unix() || comment.children.length > 0;
+
+            comment.editAndDeleteExpired = hasEditAndDeleteExpired;
+        }
+
+        const commentVoteDoc = await UserVoteModel.findOne({
+            username: authUser.username,
+            id: commentId,
+            type: "comment",
+        })
+            .lean()
+            .exec();
+
+        comment.votedOnByUser = commentVoteDoc ? true : false;
+        comment.unvoteExpired =
+            commentVoteDoc &&
+            commentVoteDoc.date + 3600 * config.hrsUntilUnvoteExpires <
+                moment().unix();
+
+        return { success: true, comment: comment };
     },
 };
