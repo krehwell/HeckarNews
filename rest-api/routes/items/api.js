@@ -694,7 +694,7 @@ module.exports = {
                 }
 
                 // check if item has been voted by user
-                const voteDoc = await userItemVoteDocs.find((voteDoc) => {
+                const voteDoc = userItemVoteDocs.find((voteDoc) => {
                     return voteDoc.id === items[i].id;
                 });
 
