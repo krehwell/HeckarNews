@@ -201,6 +201,9 @@ module.exports = {
                             moment().unix()
                                 ? true
                                 : false;
+
+                        comment.upvotedByUser = commentVoteDocs[i].upvote || false;
+                        comment.downvotedByUser = commentVoteDocs[i].downvote || false;
                     }
                 }
             }

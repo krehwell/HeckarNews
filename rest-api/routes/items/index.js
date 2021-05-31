@@ -57,7 +57,7 @@ app.get("/items/get-item-by-id", authUser, async (req, res) => {
             res.locals
         );
         response.authUser = res.locals;
-        console.log(response);
+        // console.log(response);
         res.json(response);
     } catch (error) {
         console.log(error);
