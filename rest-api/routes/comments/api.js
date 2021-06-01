@@ -81,9 +81,13 @@ module.exports = {
      *        - upvotedByUser: if user ever upvote this comment
      *        - downvotedByUser
      *        - votedOnByUser: user ever do and still currently vote to this comment
+     * comment also populated with its children comment, count each children and return based on num of comment per page
      */
-    getCommentById: async (commentId, authUser) => {
-        const comment = await CommentModel.findOne({ id: commentId })
+    getCommentById: async (commentId, page, authUser) => {
+        const comment = await CommentModel.findOne({ id: commentId }, null, {
+            getChildrenComment: true,
+            showDeadComments: authUser.showDead,
+        })
             .lean()
             .exec();
 
@@ -94,12 +98,33 @@ module.exports = {
         // this is for website to put it as title meta data
         comment.pageMetadataTitle = comment.text.replace(/<[^>]+>/g, "");
 
+        // sort comment children by points and created
+        comment.children.sort((a, b) => {
+            if (a.points > b.points) return -1;
+            if (a.points < b.points) return 1;
+
+            if (a.created > b.created) return -1;
+            if (a.created < b.created) return 1;
+        });
+
+        const totalNumOfChildrenComments = comment.children.length;
+
+        // slice comment per page
+        comment.children = comment.children.slice(
+            (page - 1) * config.commentsPerPage,
+            page * config.commentsPerPage
+        );
+
         // user user not signed in then just return comment with no vote checkers
         if (!authUser.userSignedIn) {
             return { success: true, comment: comment };
         }
 
-        const [commentVoteDoc, commentFavoriteDoc] = await Promise.all([
+        const [
+            commentVoteDoc,
+            commentFavoriteDoc,
+            commentVotesByUserDocs,
+        ] = await Promise.all([
             UserVoteModel.findOne({
                 username: authUser.username,
                 id: commentId,
@@ -109,6 +134,11 @@ module.exports = {
                 username: authUser.username,
                 id: commentId,
                 type: "comment",
+            }).lean(),
+            UserVoteModel.find({
+                username: authUser.username,
+                type: "comment",
+                parentItemId: comment.parentItemId,
             }).lean(),
         ]);
 
@@ -130,7 +160,67 @@ module.exports = {
             comment.editAndDeleteExpired = hasEditAndDeleteExpired;
         }
 
-        return { success: true, comment: comment };
+        // define if user has voted a certain comment
+        let userCommentVotes = [];
+
+        for (let i = 0; i < commentVotesByUserDocs.length; i++) {
+            userCommentVotes.push(commentVotesByUserDocs[i].id);
+        }
+
+        const updateComment = (parentComment) => {
+            if (parentComment.by === authUser.username) {
+                const hasEditAndDeleteExpired =
+                    parentComment.created +
+                        3600 * config.hrsUntilEditAndDeleteExpires <
+                        moment().unix() || parentComment.children.length > 0;
+
+                parentComment.editAndDeleteExpired = hasEditAndDeleteExpired;
+            }
+
+            // user ever vote this comment?
+            if (userCommentVotes.includes(parentComment.id)) {
+                parentComment.votedOnByUser = true;
+
+                for (let i = 0; i < commentVotesByUserDocs.length; i++) {
+                    if (parentComment.id === commentVotesByUserDocs[i].id) {
+                        parentComment.unvoteExpired =
+                            commentVotesByUserDocs[i].date +
+                                3600 * config.hrsUntilUnvoteExpires <
+                            moment().unix()
+                                ? true
+                                : false;
+                    }
+
+                    // user upvote it or downvote it?
+                    if (parentComment.id === commentVotesByUserDocs[i].id) {
+                        parentComment.upvotedByUser =
+                            commentVotesByUserDocs[i].upvote;
+                        parentComment.downvotedByUser =
+                            commentVotesByUserDocs[i].downvote;
+                    }
+                }
+            }
+
+            if (parentComment.children) {
+                for (let i = 0; i < parentComment.children.length; i++) {
+                    updateComment(parentComment.children[i]);
+                }
+            }
+        };
+
+        for (let i = 0; i < comment.children.length; i++) {
+            updateComment(comment.children[i]);
+        }
+
+        return {
+            success: true,
+            comment: comment,
+            isMoreChildrenComments:
+                totalNumOfChildrenComments >
+                (page - 1) * config.commentsPerPage + config.commentsPerPage
+                    ? true
+                    : false,
+        };
     },
 
     /**
