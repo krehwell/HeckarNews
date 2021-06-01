@@ -2,12 +2,14 @@ import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import CommentComponent from "../components/comment.js";
+import CommentSection from "../components/commentSection.js";
 
 import getCommentById from "../api/comments/getCommentById.js";
 
 import truncateCommentText from "../utils/truncateCommentText.js";
 
-export default function Comment({ comment, authUserData, notFoundError, getDataError, goToString }) {
+export default function Comment({ comment, authUserData, notFoundError, getDataError, goToString, page, isMoreChildrenComments }) {
+    console.log("COMMENT", comment);
     return (
         <div className="layout-wrapper">
             <HeadMetadata
@@ -30,6 +32,16 @@ export default function Comment({ comment, authUserData, notFoundError, getDataE
                             showDownvote={authUserData.showDownvote}
                             showFavoriteOption={true}
                         />
+                        <CommentSection
+                            comments={comment.children}
+                            parentItemId={comment.parentItemId}
+                            isMore={isMoreChildrenComments}
+                            isMoreLink={`/comment?id=${comment.id}&page=${page + 1}`}
+                            userSignedIn={authUserData.userSignedIn}
+                            currUsername={authUserData.username}
+                            showDownvote={authUserData.showDownvote}
+                            goToString={goToString}
+                        />
                     </>
                 ) : (
                     <div className="comment-get-data-error-msg">
@@ -44,8 +56,9 @@ export default function Comment({ comment, authUserData, notFoundError, getDataE
 
 export async function getServerSideProps({ req, query }) {
     const commentId = query.id ? query.id : "";
+    const page = query.page ? parseInt(query.page) : 1;
 
-    const apiResult = await getCommentById(commentId, req);
+    const apiResult = await getCommentById(commentId, page, req);
 
     return {
         props: {
@@ -54,6 +67,8 @@ export async function getServerSideProps({ req, query }) {
             notFoundError: (apiResult && apiResult.notFoundError) || false,
             getDataError: (apiResult && apiResult.getDataError) || false,
             goToString: `comment?id=${commentId}`,
+            page: page,
+            isMoreChildrenComments: apiResult && apiResult.isMoreChildrenComments || false,
         },
     };
 }
