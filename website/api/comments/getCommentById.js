@@ -7,7 +7,7 @@ export default async function getCommentById(commentId, page, req) {
         const cookie = req.headers.cookie ? req.headers.cookie : "";
 
         const response = await axios({
-            url: `${apiBaseUrl}/comments/get-comment-by-id?id=${commentId}&page={page}`,
+            url: `${apiBaseUrl}/comments/get-comment-by-id?id=${commentId}&page=${page}`,
             headers: req ? { cookie: cookie } : "",
             withCredentials: true,
         });
