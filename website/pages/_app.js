@@ -13,6 +13,7 @@ import "../styles/components/item.css";
 import "../styles/components/itemsList.css";
 import "../styles/components/comment.css";
 import "../styles/components/commentSection.css";
+import "../styles/components/commentsList.css"
 
 /// PAGES STYLES
 import "../styles/pages/_error.css";
