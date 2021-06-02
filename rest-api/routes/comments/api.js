@@ -570,8 +570,8 @@ module.exports = {
         const [comments, totalCommentsCount] = await Promise.all([
             CommentModel.find(commentsDbQuery)
                 .sort({ _id: -1 })
-                .skip((page - 1) * commentsPerPage)
-                .limit(commentsPerPage)
+                .skip((page - 1) * config.commentsPerPage)
+                .limit(config.commentsPerPage)
                 .lean(),
             CommentModel.countDocuments(commentsDbQuery).lean(),
         ]);
@@ -621,6 +621,8 @@ module.exports = {
             });
 
             if (commentObj) {
+                commentObj.upvotedByUser = voteDocs[i].upvote || false;
+                commentObj.downvotedByUser = voteDocs[i].downvote || false;
                 commentObj.votedOnByUser = true;
                 commentObj.unvoteExpired =
                     voteDocs[i].date + 3600 * config.hrsUntilUnvoteExpires <

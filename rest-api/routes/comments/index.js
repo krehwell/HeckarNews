@@ -293,6 +293,7 @@ app.get("/comments/get-newest-comments-by-page", authUser, async (req, res) => {
         response.authUser = res.locals;
         res.json(response);
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
             error.authUser = res.locals;
             res.json(error);
