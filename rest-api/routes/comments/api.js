@@ -561,4 +561,83 @@ module.exports = {
 
         return { success: true, comment: comment };
     },
+
+    getNewestCommentsByPage: async (page, authUser) => {
+        let commentsDbQuery = {};
+
+        if (!authUser.showDead) commentsDbQuery.dead = false;
+
+        const [comments, totalCommentsCount] = await Promise.all([
+            CommentModel.find(commentsDbQuery)
+                .sort({ _id: -1 })
+                .skip((page - 1) * commentsPerPage)
+                .limit(commentsPerPage)
+                .lean(),
+            CommentModel.countDocuments(commentsDbQuery).lean(),
+        ]);
+
+        /// IF USER NOT SIGNED IN
+        if (!authUser.userSignedIn) {
+            return {
+                success: true,
+                comments: comments,
+                isMore:
+                    totalCommentsCount >
+                    (page - 1) * config.commentsPerPage + config.commentsPerPage
+                        ? true
+                        : false,
+            };
+        }
+
+        /// IF USER SIGNED IN
+
+        let arrayOfCommentIds = [];
+
+        for (let i = 0; i < comments.length; i++) {
+            if (comments[i].by !== authUser.username)
+                arrayOfCommentIds.push(comments[i].id);
+
+            if (comments[i].by === authUser.username) {
+                const hasEditAndDeleteExpired =
+                    comments[i].created +
+                        3600 * config.hrsUntilEditAndDeleteExpires <
+                        moment().unix() || comments[i].children.length > 0;
+
+                comments[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+            }
+        }
+
+        const voteDocs = await UserVoteModel.find({
+            username: authUser.username,
+            id: { $in: arrayOfCommentIds },
+            type: "comment",
+        })
+            .lean()
+            .exec();
+
+        for (let i = 0; i < voteDocs.length; i++) {
+            const commentObj = comments.find((comment) => {
+                return comment.id === voteDocs[i].id;
+            });
+
+            if (commentObj) {
+                commentObj.votedOnByUser = true;
+                commentObj.unvoteExpired =
+                    voteDocs[i].date + 3600 * config.hrsUntilUnvoteExpires <
+                    moment().unix()
+                        ? true
+                        : false;
+            }
+        }
+
+        return {
+            success: true,
+            comments: comments,
+            isMore:
+                totalCommentsCount >
+                (page - 1) * config.commentsPerPage + config.commentsPerPage
+                    ? true
+                    : false,
+        };
+    },
 };

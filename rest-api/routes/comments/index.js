@@ -281,4 +281,25 @@ app.get("/comments/get-reply-page-data", authUser, async (req, res) => {
     }
 });
 
+app.get("/comments/get-newest-comments-by-page", authUser, async (req, res) => {
+    try {
+        if (!req.query.page) {
+            throw { getDataError: true, authUser: res.locals };
+        }
+        const response = await api.getNewestCommentsByPage(
+            req.query.page,
+            res.locals
+        );
+        response.authUser = res.locals;
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            error.authUser = res.locals;
+            res.json(error);
+        } else {
+            res.json({ getDataError: true, authUser: res.locals });
+        }
+    }
+});
+
 module.exports = app;
