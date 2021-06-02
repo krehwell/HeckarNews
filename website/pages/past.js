@@ -1,5 +1,4 @@
 import moment from "moment";
-import Link from "next/link";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -18,13 +17,13 @@ export default function Past({ items, authUserData, day, page, isMore, getDataEr
             <>
                 <span>Go back a </span>
                 <span>
-                    <Link href={`/past?day=${backOneDay}`}>day</Link>,&nbsp;
+                    <a href={`/past?day=${backOneDay}`}>day</a>,&nbsp;
                 </span>
                 <span>
-                    <Link href={`/past?day=${backOneMonth}`}>month</Link>,&nbsp;
+                    <a href={`/past?day=${backOneMonth}`}>month</a>,&nbsp;
                 </span>
                 <span>
-                    or <Link href={`/past?day=${backOneYear}`}>year</Link>.&nbsp;
+                    or <a href={`/past?day=${backOneYear}`}>year</a>.&nbsp;
                 </span>
             </>
         );
@@ -40,22 +39,22 @@ export default function Past({ items, authUserData, day, page, isMore, getDataEr
         if (differenceInDays >= 365) {
             return (
                 <span>
-                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link>,&nbsp;
-                    <Link href={`/past?day=${forwardOneMonth}`}>month</Link> or&nbsp;
-                    <Link href={`/past?day=${forwardOneYear}`}>year</Link>.
+                    Go forward a <a href={`/past?day=${forwardOneDay}`}>day</a>,&nbsp;
+                    <a href={`/past?day=${forwardOneMonth}`}>month</a> or&nbsp;
+                    <a href={`/past?day=${forwardOneYear}`}>year</a>.
                 </span>
             );
         } else if (differenceInDays >= 30) {
             return (
                 <span>
-                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link> or&nbsp;
-                    <Link href={`/past?day=${forwardOneMonth}`}>month</Link>.
+                    Go forward a <a href={`/past?day=${forwardOneDay}`}>day</a> or&nbsp;
+                    <a href={`/past?day=${forwardOneMonth}`}>month</a>.
                 </span>
             );
         } else if (differenceInDays > 0) {
             return (
                 <span>
-                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link>.
+                    Go forward a <a href={`/past?day=${forwardOneDay}`}>day</a>.
                 </span>
             );
         } else {
