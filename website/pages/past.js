@@ -1,4 +1,5 @@
 import moment from "moment";
+import Link from "next/link";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -17,13 +18,23 @@ export default function Past({ items, authUserData, day, page, isMore, getDataEr
             <>
                 <span>Go back a </span>
                 <span>
-                    <a href={`/past?day=${backOneDay}`}>day</a>,&nbsp;
+                    <Link href={`/past?day=${backOneDay}`}>
+                        <a>day</a>
+                    </Link>
+                    ,&nbsp;
                 </span>
                 <span>
-                    <a href={`/past?day=${backOneMonth}`}>month</a>,&nbsp;
+                    <Link href={`/past?day=${backOneMonth}`}>
+                        <a>month</a>
+                    </Link>
+                    ,&nbsp;
                 </span>
                 <span>
-                    or <a href={`/past?day=${backOneYear}`}>year</a>.&nbsp;
+                    or&nbsp;
+                    <Link href={`/past?day=${backOneYear}`}>
+                        <a>year</a>
+                    </Link>
+                    .&nbsp;
                 </span>
             </>
         );
@@ -39,22 +50,32 @@ export default function Past({ items, authUserData, day, page, isMore, getDataEr
         if (differenceInDays >= 365) {
             return (
                 <span>
-                    Go forward a <a href={`/past?day=${forwardOneDay}`}>day</a>,&nbsp;
-                    <a href={`/past?day=${forwardOneMonth}`}>month</a> or&nbsp;
-                    <a href={`/past?day=${forwardOneYear}`}>year</a>.
+                    Go forward a&nbsp;
+                    <Link href={`/past?day=${forwardOneDay}`}>
+                        <a>day</a>
+                    </Link>
+                    ,&nbsp;
+                    <Link href={`/past?day=${forwardOneMonth}`}>
+                        <a>month</a>
+                    </Link>
+                    &nbsp; or&nbsp;
+                    <Link href={`/past?day=${forwardOneYear}`}>
+                        <a>year</a>
+                    </Link>
+                    .
                 </span>
             );
         } else if (differenceInDays >= 30) {
             return (
                 <span>
-                    Go forward a <a href={`/past?day=${forwardOneDay}`}>day</a> or&nbsp;
-                    <a href={`/past?day=${forwardOneMonth}`}>month</a>.
+                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link> or&nbsp;
+                    <Link href={`/past?day=${forwardOneMonth}`}>month</Link>.
                 </span>
             );
         } else if (differenceInDays > 0) {
             return (
                 <span>
-                    Go forward a <a href={`/past?day=${forwardOneDay}`}>day</a>.
+                    Go forward a <Link href={`/past?day=${forwardOneDay}`}>day</Link>.
                 </span>
             );
         } else {
@@ -111,7 +132,7 @@ export async function getServerSideProps({ req, query }) {
     const page = query.page ? parseInt(query.page) : 1;
 
     const apiResult = await getRankedItemsByDay(day, page, req);
-    // console.log(apiResult);
+    // console.log("API RESULT", apiResult);
 
     return {
         props: {
