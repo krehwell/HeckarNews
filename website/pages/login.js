@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
@@ -88,7 +89,8 @@ export default function Login({ goto }) {
                         loginSubmitError: true,
                     });
                 } else {
-                    window.location.href = `/${goto}`;
+                    Router.push(`/${goto}`);
+                    // location.href = `/${goto}`;
                 }
             });
         }
@@ -154,8 +156,9 @@ export default function Login({ goto }) {
                         createAccountSubmitError: true,
                     });
                 } else {
-                    // refer most bottom below on `getServerSideProps`
-                    window.location.href = `/${goto}`;
+                    // refer most bottom below on `getServerSideProps` for ${goto}
+                    Router.push(`/${goto}`);
+                    // location.href = `/${goto}`;
                 }
             });
         }
@@ -205,7 +208,8 @@ export default function Login({ goto }) {
                 </div>
             </div>
             <div className="login-submit-btn">
-                <input type="submit" value="login" onClick={() => submitLogin()} />&nbsp;
+                <input type="submit" value="login" onClick={() => submitLogin()} />
+                &nbsp;
                 {loading && <span> loading...</span>}
             </div>
             <div className="login-input-item-forgot-text">
@@ -270,7 +274,8 @@ export default function Login({ goto }) {
                 </div>
             </div>
             <div className="login-submit-btn">
-                <input type="submit" value="create account" onClick={() => submitCreateAccount()} />&nbsp;
+                <input type="submit" value="create account" onClick={() => submitCreateAccount()} />
+                &nbsp;
                 {loading && <span> loading...</span>}
             </div>
         </div>

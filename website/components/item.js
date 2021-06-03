@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
@@ -25,7 +26,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -33,7 +35,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
 
             upvoteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setLoading(false);
                     setNumOfVote(numOfVote + 1);
@@ -46,7 +49,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -54,7 +58,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
 
             unvoteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setLoading(false);
                     setNumOfVote(numOfVote - 1);
@@ -67,17 +72,21 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
             favoriteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else if (!response.success) {
-                    window.location.href = "";
+                    // location.href = "";
+                    Router.push(Router.asPath);
                 } else {
-                    window.location.href = `/favorites?id=${currUsername}`;
+                    // location.href = `/favorites?id=${currUsername}`;
+                    Router.push(`/favorites?id=${currUsername}`);
                 }
             });
         }
@@ -87,17 +96,21 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
             unfavoriteItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else if (!response.success) {
-                    window.location.href = "";
+                    // location.href = "";
+                    Router.push(Router.asPath);
                 } else {
-                    window.location.href = `/favorites?id=${currUsername}`;
+                    // location.href = `/favorites?id=${currUsername}`;
+                    Router.push(`/favorites?id=${currUsername}`);
                 }
             });
         }
@@ -107,7 +120,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -115,9 +129,11 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
 
             hideItem(item.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else if (!response.success) {
-                    window.location.href = "";
+                    // location.href = "";
+                    Router.push(Router.asPath);
                 } else {
                     setLoading(false);
                 }
@@ -134,9 +150,11 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
 
         unhideItem(item.id, (response) => {
             if (response.authError) {
-                window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
             } else if (!response.success) {
-                window.location.href = "";
+                // location.href = ""
+                Router.push(Router.asPath);
             } else {
                 setLoading(false);
             }
@@ -151,7 +169,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else if (!commentInputValue) {
             setError({
                 commentTextRequiredError: true,
@@ -177,7 +196,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
             addNewComment(commentData, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else if (response.textRequiredError) {
                     setError({
                         commentTextRequiredError: true,
@@ -197,7 +217,9 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
                         commentSubmitError: true,
                     });
                 } else {
-                    window.location.href = "";
+                    // location.href = "";
+                    setCommentInputValue("");
+                    Router.push(Router.asPath);
                 }
             });
         }
@@ -374,7 +396,8 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
                         <textarea type="text" value={commentInputValue} onChange={updateCommentInputValue} />
                     </div>
                     <div className="item-add-comment-btn">
-                        <input type="submit" value="add comment" onClick={() => requestAddNewComment()} />&nbsp;
+                        <input type="submit" value="add comment" onClick={() => requestAddNewComment()} />
+                        &nbsp;
                         {loading && <span> loading...</span>}
                     </div>
                     {error.commentTextTooLongError ? (

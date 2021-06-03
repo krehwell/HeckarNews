@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
 import Link from "next/link";
+import Router from "next/router";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -64,7 +65,7 @@ export default function User({
             if (response.submitError) {
                 setError({ submitError: true });
             } else {
-                window.location.href = "";
+                Router.push(Router.asPath);
             }
         });
     };

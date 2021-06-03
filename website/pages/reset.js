@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Router from "next/router";
 
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
@@ -67,7 +68,8 @@ export default function Reset({ resetToken, username }) {
                         submitError: true,
                     });
                 } else {
-                    window.location.href = "/login";
+                    // location.href = "/login";
+                    Router.push("/login");
                 }
             });
         }

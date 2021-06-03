@@ -1,11 +1,12 @@
 import Link from "next/link";
+import Router from "next/router";
 
 import logoutUser from "../api/users/logoutUser";
 
 export default function Header({ userSignedIn, username, karma, goto, pageName, label }) {
     const requestLogout = () => {
         logoutUser(() => {
-            window.location.reload();
+            Router.push(Router.asPath);
         });
     };
 
