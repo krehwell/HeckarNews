@@ -2,8 +2,10 @@ import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
+import CommentsList from "../components/commentsList.js";
 
 import getUserUpvotedItemsByPage from "../api/items/getUserUpvotedItemsByPage.js";
+import getUserUpvotedCommentsByPage from "../api/comments/getUserUpvotedCommentsByPage.js";
 
 export default function Upvoted({
     items,
@@ -43,7 +45,20 @@ export default function Upvoted({
                                 isMore={isMoreItems}
                             />
                         ) : null}
-                        {showComments ? <></> : null}
+                        {showComments ? (
+                            <>
+                                {showComments ? (
+                                    <CommentsList
+                                        comments={comments}
+                                        userSignedIn={authUserData.userSignedIn}
+                                        currUsername={authUserData.username}
+                                        showDownvote={authUserData.showDownvote}
+                                        isMoreLink={`/upvoted?id=${userId}&page=${page + 1}&comments=t`}
+                                        isMore={isMoreComments}
+                                    />
+                                ) : null}
+                            </>
+                        ) : null}
                     </>
                 ) : (
                     <div className="items-list-error-msg">
@@ -65,13 +80,15 @@ export async function getServerSideProps({ req, query }) {
     let itemsApiResult, commentsApiResult, authUserData;
 
     if (showItems) {
+        /// UPVOTED ITEMS
         itemsApiResult = await getUserUpvotedItemsByPage(userId, page, req);
-
         authUserData = itemsApiResult.authUser ? itemsApiResult.authUser : {};
-
         commentsApiResult = {};
     } else {
-        // make api call to get comments data
+        /// UPVOTED COMMENT
+        commentsApiResult = await getUserUpvotedCommentsByPage(userId, page, req);
+        authUserData = commentsApiResult.authUser ? commentsApiResult.authUser : {};
+        itemsApiResult = {};
     }
 
     const goToString =
