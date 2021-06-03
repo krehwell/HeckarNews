@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Router from "next/router";
 
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
@@ -7,39 +8,37 @@ import authUser from "../api/users/authUser.js";
 import submitNewItem from "../api/items/submitNewItem.js";
 
 export default function Submit({}) {
-    const [state, setState] = useState({
-        titleInputValue: "",
-        urlInputValue: "",
-        textInputValue: "",
+    const [loading, setLoading] = useState(false);
+    const [ titleInputValue, setTitleInputValue ] = useState("");
+    const [ urlInputValue, setUrlInputValue] = useState("");
+    const [ textInputValue, setTextInputValue] = useState("");
 
+    const [error, setError] = useState({
         titleRequiredError: false,
         titleTooLongError: false,
         invalidUrlError: false,
         urlAndTextError: false,
         textTooLongError: false,
         submitError: false,
-
-        loading: false,
-    });
+    })
 
     const updateTitleInputValue = (event) => {
-        setState({ ...state, titleInputValue: event.target.value });
+        setTitleInputValue(event.target.value);
     };
 
     const updateUrlInputValue = (event) => {
-        setState({ ...state, urlInputValue: event.target.value });
+        setUrlInputValue(event.target.value);
     };
 
     const updateTextInputValue = (event) => {
-        setState({ ...state, textInputValue: event.target.value });
+        setTextInputValue( event.target.value);
     };
 
     const submitRequest = () => {
-        if (state.loading) return;
+        if (loading) return;
 
-        if (!state.titleInputValue.trim()) {
-            setState({
-                ...state,
+        if (!titleInputValue.trim()) {
+            setError({
                 titleRequiredError: true,
                 titleTooLongError: false,
                 invalidUrlError: false,
@@ -47,9 +46,8 @@ export default function Submit({}) {
                 textTooLongError: false,
                 submitError: false,
             });
-        } else if (state.titleInputValue.length > 80) {
-            setState({
-                ...state,
+        } else if (titleInputValue.length > 80) {
+            setError({
                 titleRequiredError: false,
                 titleTooLongError: true,
                 invalidUrlError: false,
@@ -57,9 +55,8 @@ export default function Submit({}) {
                 textTooLongError: false,
                 submitError: false,
             });
-        } else if (state.urlInputValue && state.textInputValue) {
-            setState({
-                ...state,
+        } else if (urlInputValue && textInputValue) {
+            setError({
                 titleRequiredError: false,
                 titleTooLongError: false,
                 invalidUrlError: false,
@@ -67,9 +64,8 @@ export default function Submit({}) {
                 textTooLongError: false,
                 submitError: false,
             });
-        } else if (state.textInputValue.length > 5000) {
-            setState({
-                ...state,
+        } else if (textInputValue.length > 5000) {
+            setError({
                 titleRequiredError: false,
                 titleTooLongError: false,
                 invalidUrlError: false,
@@ -78,15 +74,16 @@ export default function Submit({}) {
                 submitError: false,
             });
         } else {
-            setState({ ...state, loading: true });
+            setLoading(true);
 
-            submitNewItem(state.titleInputValue, state.urlInputValue, state.textInputValue, (response) => {
+            submitNewItem(titleInputValue, urlInputValue, textInputValue, (response) => {
+                setLoading(false);
+
                 if (response.authError) {
-                    window.location.href = "/login?goto=submit";
+                    // location.href = "/login?goto=submit";
+                    Router.push("/login?goto=submit");
                 } else if (response.titleRequiredError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         titleRequiredError: true,
                         titleTooLongError: false,
                         invalidUrlError: false,
@@ -95,9 +92,7 @@ export default function Submit({}) {
                         submitError: false,
                     });
                 } else if (response.urlAndTextError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         titleRequiredError: false,
                         titleTooLongError: false,
                         invalidUrlError: false,
@@ -106,9 +101,7 @@ export default function Submit({}) {
                         submitError: false,
                     });
                 } else if (response.invalidUrlError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         titleRequiredError: false,
                         titleTooLongError: false,
                         invalidUrlError: true,
@@ -117,9 +110,7 @@ export default function Submit({}) {
                         submitError: false,
                     });
                 } else if (response.titleTooLongError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         titleRequiredError: false,
                         titleTooLongError: true,
                         invalidUrlError: false,
@@ -128,9 +119,7 @@ export default function Submit({}) {
                         submitError: false,
                     });
                 } else if (response.textTooLongError) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         titleRequiredError: false,
                         titleTooLongError: false,
                         invalidUrlError: false,
@@ -139,9 +128,7 @@ export default function Submit({}) {
                         submitError: false,
                     });
                 } else if (response.submitError || !response.success) {
-                    setState({
-                        ...state,
-                        loading: false,
+                    setError({
                         titleRequiredError: false,
                         titleTooLongError: false,
                         invalidUrlError: false,
@@ -150,7 +137,8 @@ export default function Submit({}) {
                         submitError: true,
                     });
                 } else {
-                    window.location.href = "/newest";
+                    // location.href = "/newest";
+                    Router.push("/newest");
                 }
             });
         }
@@ -161,22 +149,22 @@ export default function Submit({}) {
             <HeadMetadata title="Submit | HeckarNews" />
             <AlternateHeader displayMessage="Submit" />
             <div className="submit-content-container">
-                {state.titleRequiredError ? (
+                {error.titleRequiredError ? (
                     <div className="submit-content-error-msg">
                         <span>Title is required.</span>
                     </div>
                 ) : null}
-                {state.titleTooLongError ? (
+                {error.titleTooLongError ? (
                     <div className="submit-content-error-msg">
                         <span>Title exceeds limit of 80 characters.</span>
                     </div>
                 ) : null}
-                {state.invalidUrlError ? (
+                {error.invalidUrlError ? (
                     <div className="submit-content-error-msg">
                         <span>URL is invalid.</span>
                     </div>
                 ) : null}
-                {state.urlAndTextError ? (
+                {error.urlAndTextError ? (
                     <div className="submit-content-error-msg">
                         <span>
                             Submissions can’t have both urls and text, so you need to pick one. If you keep the url, you
@@ -184,12 +172,12 @@ export default function Submit({}) {
                         </span>
                     </div>
                 ) : null}
-                {state.textTooLongError ? (
+                {error.textTooLongError ? (
                     <div className="submit-content-error-msg">
                         <span>Text exceeds limit of 5,000 characters.</span>
                     </div>
                 ) : null}
-                {state.submitError ? (
+                {error.submitError ? (
                     <div className="submit-content-error-msg">
                         <span>An error occurred.</span>
                     </div>
@@ -201,7 +189,7 @@ export default function Submit({}) {
                         <span>title</span>
                     </div>
                     <div className="submit-content-input-item-input">
-                        <input type="text" value={state.titleInputValue} onChange={updateTitleInputValue} />
+                        <input type="text" value={titleInputValue} onChange={updateTitleInputValue} />
                     </div>
                 </div>
 
@@ -211,7 +199,7 @@ export default function Submit({}) {
                         <span>url</span>
                     </div>
                     <div className="submit-content-input-item-input">
-                        <input type="text" value={state.urlInputValue} onChange={updateUrlInputValue} />
+                        <input type="text" value={urlInputValue} onChange={updateUrlInputValue} />
                     </div>
                 </div>
 
@@ -225,14 +213,14 @@ export default function Submit({}) {
                         <span>text</span>
                     </div>
                     <div className="submit-content-text-input-item-input">
-                        <textarea type="text" value={state.textInputValue} onChange={updateTextInputValue} />
+                        <textarea type="text" value={textInputValue} onChange={updateTextInputValue} />
                     </div>
                 </div>
 
                 {/* SUBMIT BTN */}
                 <div className="submit-content-input-btn">
                     <input type="submit" value="submit" onClick={() => submitRequest()} />
-                    {state.loading && <span> loading...</span>}
+                    {loading && <span> loading...</span>}
                 </div>
                 <div className="submit-content-bottom-instructions">
                     <span>

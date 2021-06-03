@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
@@ -47,7 +48,8 @@ export default function DeleteItem({ item, authUserData, getDataError, notAllowe
                     submitError: true,
                 });
             } else {
-                window.location.href = `/${goToString}`;
+                // location.href = `/${goToString}`;
+                Router.push(`/${goToString}`);
             }
         });
     };
@@ -55,7 +57,8 @@ export default function DeleteItem({ item, authUserData, getDataError, notAllowe
     const goBackToOriginPage = () => {
         if (loading) return;
 
-        window.location.href = `/${goToString}`;
+        // location.href = `/${goToString}`;
+        Router.push(`/${goToString}`);
     };
 
     return (
@@ -94,8 +97,7 @@ export default function DeleteItem({ item, authUserData, getDataError, notAllowe
                                                 {item.points.toLocaleString()} {item.points === 1 ? "point" : "points"}
                                             </span>
                                             <span>
-                                                &nbsp;
-                                                by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
+                                                &nbsp; by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
                                             </span>
                                             <span className="delete-item-time">
                                                 <Link href={`/item?id=${item.id}`}>
@@ -133,7 +135,8 @@ export default function DeleteItem({ item, authUserData, getDataError, notAllowe
                                 className="delete-item-yes-btn"
                                 onClick={submitDeleteItem}
                             />
-                            <input type="submit" value="No" onClick={goBackToOriginPage} />&nbsp;
+                            <input type="submit" value="No" onClick={goBackToOriginPage} />
+                            &nbsp;
                             {loading && <span> loading...</span>}
                         </div>
                         {error.submitError ? (

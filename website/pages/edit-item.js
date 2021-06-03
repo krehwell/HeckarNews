@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -73,7 +74,8 @@ export default function EditItem({ item, authUserData, notAllowedError, getDataE
                 setLoading(false);
 
                 if (response.authError) {
-                    window.location.href = `/login?goto=${goToString}`;
+                    // location.href = `/login?goto=${goToString}`;
+                    Router.push(`/login?goto=${goToString}`);
                 } else if (response.notAllowedError) {
                     setError({ ...error, notAllowedError: true });
                 } else if (response.titleTooLongError) {
@@ -101,7 +103,8 @@ export default function EditItem({ item, authUserData, notAllowedError, getDataE
                         submitError: true,
                     });
                 } else {
-                    window.location.href = `/item?id=${item.id}`;
+                    // location.href = `/item?id=${item.id}`;
+                    Router.push(`/item?id=${item.id}`);
                 }
             });
         }

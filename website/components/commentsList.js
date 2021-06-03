@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
@@ -27,7 +28,8 @@ export default function CommentsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -38,7 +40,8 @@ export default function CommentsList({
 
             upvoteComment(commentId, parentItemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setLoading(false);
                 }
@@ -50,7 +53,8 @@ export default function CommentsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -61,7 +65,8 @@ export default function CommentsList({
 
             downvoteComment(commentId, parentItemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setLoading(false);
                 }
@@ -75,7 +80,8 @@ export default function CommentsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -93,7 +99,8 @@ export default function CommentsList({
 
             unvoteComment(commentId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setLoading(false);
                 }
@@ -106,9 +113,11 @@ export default function CommentsList({
 
         unfavoriteComment(commentId, (response) => {
             if (response.authError) {
-                window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
             } else {
-                window.location.href = "";
+                // location.href = "";
+                Router.push(Router.asPath);
             }
         });
     };

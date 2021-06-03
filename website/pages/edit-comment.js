@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Router from "next/router";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -61,7 +62,8 @@ export default function EditComment({
 
             editComment(comment.id, commentInputValue, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${goToString}`;
+                    // location.href = `/login?goto=${goToString}`;
+                    Router.push(`/login?goto=${goToString}`);
                 } else if (response.notAllowedError) {
                     setError({ ...error, notAllowedError: true });
                 } else if (response.notFoundError) {
@@ -85,7 +87,8 @@ export default function EditComment({
                         submitError: true,
                     });
                 } else {
-                    window.location.href = `/comment?id=${comment.id}`;
+                    // location.href = `/comment?id=${comment.id}`;
+                    Router.push(`/comment?id=${comment.id}`)
                 }
                 setLoading(false);
             });

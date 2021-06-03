@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Router from "next/router";
 
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
@@ -48,7 +49,8 @@ export default function ChangePw({ userContainsEmail, username }) {
             changePassword(currentPassword, newPassword, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = "/login?goto=changepw";
+                    // location.href = "/login?goto=changepw";
+                    Router.push("/login?goto=changepw");
                 } else if (response.newPasswordLengthError) {
                     setError({
                         invalidCurrentPassword: false,
@@ -68,7 +70,8 @@ export default function ChangePw({ userContainsEmail, username }) {
                         submitError: true,
                     });
                 } else {
-                    window.location.href = "/login";
+                    // location.href = "/login";
+                    Router.push("/login");
                 }
             });
         }

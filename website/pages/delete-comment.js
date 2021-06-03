@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Router from "next/router";
 
 import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
@@ -41,7 +42,8 @@ export default function DeleteComment({
                     submitError: true,
                 });
             } else {
-                window.location.href = `/${goToString}`;
+                // location.href = `/${goToString}`;
+                Router.push(`/${goToString}`);
             }
 
             setLoading(false);
@@ -51,7 +53,8 @@ export default function DeleteComment({
     const goBackToOriginPage = () => {
         if (loading) return;
 
-        window.location.href = `/${goToString}`;
+        // location.href = `/${goToString}`;
+        Router.push(`/${goToString}`);
     };
 
     return (

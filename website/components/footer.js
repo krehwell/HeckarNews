@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 export default function Footer({}) {
     const [searchInputValue, setSearchInputValue] = useState("");
@@ -10,7 +11,8 @@ export default function Footer({}) {
 
     const listenForEnterKeyPress = (event) => {
         if (event.keyCode === 13 && searchInputValue) {
-            window.location.href = `/search?q=${searchInputValue}`;
+            // location.href = `/search?q=${searchInputValue}`;
+            Router.push(`/search?q=${searchInputValue}`);
         }
     };
 

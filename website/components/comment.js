@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import renderPointsString from "../utils/renderPointsString.js";
 import renderCreatedTime from "../utils/renderCreatedTime.js";
@@ -37,7 +38,8 @@ export default function CommentComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else if (!replyInputValue) {
             setError({
                 replyTextRequiredError: true,
@@ -63,7 +65,8 @@ export default function CommentComponent({
             addNewComment(commentData, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else if (response.textRequiredError) {
                     setError({
                         replyTextRequiredError: true,
@@ -83,7 +86,8 @@ export default function CommentComponent({
                         replySubmitError: true,
                     });
                 } else {
-                    window.location.href = `/comment?id=${comment.id}`;
+                    // location.href = `/comment?id=${comment.id}`;
+                    Router.push(`/comment?id=${comment.id}`);
                 }
             });
         }
@@ -93,7 +97,8 @@ export default function CommentComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -102,7 +107,8 @@ export default function CommentComponent({
 
             upvoteComment(comment.id, comment.parentItemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeuricomponent(gotostring)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setNumOfVote(numOfVote + 1);
                     setLoading(false);
@@ -115,7 +121,8 @@ export default function CommentComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeuricomponent(gotostring)}`;
+            Router.push(`/login?goto=${encodeuricomponent(gotostring)}`);
         } else {
             setLoading(true);
 
@@ -124,7 +131,8 @@ export default function CommentComponent({
 
             downvoteComment(comment.id, comment.parentItemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     setNumOfVote(numOfVote - 1);
                     setLoading(false);
@@ -137,7 +145,8 @@ export default function CommentComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeuricomponent(gotostring)}`;
+            Router.push(`/login?goto=${encodeuricomponent(gotostring)}`);
         } else {
             setLoading(true);
 
@@ -145,7 +154,8 @@ export default function CommentComponent({
 
             unvoteComment(comment.id, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
                     if (comment.upvotedByUser) {
                         comment.upvotedByUser = false;
@@ -164,7 +174,8 @@ export default function CommentComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -172,9 +183,11 @@ export default function CommentComponent({
                 // console.log(response);
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeuricomponent(gotostring)}`;
+                    Router.push(`/login?goto=${encodeuricomponent(gotostring)}`);
                 } else {
-                    window.location.href = `/favorites?id=${currUsername}&comments=t`;
+                    // location.href = `/favorites?id=${currUsername}&comments=t`;
+                    Router.push(`/favorites?id=${currUsername}&comments=t`);
                 }
             });
         }
@@ -184,7 +197,8 @@ export default function CommentComponent({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -192,7 +206,8 @@ export default function CommentComponent({
 
             unfavoriteComment(comment.id, function (response) {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
                 setLoading(false);
             });

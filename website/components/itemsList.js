@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import upvoteItem from "../api/items/upvoteItem.js";
 import unvoteItem from "../api/items/unvoteItem.js";
@@ -30,7 +31,8 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -42,7 +44,8 @@ export default function ItemsList({
                 setLoading(false);
 
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
             });
         }
@@ -52,7 +55,8 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -64,7 +68,8 @@ export default function ItemsList({
                 setLoading(false);
 
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
             });
         }
@@ -74,13 +79,16 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             unfavoriteItem(itemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
-                    window.location.href = "";
+                    // location.href = "";
+                    Router.push(Router.asPath);
                 }
             });
         }
@@ -90,7 +98,8 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -108,26 +117,42 @@ export default function ItemsList({
             hideItem(itemId, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
             });
         }
     };
 
-    const requestUnhideItem = (itemId) => {
+    const requestUnhideItem = (itemId, itemIndexPosition) => {
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
-            unhideItem(itemId, function (response) {
-                if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
-                } else {
-                    window.location.href = "";
+            // recalculate the items rank
+            for (let i = 0; i < items.length; i++) {
+                if (i > itemIndexPosition) {
+                    items[i].rank -= 1;
                 }
+            }
+
+            // remove the hidden item from items
+            items.splice(itemIndexPosition, 1);
+            setItems(items);
+
+            unhideItem(itemId, (response) => {
+                if (response.authError) {
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
+                } else {
+                    // location.href = "";
+                    Router.push(Router.asPath);
+                }
+                setLoading(false);
             });
         }
     };
@@ -136,6 +161,7 @@ export default function ItemsList({
         <>
             {items
                 ? items.map((item, index) => {
+                    item.rank = index + 1;
                       return (
                           <div key={item.id} className="listed-item-container">
                               <table>
@@ -196,15 +222,14 @@ export default function ItemsList({
 
                                               {/* AUTHOR | BY */}
                                               <span>
-                                                  &nbsp; by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
+                                                  &nbsp;by <Link href={`/user?id=${item.by}`}>{item.by}</Link>&nbsp;
                                               </span>
 
                                               {/* CREATED TIME */}
                                               <span className="listed-item-time">
                                                   <Link href={`/item?id=${item.id}`}>
-                                                      {renderCreatedTime(item.created)}
+                                                      <a>{renderCreatedTime(item.created)}</a>
                                                   </Link>
-                                                  &nbsp;
                                               </span>
 
                                               {/* SHOW LINK */}
@@ -269,7 +294,7 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-unhide"
-                                                          onClick={() => requestUnhideItem(item.id)}>
+                                                          onClick={() => requestUnhideItem(item.id, index)}>
                                                           un-hide
                                                       </span>
                                                   </>

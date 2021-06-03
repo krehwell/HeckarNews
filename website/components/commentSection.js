@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import Router from "next/router";
 
 import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
@@ -115,7 +116,7 @@ function Comment({
                                             {comment.points}&nbsp;
                                             {renderPointsString(comment.points)}
                                         </span>
-                                        &nbsp; | &nbsp;
+                                        &nbsp;|&nbsp;
                                         {/* AUTHOR OF COMMENT | BY */}
                                         <span>
                                             <Link href={`/user?id=${comment.by}`}>
@@ -254,7 +255,8 @@ export default function CommentSection({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -278,7 +280,8 @@ export default function CommentSection({
 
             upvoteComment(commentId, parentItemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
                 setLoading(false);
                 setrerender(!rerender);
@@ -290,7 +293,8 @@ export default function CommentSection({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -314,7 +318,8 @@ export default function CommentSection({
 
             downvoteComment(commentId, parentItemId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
                 setLoading(false);
                 setrerender(!rerender);
@@ -326,7 +331,8 @@ export default function CommentSection({
         if (loading) return;
 
         if (!userSignedIn) {
-            window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+            Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
 
@@ -355,7 +361,8 @@ export default function CommentSection({
 
             unvoteComment(commentId, (response) => {
                 if (response.authError) {
-                    window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
+                    Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
                 setLoading(false);
                 setrerender(!rerender);
