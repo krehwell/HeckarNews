@@ -79,3 +79,17 @@
         transform: rotate(360deg);
     }
 }
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    #nprogress .bar {
+        background: #000000;
+
+        position: fixed;
+        z-index: 1031;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 2px;
+    }
+}
