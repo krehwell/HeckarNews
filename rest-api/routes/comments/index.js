@@ -326,4 +326,32 @@ app.get("/comments/get-user-comments-by-page", authUser, async (req, res) => {
     }
 });
 
+app.get(
+    "/comments/get-user-favorited-comments-by-page",
+    authUser,
+    async (req, res) => {
+        try {
+            if (!req.query.userId || !req.query.page) {
+                throw { getDataError: true, authUser: res.locals };
+            }
+
+            const response = await api.getUserFavoritedCommentsByPage(
+                req.query.userId,
+                req.query.page,
+                res.locals
+            );
+            response.authUser = res.locals;
+            res.json(response);
+        } catch (error) {
+            console.log(error);
+            if (!(error instanceof Error)) {
+                error.authUser = res.locals;
+                res.json(error);
+            } else {
+                res.json({ getDataError: true, authUser: res.locals });
+            }
+        }
+    }
+);
+
 module.exports = app;

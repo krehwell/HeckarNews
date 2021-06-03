@@ -652,7 +652,9 @@ module.exports = {
      *          will be used for pagination purposes.
      */
     getUserCommentsByPage: async (userId, page, authUser) => {
-        const user = await UserModel.findOne({ username: userId }).lean().exec();
+        const user = await UserModel.findOne({ username: userId })
+            .lean()
+            .exec();
 
         if (!user) {
             throw { notFoundError: true };
@@ -734,6 +736,122 @@ module.exports = {
             comments: comments,
             isMore:
                 totalCommentsCount >
+                (page - 1) * config.commentsPerPage + config.commentsPerPage
+                    ? true
+                    : false,
+        };
+    },
+
+    getUserFavoritedCommentsByPage: async (userId, page, authUser) => {
+        const user = await UserModel.findOne({ username: userId }).lean().exec();
+        if (!user) {
+            throw { notFoundError: true };
+        }
+
+        const [
+            userFavoriteCommentsDocs,
+            totalFavoriteCommentsCount,
+        ] = await Promise.all([
+            UserFavoriteModel.find({
+                username: userId,
+                type: "comment",
+            })
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.commentsPerPage)
+                .limit(config.commentsPerPage)
+                .lean(),
+            UserFavoriteModel.countDocuments({
+                username: userId,
+                type: "comment",
+            }).lean(),
+        ]);
+
+        let arrayOfCommentIds = [];
+
+        for (i = 0; i < userFavoriteCommentsDocs.length; i++) {
+            arrayOfCommentIds.push(userFavoriteCommentsDocs[i].id);
+        }
+
+        let commentsDbQuery = {
+            id: {
+                $in: arrayOfCommentIds,
+            },
+        };
+
+        if (!authUser.showDead) commentsDbQuery.dead = false;
+
+        const comments = await CommentModel.aggregate([
+            {
+                $match: commentsDbQuery,
+            },
+            {
+                $addFields: {
+                    __order: {
+                        $indexOfArray: [arrayOfCommentIds, "$id"],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    __order: 1,
+                },
+            },
+        ]);
+
+        if (!authUser.userSignedIn) {
+            return {
+                success: true,
+                comments: comments,
+                isMore:
+                    totalFavoriteCommentsCount >
+                    (page - 1) * config.commentsPerPage + config.commentsPerPage
+                        ? true
+                        : false,
+            };
+        }
+
+        const userCommentVoteDocs = await UserVoteModel.find({
+            username: authUser.username,
+            id: { $in: arrayOfCommentIds },
+            type: "comment",
+        })
+            .lean()
+            .exec();
+
+        for (let i = 0; i < comments.length; i++) {
+            if (comments[i].by === authUser.username) {
+                const hasEditAndDeleteExpired =
+                    comments[i].created +
+                        3600 * config.hrsUntilEditAndDeleteExpires <
+                        moment().unix() || comments[i].children.length > 0;
+
+                comments[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+            }
+        }
+
+        for (let i = 0; i < userCommentVoteDocs.length; i++) {
+            const commentObj = comments.find((comment) => {
+                return comment.id === userCommentVoteDocs[i].id;
+            });
+
+            if (commentObj) {
+                commentObj.upvotedByUser = voteDocs[i].upvote || false;
+                commentObj.downvotedByUser = voteDocs[i].downvote || false;
+                commentObj.votedOnByUser = true;
+                commentObj.unvoteExpired =
+                    userCommentVoteDocs[i].date +
+                        3600 * config.hrsUntilUnvoteExpires <
+                    moment().unix()
+                        ? true
+                        : false;
+            }
+        }
+
+        return {
+            success: true,
+            comments: comments,
+            isMore:
+                totalFavoriteCommentsCount >
                 (page - 1) * config.commentsPerPage + config.commentsPerPage
                     ? true
                     : false,
