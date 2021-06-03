@@ -642,4 +642,101 @@ module.exports = {
                     : false,
         };
     },
+
+    /**
+     * Thread Page:
+     * Step 1 - Retrieve the list of comments created by the given user from the database.
+     *          comments will be sorted by their creation date property.
+     *          pagination will be applied to the results.
+     * Step 2 - Get the total number of comments created by the user in the database.
+     *          will be used for pagination purposes.
+     */
+    getUserCommentsByPage: async (userId, page, authUser) => {
+        const user = await UserModel.findOne({ username: userId }).lean().exec();
+
+        if (!user) {
+            throw { notFoundError: true };
+        }
+
+        let commentsDbQuery = {
+            by: userId,
+        };
+
+        if (!authUser.showDead) commentsDbQuery.dead = false;
+
+        const [comments, totalCommentsCount] = await Promise.all([
+            CommentModel.find(commentsDbQuery)
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.commentsPerPage)
+                .limit(config.commentsPerPage)
+                .lean(),
+            CommentModel.countDocuments(commentsDbQuery).lean(),
+        ]);
+
+        /// IF USER SIGNED IN
+        if (!authUser.userSignedIn) {
+            return {
+                success: true,
+                comments: comments,
+                isMore:
+                    totalCommentsCount >
+                    (page - 1) * config.commentsPerPage + config.commentsPerPage
+                        ? true
+                        : false,
+            };
+        }
+
+        /// IF USER SIGNED IN
+
+        let arrayOfCommentIds = [];
+
+        for (let i = 0; i < comments.length; i++) {
+            if (comments[i].by !== authUser.username)
+                arrayOfCommentIds.push(comments[i].id);
+
+            if (comments[i].by === authUser.username) {
+                const hasEditAndDeleteExpired =
+                    comments[i].created +
+                        3600 * config.hrsUntilEditAndDeleteExpires <
+                        moment().unix() || comments[i].children.length > 0;
+
+                comments[i].editAndDeleteExpired = hasEditAndDeleteExpired;
+            }
+        }
+
+        const voteDocs = await UserVoteModel.find({
+            username: authUser.username,
+            id: { $in: arrayOfCommentIds },
+            type: "comment",
+        })
+            .lean()
+            .exec();
+
+        for (let i = 0; i < voteDocs.length; i++) {
+            const commentObj = comments.find((comment) => {
+                return comment.id === voteDocs[i].id;
+            });
+
+            if (commentObj) {
+                commentObj.upvotedByUser = voteDocs[i].upvote || false;
+                commentObj.downvotedByUser = voteDocs[i].downvote || false;
+                commentObj.votedOnByUser = true;
+                commentObj.unvoteExpired =
+                    voteDocs[i].date + 3600 * config.hrsUntilUnvoteExpires <
+                    moment().unix()
+                        ? true
+                        : false;
+            }
+        }
+
+        return {
+            success: true,
+            comments: comments,
+            isMore:
+                totalCommentsCount >
+                (page - 1) * config.commentsPerPage + config.commentsPerPage
+                    ? true
+                    : false,
+        };
+    },
 };
