@@ -787,8 +787,11 @@ module.exports = {
                 $match: commentsDbQuery,
             },
             {
+                // $addFields: https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/
+                // in this case the comment add field called {__order} and the value is based on the index of $id (mongodb id)
                 $addFields: {
                     __order: {
+                        // sort by -> search the arrayOfItemIds match the $id of the doc, it means it is first created
                         $indexOfArray: [arrayOfCommentIds, "$id"],
                     },
                 },
@@ -856,6 +859,87 @@ module.exports = {
             comments: comments,
             isMore:
                 totalFavoriteCommentsCount >
+                (page - 1) * config.commentsPerPage + config.commentsPerPage
+                    ? true
+                    : false,
+        };
+    },
+
+    getUserUpvotedCommentsByPage: async (page, authUser) => {
+        const [voteDocs, totalUpvotedCommentsCount] = await Promise.all([
+            UserVoteModel.find({
+                username: authUser.username,
+                upvote: true,
+                type: "comment",
+            })
+                .sort({ date: -1 })
+                .skip((page - 1) * config.commentsPerPage)
+                .limit(config.commentsPerPage)
+                .lean(),
+            UserVoteModel.countDocuments({
+                username: authUser.username,
+                upvote: true,
+                type: "comment",
+            }).lean(),
+        ]);
+
+        let arrayOfCommentIds = [];
+
+        for (i = 0; i < voteDocs.length; i++) {
+            arrayOfCommentIds.push(voteDocs[i].id);
+        }
+
+        let commentsDbQuery = {
+            id: {
+                $in: arrayOfCommentIds,
+            },
+        };
+
+        if (!authUser.showDead) commentsDbQuery.dead = false;
+
+        const comments = await CommentModel.aggregate([
+            {
+                $match: commentsDbQuery,
+            },
+            {
+                // $addFields: https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/
+                // in this case the comment add field called {__order} and the value is based on the index of $id (mongodb id)
+                $addFields: {
+                    __order: {
+                        // sort by -> search the arrayOfItemIds match the $id of the doc, it means it is first created
+                        $indexOfArray: [arrayOfCommentIds, "$id"],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    __order: 1,
+                },
+            },
+        ]).exec();
+
+        for (let i = 0; i < voteDocs.length; i++) {
+            const commentObj = comments.find((comment) => {
+                return comment.id === voteDocs[i].id;
+            });
+
+            if (commentObj) {
+                commentObj.upvotedByUser = voteDocs[i].upvote || false;
+                commentObj.downvotedByUser = voteDocs[i].downvote || false;
+                commentObj.votedOnByUser = true;
+                commentObj.unvoteExpired =
+                    voteDocs[i].date + 3600 * config.hrsUntilUnvoteExpires <
+                    moment().unix()
+                        ? true
+                        : false;
+            }
+        }
+
+        return {
+            success: true,
+            comments: comments,
+            isMore:
+                totalUpvotedCommentsCount >
                 (page - 1) * config.commentsPerPage + config.commentsPerPage
                     ? true
                     : false,

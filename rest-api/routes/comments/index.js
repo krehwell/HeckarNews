@@ -354,4 +354,35 @@ app.get(
     }
 );
 
+app.get(
+    "/comments/get-user-upvoted-comments-by-page",
+    authUser,
+    async (req, res) => {
+        try {
+            if (!res.locals.userSignedIn) {
+                throw { notAllowedError: true, authUser: res.locals };
+            } else if (!req.query.userId || !req.query.page) {
+                throw { getDataError: true, authUser: res.locals };
+            } else if (req.query.userId !== res.locals.username) {
+                throw { notAllowedError: true, authUser: res.locals };
+            }
+
+            const response = await api.getUserUpvotedCommentsByPage(
+                req.query.page,
+                res.locals
+            );
+            response.authUser = res.locals;
+            res.json(response);
+        } catch (error) {
+            console.log(error);
+            if (!(error instanceof Error)) {
+                error.authUser = res.locals;
+                res.json(error);
+            } else {
+                res.json({ getDataError: true, authUser: res.locals });
+            }
+        }
+    }
+);
+
 module.exports = app;
