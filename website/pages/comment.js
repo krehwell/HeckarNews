@@ -9,7 +9,7 @@ import getCommentById from "../api/comments/getCommentById.js";
 import truncateCommentText from "../utils/truncateCommentText.js";
 
 export default function Comment({ comment, authUserData, notFoundError, getDataError, goToString, page, isMoreChildrenComments }) {
-    console.log("COMMENT", comment);
+    // console.log("COMMENT", comment);
     return (
         <div className="layout-wrapper">
             <HeadMetadata

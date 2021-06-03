@@ -97,6 +97,7 @@ export default function CommentComponent({
         } else {
             setLoading(true);
 
+            comment.upvotedByUser = true;
             comment.votedOnByUser = true;
 
             upvoteComment(comment.id, comment.parentItemId, (response) => {
@@ -118,6 +119,7 @@ export default function CommentComponent({
         } else {
             setLoading(true);
 
+            comment.downvotedByUser = true;
             comment.votedOnByUser = true;
 
             downvoteComment(comment.id, comment.parentItemId, (response) => {
@@ -146,8 +148,10 @@ export default function CommentComponent({
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                 } else {
                     if (comment.upvotedByUser) {
+                        comment.upvotedByUser = false;
                         setNumOfVote(numOfVote - 1);
                     } else if (comment.downvotedByUser) {
+                        comment.downvotedByUser = false;
                         setNumOfVote(numOfVote + 1);
                     }
                     setLoading(false);
@@ -165,7 +169,7 @@ export default function CommentComponent({
             setLoading(true);
 
             favoriteComment(comment.id, (response) => {
-                console.log(response);
+                // console.log(response);
                 setLoading(false);
                 if (response.authError) {
                     window.location.href = `/login?goto=${encodeURIComponent(goToString)}`;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
@@ -117,13 +118,15 @@ function Comment({
                                         &nbsp; | &nbsp;
                                         {/* AUTHOR OF COMMENT | BY */}
                                         <span>
-                                            <a href={`/user?id=${comment.by}`}>{comment.by}</a>
+                                            <Link href={`/user?id=${comment.by}`}>
+                                                <a>{comment.by}</a>
+                                            </Link>
                                         </span>
                                         <span>
-                                            <a href={`/comment?id=${comment.id}`}>
-                                                &nbsp;
-                                                {renderCreatedTime(comment.created)}
-                                            </a>
+                                            &nbsp;
+                                            <Link href={`/comment?id=${comment.id}`}>
+                                                <a>{renderCreatedTime(comment.created)}</a>
+                                            </Link>
                                         </span>
                                         {/* IS COMMENT DEAD? */}
                                         {comment.dead ? <span> [dead]</span> : null}
@@ -145,7 +148,9 @@ function Comment({
                                             <>
                                                 <span> | </span>
                                                 <span>
-                                                    <a href={`/edit-comment?id=${comment.id}`}>edit</a>
+                                                    <Link href={`/edit-comment?id=${comment.id}`}>
+                                                        <a>edit</a>
+                                                    </Link>
                                                 </span>
                                             </>
                                         ) : null}
@@ -156,12 +161,12 @@ function Comment({
                                             <>
                                                 <span> | </span>
                                                 <span>
-                                                    <a
+                                                    <Link
                                                         href={`/delete-comment?id=${
                                                             comment.id
                                                         }&goto=${encodeURIComponent(goToString)}`}>
-                                                        delete
-                                                    </a>
+                                                        <a>delete</a>
+                                                    </Link>
                                                 </span>
                                             </>
                                         ) : null}
@@ -178,7 +183,9 @@ function Comment({
                                         {/* GOT TO REPLY COMMENT */}
                                         <div className="comment-section-comment-reply">
                                             <span>
-                                                <a href={`/reply?id=${comment.id}`}>reply</a>
+                                                <Link href={`/reply?id=${comment.id}`}>
+                                                    <a>reply</a>
+                                                </Link>
                                             </span>
                                         </div>
                                     </td>
@@ -206,10 +213,15 @@ function Comment({
                     // IF COMMENT IS COLLPASED, SHOW THIS
                     <div className="comment-section-comment-collapsed">
                         <span>
-                            <a href={`/user?id=${comment.by}`}>{comment.by} </a>
+                            <Link href={`/user?id=${comment.by}`}>
+                                <a>{comment.by}</a>
+                            </Link>
+                            &nbsp;
                         </span>
                         <span>
-                            <a href={`/comment?id=${comment.id}`}>{renderCreatedTime(comment.created)}</a>
+                            <Link href={`/comment?id=${comment.id}`}>
+                                <a>{renderCreatedTime(comment.created)}</a>
+                            </Link>
                         </span>
                         <div className="comment-section-comment-collapsed-btn">
                             <span
@@ -418,7 +430,9 @@ export default function CommentSection({
             {isMore ? (
                 <div className="comment-section-more">
                     <span>
-                        <a href={isMoreLink}>More</a>
+                        <Link href={isMoreLink}>
+                            <a>More</a>
+                        </Link>
                     </span>
                 </div>
             ) : null}

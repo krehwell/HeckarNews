@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
@@ -68,7 +69,7 @@ export default function CommentsList({
         }
     };
 
-    console.log(comments);
+    // console.log(comments);
 
     const requestUnvoteComment = (commentId, index) => {
         if (loading) return;
@@ -122,6 +123,7 @@ export default function CommentsList({
                                   <tbody>
                                       <tr>
                                           <td valign="top">
+                                              {/* STAR IF THIS COMMENT BELONGS TO USER */}
                                               {currUsername === comment.by ? (
                                                   <div className="listed-comment-star">
                                                       <span>*</span>
@@ -129,6 +131,7 @@ export default function CommentsList({
                                               ) : null}
                                               {currUsername !== comment.by ? (
                                                   <>
+                                                      {/* UPVOTE BOTTON */}
                                                       {comment.votedOnByUser || comment.dead ? (
                                                           <>
                                                               <div className="listed-comment-upvote hide">
@@ -154,6 +157,7 @@ export default function CommentsList({
                                               ) : null}
                                               {currUsername !== comment.by ? (
                                                   <>
+                                                      {/* DOWNVOTE BOTTON */}
                                                       {comment.votedOnByUser || !showDownvote || comment.dead ? (
                                                           <>
                                                               <div className="listed-comment-downvote hide">
@@ -180,18 +184,27 @@ export default function CommentsList({
                                           </td>
                                           <td>
                                               <div className="listed-comment-head">
+                                                  {/* COMMENT POINTS */}
                                                   <span>
                                                       {comment.points.toLocaleString()}&nbsp;
                                                       {renderPointsString(comment.points)} by&nbsp;
                                                   </span>
+
+                                                  {/* COMMENT BY/AUTHOR */}
                                                   <span>
-                                                      <a href={`/user?id=${comment.by}`}>{comment.by} </a>
+                                                      <Link href={`/user?id=${comment.by}`}>
+                                                          <a>{comment.by}</a>
+                                                      </Link>&nbsp;
                                                   </span>
+
+                                                  {/* COMMENT CREATED TIME */}
                                                   <span>
-                                                      <a href={`/comment?id=${comment.id}`}>
-                                                          {renderCreatedTime(comment.created)}
-                                                      </a>
+                                                      <Link href={`/comment?id=${comment.id}`}>
+                                                          <a>{renderCreatedTime(comment.created)}</a>
+                                                      </Link>
                                                   </span>
+
+                                                  {/* UNVOTE COMMENT */}
                                                   {comment.dead ? <span> [dead]</span> : null}
                                                   {comment.votedOnByUser && !comment.unvoteExpired ? (
                                                       <>
@@ -204,16 +217,20 @@ export default function CommentsList({
                                                       </>
                                                   ) : null}
                                                   <span> | </span>
+
+                                                  {/* COMMENT PARENT */}
                                                   <span className="listed-comment-parent">
-                                                      <a
+                                                      <Link
                                                           href={
                                                               comment.isParent
                                                                   ? `/item?id=${comment.parentItemId}`
                                                                   : `/comment?id=${comment.parentCommentId}`
                                                           }>
-                                                          parent
-                                                      </a>
+                                                          <a>parent</a>
+                                                      </Link>
                                                   </span>
+
+                                                  {/* FAVORITE COMMENT */}
                                                   {showUnfavoriteOption ? (
                                                       <>
                                                           <span> | </span>
@@ -224,37 +241,45 @@ export default function CommentsList({
                                                           </span>
                                                       </>
                                                   ) : null}
+
+                                                  {/* EDIT COMMENT */}
                                                   {comment.by === currUsername &&
                                                   !comment.editAndDeleteExpired &&
                                                   !comment.dead ? (
                                                       <>
                                                           <span> | </span>
                                                           <span>
-                                                              <a href={`/edit-comment?id=${comment.id}`}>edit</a>
+                                                              <Link href={`/edit-comment?id=${comment.id}`}>
+                                                                  <a>edit</a>
+                                                              </Link>
                                                           </span>
                                                       </>
                                                   ) : null}
+
+                                                  {/* DELETE COMMENT */}
                                                   {comment.by === currUsername &&
                                                   !comment.editAndDeleteExpired &&
                                                   !comment.dead ? (
                                                       <>
                                                           <span> | </span>
                                                           <span>
-                                                              <a
+                                                              <Link
                                                                   href={`/delete-comment?id=${
                                                                       comment.id
                                                                   }&goto=${encodeURIComponent(goToString)}`}>
-                                                                  delete
-                                                              </a>
+                                                                  <a>delete</a>
+                                                              </Link>
                                                           </span>
                                                       </>
                                                   ) : null}
                                                   <span> | </span>
+
+                                                  {/* COMMENT FROM ITEM */}
                                                   <span>
                                                       on:&nbsp;
-                                                      <a href={`/item?id=${comment.parentItemId}`}>
-                                                          {truncateItemTitle(comment.parentItemTitle)}
-                                                      </a>
+                                                      <Link href={`/item?id=${comment.parentItemId}`}>
+                                                          <a>{truncateItemTitle(comment.parentItemTitle)}</a>
+                                                      </Link>
                                                   </span>
                                               </div>
                                               <div className="listed-comment-text">
@@ -270,9 +295,12 @@ export default function CommentsList({
                 : null}
             {isMore ? (
                 <div className="listed-comments-more">
-                    <a href={isMoreLink}>
-                        <span>More</span>
-                    </a>
+                    {/* ANYMORE COMMENT? */}
+                    <Link href={isMoreLink}>
+                        <span>
+                            <a>More</a>
+                        </span>
+                    </Link>
                 </div>
             ) : null}
         </>

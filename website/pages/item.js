@@ -61,7 +61,7 @@ export async function getServerSideProps({ req, query }) {
     const page = query.page ? parseInt(query.page) : 1;
 
     const apiResult = await getItemById(itemId, page, req);
-    console.log("api result", apiResult);
+    // console.log("api result", apiResult);
 
     return {
         props: {

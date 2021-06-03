@@ -29,7 +29,7 @@ export default function Forgot() {
 
             requestPasswordResetLink(usernameInputValue, (response) => {
                 setLoading(false);
-                console.log(response);
+                // console.log(response);
                 if (response.userNotFoundError) {
                     setError({
                         ...error,
