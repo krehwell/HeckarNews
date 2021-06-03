@@ -743,7 +743,9 @@ module.exports = {
     },
 
     getUserFavoritedCommentsByPage: async (userId, page, authUser) => {
-        const user = await UserModel.findOne({ username: userId }).lean().exec();
+        const user = await UserModel.findOne({ username: userId })
+            .lean()
+            .exec();
         if (!user) {
             throw { notFoundError: true };
         }
@@ -835,8 +837,10 @@ module.exports = {
             });
 
             if (commentObj) {
-                commentObj.upvotedByUser = voteDocs[i].upvote || false;
-                commentObj.downvotedByUser = voteDocs[i].downvote || false;
+                commentObj.upvotedByUser =
+                    userCommentVoteDocs[i].upvote || false;
+                commentObj.downvotedByUser =
+                    userCommentVoteDocs[i].downvote || false;
                 commentObj.votedOnByUser = true;
                 commentObj.unvoteExpired =
                     userCommentVoteDocs[i].date +
