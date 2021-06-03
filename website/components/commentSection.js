@@ -403,8 +403,6 @@ export default function CommentSection({
         setrerender(!rerender);
     };
 
-    console.clear();
-    console.log("\n\n============================================================================================");
     return (
         <>
             {comments
