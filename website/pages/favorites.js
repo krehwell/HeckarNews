@@ -1,10 +1,13 @@
+import Link from "next/link";
+
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
-import Link from "next/link";
+import CommentsList from "../components/commentsList.js";
 
 import getUserFavoritedItemsByPage from "../api/items/getUserFavoritedItemsByPage.js";
+import getUserFavoritedCommentsByPage from "../api/comments/getUserFavoritedCommentsByPage.js";
 
 export default function Favorites({
     items,
@@ -68,7 +71,34 @@ export default function Favorites({
                                 )}
                             </>
                         ) : null}
-                        {showComments ? <></> : null}
+                        {showComments ? (
+                            <>
+                                {showComments ? (
+                                    <>
+                                        {comments.length ? (
+                                            <CommentsList
+                                                comments={comments}
+                                                goToString={goToString}
+                                                userSignedIn={authUserData.userSignedIn}
+                                                currUsername={authUserData.username}
+                                                showUnfavoriteOption={userId === authUserData.username}
+                                                showDownvote={authUserData.showDownvote}
+                                                isMoreLink={`/favorites?id=${userId}&page=${page + 1}&comments=t`}
+                                                isMore={isMoreComments}
+                                            />
+                                        ) : (
+                                            <div className="favorites-none-found-msg comments">
+                                                <p>{userId} hasn’t added any favorite comments yet.</p>
+                                                <p>
+                                                    To add a comment to your own favorites, click on its timestamp to go
+                                                    to its page, then click 'favorite' at the top.
+                                                </p>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : null}
+                            </>
+                        ) : null}
                     </>
                 ) : (
                     <div className="items-list-error-msg">
@@ -90,17 +120,14 @@ export async function getServerSideProps({ req, query }) {
     let itemsApiResult, commentsApiResult, authUserData;
 
     if (showItems) {
+        /// GET FAVORITES ITEM
         itemsApiResult = await getUserFavoritedItemsByPage(userId, page, req);
-
         authUserData = itemsApiResult.authUser ? itemsApiResult.authUser : {};
-
         commentsApiResult = {};
     } else {
-        // make api call to get comments data
-
-        authUserData = {};
-
-        commentsApiResult = {};
+        /// GET FAVORITES COMMENTS
+        commentsApiResult = await getUserFavoritedCommentsByPage(userId, page, req);
+        authUserData = commentsApiResult.authUser ? commentsApiResult.authUser : {};
         itemsApiResult = {};
     }
 
