@@ -12,6 +12,8 @@ const CommentModel = require("../../models/comment.js");
 const utils = require("../utils.js");
 const config = require("../../config.js");
 
+const searchApi = require("../search/api.js");
+
 /// ITEMS API
 module.exports = {
     /**
@@ -71,12 +73,14 @@ module.exports = {
             created: moment().unix(),
         });
 
-        const saveItem = await newItem.save();
+        const newItemDoc = await newItem.save();
 
-        const updateUserKarma = await UserModel.findOneAndUpdate(
+        await UserModel.findOneAndUpdate(
             { username: authUser.username },
             { $inc: { karma: 1 } }
         ).exec();
+
+        await searchApi.addNewItem(newItemDoc);
 
         return { success: true };
     },
@@ -202,8 +206,10 @@ module.exports = {
                                 ? true
                                 : false;
 
-                        comment.upvotedByUser = commentVoteDocs[i].upvote || false;
-                        comment.downvotedByUser = commentVoteDocs[i].downvote || false;
+                        comment.upvotedByUser =
+                            commentVoteDocs[i].upvote || false;
+                        comment.downvotedByUser =
+                            commentVoteDocs[i].downvote || false;
                     }
                 }
             }
@@ -282,10 +288,10 @@ module.exports = {
             date: moment().unix(),
         });
 
-        const saveVoteDoc = await newUserVoteDoc.save();
+        await newUserVoteDoc.save();
 
         item.points = item.points + 1;
-        const saveItem = await item.save();
+        await item.save();
 
         // increment author karma
         await UserModel.findOneAndUpdate(
@@ -294,6 +300,8 @@ module.exports = {
         )
             .lean()
             .exec();
+
+        await searchApi.updateItemPointsCount(item.id, item.points);
 
         return { success: true };
     },
@@ -327,11 +335,13 @@ module.exports = {
             throw { submitError: true };
         }
 
-        const removeVoteDoc = await voteDoc.remove();
+        await voteDoc.remove();
 
         item.points = item.points - 1;
 
-        const saveItem = await item.save();
+        await item.save();
+
+        searchApi.updateItemPointsCount(item.id, item.points);
 
         // decrement author karma
         await UserModel.findOneAndUpdate(
@@ -523,7 +533,10 @@ module.exports = {
             item.type = utils.getItemType(newItemTitle, item.url, newItemText);
         }
 
-        const saveItem = await item.save();
+        await item.save();
+
+        await searchApi.editItem(itemId, newItemTitle, newItemText);
+
         return { success: true };
     },
 
@@ -566,14 +579,16 @@ module.exports = {
             throw { notAllowedError: true };
         }
 
-        const removeItem = await item.remove();
+        await item.remove();
 
         const newUserKarmaValue = authUser.karma - item.points;
 
-        const updateUserKarma = await UserModel.findOneAndUpdate(
+        await UserModel.findOneAndUpdate(
             { username: authUser.username },
             { karma: newUserKarmaValue }
         ).exec();
+
+        await searchApi.deleteItem(item.id);
 
         return { success: true };
     },

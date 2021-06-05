@@ -37,6 +37,7 @@ app.post("/items/submit-new-item", authUser, async (req, res) => {
         );
         res.json(response);
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
