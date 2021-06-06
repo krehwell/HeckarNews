@@ -50,7 +50,7 @@ function Comment({
         }, []);
     };
 
-    console.log("COMMENT", comment);
+    // console.log("COMMENT", comment);
 
     return (
         <>

@@ -6,7 +6,7 @@ export default async function getUserCommentsByPage(userId, page, req) {
     try {
         const cookie = req.headers.cookie ? req.headers.cookie : "";
 
-        console.log("FUCK YOU");
+        // console.log("FUCK YOU");
 
         const response = await axios({
             url: `${apiBaseUrl}/comments/get-user-comments-by-page?userId=${userId}&page=${page}`,

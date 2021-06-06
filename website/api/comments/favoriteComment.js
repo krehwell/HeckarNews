@@ -17,7 +17,7 @@ export default function favoriteComment(commentId, callback) {
             callback(response.data);
         })
         .catch(function (error) {
-            console.log("ERR", error);
+            // console.log("ERR", error);
             callback({ submitError: true });
         });
 }
