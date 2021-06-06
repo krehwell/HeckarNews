@@ -232,6 +232,7 @@ app.get(
             response.authUser = res.locals;
             res.json(response);
         } catch (error) {
+            console.log(error);
             if (!(error instanceof Error)) {
                 error.authUser = res.locals;
                 res.json(error);
@@ -253,6 +254,7 @@ app.put("/comments/delete-comment", authUser, async (req, res) => {
         const response = await api.deleteComment(req.body.id, res.locals);
         res.json(response);
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
             res.json(error);
         } else {

@@ -544,8 +544,8 @@ module.exports = {
 
         await searchApi.deleteComment(
             comment.id,
-            item.id,
-            item.commentCount - 1
+            comment.id,
+            comment.commentCount - 1
         );
 
         return { success: true };

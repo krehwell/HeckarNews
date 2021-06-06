@@ -98,9 +98,9 @@ module.exports = {
     updateCommentPointsValue: async (id, newPointsValue) => {
         await index.partialUpdateObject({
             objectID: id,
-            points: newPointsValue
+            points: newPointsValue,
         });
 
         return { success: true };
-    }
+    },
 };
