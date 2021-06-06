@@ -12,6 +12,7 @@
     "author": "krehwell fahrimuham001@gmail.com",
     "license": "ISC",
     "dependencies": {
+        "algoliasearch": "^4.9.1",
         "axios": "^0.21.1",
         "moment": "^2.29.1",
         "next": "^10.0.3",
