@@ -395,6 +395,8 @@ module.exports = {
 
         await newFavoriteDoc.save();
 
+        await searchApi.updateCommentPointsValue(comment.id, comment.points);
+
         return { success: true };
     },
 
