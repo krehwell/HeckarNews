@@ -11,6 +11,8 @@ const UserFavoriteModel = require("../../models/userFavorite.js");
 const utils = require("../utils.js");
 const config = require("../../config.js");
 
+const searchApi = require("../search/api.js");
+
 /// COMMENT API
 module.exports = {
     addNewComment: async (commentData, authUser) => {
@@ -67,6 +69,12 @@ module.exports = {
         }
 
         await Promise.all(promises);
+
+        await searchApi.addNewComment(
+            newCommentDoc,
+            item.id,
+            item.commentCount + 1
+        );
 
         return { success: true };
     },
@@ -270,6 +278,8 @@ module.exports = {
             .lean()
             .exec();
 
+        await searchApi.updateCommentPointsValue(comment.id, comment.points);
+
         return { success: true };
     },
 
@@ -313,6 +323,8 @@ module.exports = {
         )
             .lean()
             .exec();
+
+        await searchApi.updateCommentPointsValue(comment.id, comment.points);
 
         return { success: true };
     },
@@ -454,6 +466,8 @@ module.exports = {
 
         await comment.save();
 
+        await searchApi.editComment(comment.id, newCommentText);
+
         return { success: true };
     },
 
@@ -525,6 +539,12 @@ module.exports = {
                 .lean()
                 .exec();
         }
+
+        await searchApi.deleteComment(
+            comment.id,
+            item.id,
+            item.commentCount - 1
+        );
 
         return { success: true };
     },

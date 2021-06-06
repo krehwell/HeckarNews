@@ -1913,7 +1913,7 @@ module.exports = {
         const items = await ItemModel.find({}).lean().exec();
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            searchApi.editItem(item.id, item.title, item.text);
+            searchApi.addNewItem(item);
         }
     },
 };
