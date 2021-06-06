@@ -369,6 +369,8 @@ module.exports = {
             throw { submitError: true };
         }
 
+        await searchApi.updateCommentPointsValue(comment.id, comment.points);
+
         return { success: true };
     },
 
@@ -394,8 +396,6 @@ module.exports = {
         });
 
         await newFavoriteDoc.save();
-
-        await searchApi.updateCommentPointsValue(comment.id, comment.points);
 
         return { success: true };
     },
