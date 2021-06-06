@@ -1,0 +1,22 @@
+.search-footer {
+    padding-top: 8px;
+}
+
+.search-footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style-type: none;
+    padding: 4px 8px 24px;
+    margin: 0;
+}
+
+.search-footer ul li {
+    padding: 4px;
+    font-size: 12px;
+}
+
+.search-footer ul a {
+    color: #000;
+    text-decoration: none;
+}
