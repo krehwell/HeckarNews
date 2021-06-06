@@ -15,6 +15,10 @@ import "../styles/components/comment.css";
 import "../styles/components/commentSection.css";
 import "../styles/components/commentsList.css"
 
+/// SEARCH COMPONENT
+import "../styles/components/search/header.css";
+import "../styles/components/search/footer.css";
+
 /// PAGES STYLES
 import "../styles/pages/_error.css";
 import "../styles/pages/login.css";
@@ -32,6 +36,9 @@ import "../styles/pages/favorites.css";
 import "../styles/pages/comment.css";
 import "../styles/pages/edit-comment.css";
 import "../styles/pages/delete-comment.css";
+
+/// SEARCH PAGES
+import "../styles/search/index.css";
 
 /// NProgress CONFIG
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
