@@ -1903,9 +1903,17 @@ module.exports = {
 
             item.score = score.toFixed(3);
 
-            const saveItem = await item.save();
+            await item.save();
         });
 
         return { success: true };
+    },
+
+    updateAllItemsToAlgolia: async () => {
+        const items = await ItemModel.find({}).lean().exec();
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            searchApi.editItem(item.id, item.title, item.text);
+        }
     },
 };
