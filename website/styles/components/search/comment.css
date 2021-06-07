@@ -1,0 +1,77 @@
+.search-highlighted-text {
+  font-weight: 700;
+  color: #000;
+  background: #ff0;
+  font-style: normal;
+}
+
+.search-results-comment {
+  display: flex;
+  align-items: center;
+  font-size: 13.5px;
+  padding: 4px 16px;
+  min-height: 40px;
+  flex-wrap: wrap;
+}
+
+.search-results-comment-details {
+  font-size: 10.6667px;
+}
+
+.search-results-comment-details a {
+  color: #696969;
+  text-decoration: none;
+}
+
+.search-results-comment-details a:hover {
+  text-decoration: underline;
+}
+
+.search-results-comment-details-separator {
+  margin: 0 5px;
+  color: #696969;
+}
+
+.search-results-comment-text {
+  padding: 8px 0;
+  color: #000;
+  font-size: 12px;
+  width: 100%;
+  line-height: normal;
+  font-style: normal;
+  -webkit-font-feature-settings: normal;
+  font-feature-settings: normal;
+  font-variant-caps: normal;
+  font-variant-east-asian: normal;
+  -webkit-font-variant-ligatures: normal;
+  font-variant-ligatures: normal;
+  font-variant-numeric: normal;
+  font-weight: 400;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.search-results-comment-text a {
+  color: #000000;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.search-results-comment-text a:visited {
+  color: #828282;
+}
+
+.search-results-comment-text a:link {
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+  .search-results-comment-text a {
+    max-width: 250px;
+  }
+}

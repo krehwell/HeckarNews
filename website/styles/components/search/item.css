@@ -1,0 +1,115 @@
+.search-highlighted-text {
+    font-weight: 700;
+    color: #000;
+    background: #ff0;
+    font-style: normal;
+}
+
+.search-results-item {
+    display: flex;
+    align-items: center;
+    font-size: 13.5px;
+    padding: 4px 16px;
+    min-height: 40px;
+    flex-wrap: wrap;
+}
+
+.search-results-item-data {
+    margin: 2px 0;
+}
+
+.search-results-item-title-and-link {
+    width: 100%;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.search-results-item-title {
+    color: #000;
+    text-decoration: none;
+}
+
+.search-results-item-link {
+    margin-left: 2.5px;
+    color: #828282;
+    font-size: 13px;
+    word-break: break-all;
+    text-decoration: none;
+}
+
+.search-results-item-link:hover {
+    text-decoration: underline;
+}
+
+.search-results-item-details {
+    font-size: 10.6667px;
+}
+
+.search-results-item-details a {
+    color: #696969;
+    text-decoration: none;
+}
+
+.search-results-item-details a:hover {
+    text-decoration: underline;
+}
+
+.search-results-item-details-separator {
+    margin: 0 5px;
+    color: #696969;
+}
+
+.search-results-item-text {
+    padding: 8px 0;
+    color: #000;
+    font-size: 12px;
+    width: 100%;
+    line-height: normal;
+    font-style: normal;
+    -webkit-font-feature-settings: normal;
+    font-feature-settings: normal;
+    font-variant-caps: normal;
+    font-variant-east-asian: normal;
+    -webkit-font-variant-ligatures: normal;
+    font-variant-ligatures: normal;
+    font-variant-numeric: normal;
+    font-weight: 400;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.search-results-item-text a {
+    color: #000000;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+.search-results-item-text a:visited {
+    color: #828282;
+}
+
+.search-results-item-text a:link {
+    text-decoration: underline;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .search-results-item-text a {
+        max-width: 250px;
+    }
+}
+
+@media only screen and (max-width: 650px) and (min-width: 0px) {
+    .search-results-item-title {
+        display: block;
+    }
+
+    .search-results-item-link {
+        display: block;
+        margin-left: 0px;
+    }
+}

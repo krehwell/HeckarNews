@@ -18,6 +18,8 @@ import "../styles/components/commentsList.css"
 /// SEARCH COMPONENT
 import "../styles/components/search/header.css";
 import "../styles/components/search/footer.css";
+import "../styles/components/search/item.css";
+import "../styles/components/search/comment.css";
 
 /// PAGES STYLES
 import "../styles/pages/_error.css";
