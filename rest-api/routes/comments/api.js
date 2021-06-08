@@ -967,4 +967,25 @@ module.exports = {
                     : false,
         };
     },
+
+    /**
+     * Used once all comments initialized and ready to be sync to Algolia
+     */
+    updateAllCommentsToAlgolia: async () => {
+        const comments = await CommentModel.find({}).lean().exec();
+        for (let i = 0; i < comments.length; i++) {
+            const comment = comments[i];
+            const item = await ItemModel.findOne({ id: comment.parentItemId })
+                .lean()
+                .exec();
+
+            if (item) {
+                await searchApi.addNewComment(
+                    comment,
+                    comment.parentItemId,
+                    item.commentCount
+                );
+            }
+        }
+    },
 };

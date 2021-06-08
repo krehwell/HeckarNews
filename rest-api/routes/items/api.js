@@ -1909,11 +1909,14 @@ module.exports = {
         return { success: true };
     },
 
+    /**
+     * Used once all items initialized and ready to be sync to Algolia
+     */
     updateAllItemsToAlgolia: async () => {
         const items = await ItemModel.find({}).lean().exec();
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            searchApi.addNewItem(item);
+            await searchApi.addNewItem(item);
         }
     },
 };
