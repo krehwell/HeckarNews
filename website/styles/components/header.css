@@ -12,7 +12,7 @@
 }
 
 .header-logo img {
-    border: 1px black solid;
+    border: 2px black solid;
     vertical-align: middle;
     margin-right: 3px;
     width: 18px;
@@ -52,6 +52,11 @@
 }
 
 @media only screen and (max-width: 750px) and (min-width: 0px) {
+    .header-logo img {
+        width: 25px;
+        height: 25px;
+    }
+
     .header-wrapper {
         font-size: 12px;
     }

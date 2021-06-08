@@ -45,12 +45,12 @@ export default function SearchPageHeader({
 
     return (
         <div className="search-header">
-            <a className="search-header-logo" href="/search">
+            <a className="search-header-logo" href="/">
                 <img src="/android-chrome-512x512.png" />
                 <div className="search-header-logo-label">
                     <span>
-                        Search <br />
-                        HeckarNews
+                        <b>Search <br />
+                        HeckarNews</b>
                     </span>
                 </div>
             </a>

@@ -12,6 +12,12 @@
     box-sizing: border-box;
 }
 
+body {
+    zoom: 1.35;
+    -moz-transform: scale(1.35);
+    -moz-transform-origin: 0 0;
+}
+
 table {
     border-spacing: 0px;
 }
@@ -42,6 +48,12 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 @media only screen and (max-width: 750px) and (min-width: 0px) {
+    body {
+        zoom: 1;
+        -moz-transform: scale(1);
+        -moz-transform-origin: 0 0;
+    }
+
     .layout-wrapper {
         width: 100%;
         margin-top: 0px;

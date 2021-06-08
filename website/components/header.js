@@ -17,7 +17,7 @@ export default function Header({ userSignedIn, username, karma, goto, pageName, 
                     <td className="header-logo">
                         <Link href="/">
                             <a>
-                                <img src="/favicon.ico" />
+                                <img src="/android-chrome-512x512.png" />
                             </a>
                         </Link>
                     </td>

@@ -11,20 +11,21 @@
 .search-header-logo {
     display: flex;
     flex: 1 0 180px;
-    max-width: 180px;
+    max-width: 150px;
     align-items: center;
     text-decoration: none;
 }
 
 .search-header-logo img {
-    width: 48px;
+    width: 25px;
     margin-right: 4px;
     border-style: none;
+    border: 2px solid black;
 }
 
 .search-header-logo-label {
     color: #000;
-    font-size: 18px;
+    font-size: 13px;
     line-height: 1;
 }
 
@@ -37,24 +38,28 @@
 
 .search-header-bar-icon {
     position: absolute;
-    top: 9px;
+    top: 3.5px;
     left: 12px;
     color: #ff742b;
-    font-size: 24px;
     pointer-events: none;
+}
+
+.search-header-bar-icon svg {
+    width: 19px;
+    height: 19px;
 }
 
 .search-header-bar input {
     border-radius: 0;
     border: none;
-    height: 42px;
+    /* height: 42px; */
     width: 100%;
     font-size: 14px;
     font-family: inherit;
     line-height: 1.15px;
     margin: 0;
     box-shadow: none;
-    padding: 16px 144px 16px 54px;
+    padding: 5px 144px 5px 40px;
     font-weight: 300;
     color: rgba(0, 0, 0, 0.75);
 }
@@ -88,6 +93,7 @@
 }
 
 .search-header-settings {
+    font-size: 14px;
     margin-right: 5px;
 }
 
@@ -100,6 +106,7 @@
 
 .search-header-settings svg {
     margin: 0 5px;
+    height: 15px;
 }
 
 .search-header-back a {
@@ -129,7 +136,7 @@
     }
 
     .search-header-logo img {
-        width: 42px;
+        width: 30px;
     }
 
     .search-header-bar {
@@ -138,7 +145,7 @@
     }
 
     .search-header-bar-icon {
-        top: 4px;
+        top: 6.5px;
     }
 
     .search-header-bar-icon svg {
@@ -147,9 +154,8 @@
     }
 
     .search-header-bar input {
-        font-size: 16px;
         padding: 16px 15px 16px 45px;
-        height: 34px;
+        height: 25px;
     }
 
     .search-header-settings svg {
