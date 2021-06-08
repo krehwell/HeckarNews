@@ -25,8 +25,8 @@ export default function Search({
             <HeadMetadata title="Search | HeckarNews" />
             <SearchPageHeader
                 searchQuery={searchQuery}
-                showSearchBar={true}
-                showSettingsButton={true}
+                showSearchBar
+                showSettingsButton
                 currPageNumber={currPageNumber}
                 itemType={itemType}
                 dateRange={dateRange}

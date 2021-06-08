@@ -45,8 +45,8 @@
 }
 
 .search-header-bar-icon svg {
-    width: 19px;
-    height: 19px;
+    width: 16px;
+    height: 16px;
 }
 
 .search-header-bar input {
@@ -110,6 +110,7 @@
 }
 
 .search-header-back a {
+    font-size: 13px;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -120,7 +121,7 @@
 }
 
 .search-header-back svg {
-    margin: 0 4px;
+    margin: 0px 0px 0px 5px;
 }
 
 @media only screen and (max-width: 775px) and (min-width: 0px) {
@@ -149,8 +150,8 @@
     }
 
     .search-header-bar-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
     }
 
     .search-header-bar input {

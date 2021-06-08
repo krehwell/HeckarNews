@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Router from "next/router";
+import Link from "next/link";
 
 import SearchBarIcon from "./svg/searchBarIcon.js";
 import AlgoliaLogo from "./svg/algoliaLogo.js";
@@ -45,15 +46,19 @@ export default function SearchPageHeader({
 
     return (
         <div className="search-header">
-            <a className="search-header-logo" href="/">
-                <img src="/android-chrome-512x512.png" />
-                <div className="search-header-logo-label">
-                    <span>
-                        <b>Search <br />
-                        HeckarNews</b>
-                    </span>
-                </div>
-            </a>
+            <Link href="/">
+                <a className="search-header-logo">
+                    <img src="/android-chrome-512x512.png" />
+                    <div className="search-header-logo-label">
+                        <span>
+                            <b>
+                                Search <br />
+                                HeckarNews
+                            </b>
+                        </span>
+                    </div>
+                </a>
+            </Link>
 
             {/* SEARCH BAR */}
             {showSearchBar ? (
@@ -90,10 +95,12 @@ export default function SearchPageHeader({
             {/* BACK BTN */}
             {showBackButton ? (
                 <div className="search-header-back">
-                    <a href="/search">
-                        <LeftArrow />
-                        Back
-                    </a>
+                    <Link href="/search">
+                        <a>
+                            <LeftArrow />
+                            Back
+                        </a>
+                    </Link>
                 </div>
             ) : null}
         </div>
