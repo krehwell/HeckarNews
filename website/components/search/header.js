@@ -1,11 +1,23 @@
 import { useState } from "react";
+import Router from "next/router";
 
 import SearchBarIcon from "./svg/searchBarIcon.js";
 import AlgoliaLogo from "./svg/algoliaLogo.js";
 import SettingsIcon from "./svg/settingsIcon.js";
 import LeftArrow from "./svg/leftArrow.js";
 
-export default function SearchPageHeader({ showSearchBar, searchQuery, showSettingsButton, showBackButton }) {
+export default function SearchPageHeader({
+    showSearchBar,
+    searchQuery,
+    showSettingsButton,
+    showBackButton,
+    currPageNumber,
+    itemType,
+    dateRange,
+    startDate,
+    endDate,
+    sortBy,
+}) {
     const [searchInputValue, setSearchInputValue] = useState(searchQuery ? searchQuery : "");
 
     const updateSearchInputValue = (event) => {
@@ -21,7 +33,14 @@ export default function SearchPageHeader({ showSearchBar, searchQuery, showSetti
     const submitSearchInputRequest = (inputValue) => {
         const query = `q=${inputValue}`;
 
-        window.location.href = `/search?${query}`;
+        const page = `page=1`;
+        const q_itemType = `itemType=${itemType}`;
+        const q_dateRange = `dateRange=${dateRange}`;
+        const q_startDate = `startDate=${startDate}`;
+        const q_endDate = `endDate=${endDate}`;
+        const q_sortBy = `sortBy=${sortBy}`;
+
+        Router.push(`/search?${query}&${page}&${q_itemType}&${q_dateRange}&${q_startDate}&${q_endDate}&${q_sortBy}`);
     };
 
     return (
@@ -69,16 +88,14 @@ export default function SearchPageHeader({ showSearchBar, searchQuery, showSetti
             ) : null}
 
             {/* BACK BTN */}
-            {
-                showBackButton ?
-                    <div className="search-header-back">
-                        <a href="/search">
-                            <LeftArrow />
-                            Back
-                        </a>
-                    </div> : null
-            }
-
+            {showBackButton ? (
+                <div className="search-header-back">
+                    <a href="/search">
+                        <LeftArrow />
+                        Back
+                    </a>
+                </div>
+            ) : null}
         </div>
     );
 }
