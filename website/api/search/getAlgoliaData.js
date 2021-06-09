@@ -77,8 +77,6 @@ export default async function getAlgoliaData(query) {
         content.dateRange = dateRangeType;
         content.itemType = itemType;
 
-        console.log("CONT", content);
-
         return content;
     } catch (error) {
         return { getDataError: true };
