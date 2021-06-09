@@ -343,13 +343,13 @@ export default function Filters({
                             endDate={endDate}
                         />
                     </span>
-
-                    {/* PROCESSING TIME */}
-                    <div className="search-results-filters-stats">
-                        <span>{totalNumOfHits} results</span>
-                        <span className="search-results-filters-stats-time">({processingTimeMS * 0.001} seconds)</span>
-                    </div>
                 </span>
+            </div>
+
+            {/* PROCESSING TIME */}
+            <div className="search-results-filters-stats">
+                <span>{totalNumOfHits} results</span>
+                <span className="search-results-filters-stats-time">({processingTimeMS * 0.001} seconds)</span>
             </div>
         </div>
     );
