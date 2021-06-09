@@ -49,9 +49,10 @@ export default function Search({
                 />
                 <div className="search-results-items">
                     {hits.length > 0 && !getDataError
-                        ? hits.map((hit, _) => {
+                        ? hits.map((hit, index) => {
                               return (
                                   <div
+                                      key={index}
                                       style={{
                                           padding: "8px 0px",
                                           borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
