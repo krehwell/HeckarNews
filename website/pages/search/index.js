@@ -71,6 +71,21 @@ export default function Search({
                             <span>An error occurred.</span>
                         </div>
                     ) : null}
+                    {hits.length === 0 && !getDataError ? (
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                color: "#828282",
+                                opacity: 0.5,
+                                height: "30vh",
+                            }}>
+                            <b>
+                                No Results <i>:(</i>
+                            </b>
+                        </div>
+                    ) : null}
                 </div>
             </div>
             <SearchPageFooter />
