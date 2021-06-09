@@ -3,6 +3,7 @@ import SearchPageHeader from "../../components/search/header.js";
 import SearchPageFooter from "../../components/search/footer.js";
 import Item from "../../components/search/item.js";
 import Comment from "../../components/search/comment.js";
+import Filters from "../../components/search/filters.js";
 
 import getAlgoliaData from "../../api/search/getAlgoliaData.js";
 
@@ -35,6 +36,17 @@ export default function Search({
                 sortBy={sortBy}
             />
             <div className="search-results">
+                <Filters
+                    searchQuery={searchQuery}
+                    currPageNumber={currPageNumber}
+                    dateRange={dateRange}
+                    startDate={startDate}
+                    endDate={endDate}
+                    sortBy={sortBy}
+                    itemType={itemType}
+                    totalNumOfHits={totalNumOfHits}
+                    processingTimeMS={processingTimeMS}
+                />
                 <div className="search-results-items">
                     {hits.length > 0 && !getDataError
                         ? hits.map((hit, _) => {
@@ -80,7 +92,7 @@ export async function getServerSideProps({ query }) {
             dateRange: apiResult.dateRange ? apiResult.dateRange : "",
             startDate: query.startDate ? query.startDate : "",
             endDate: query.endDate ? query.endDate : "",
-            currPageNumber: apiResult.page || 1,
+            currPageNumber: apiResult.page || 0,
             totalNumOfPages: apiResult.nbPages || 1,
         },
     };
