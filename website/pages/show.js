@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
@@ -21,8 +23,15 @@ export default function Show({ items, authUserData, page, isMore, getDataError, 
                     <>
                         <div className="show-items-top-text">
                             <span>
-                                Please read the <a href="/showguidelines">rules</a>. You can also browse the&nbsp;
-                                <a href="/shownew">newest</a> Show submissions.
+                                Please read the&nbsp;
+                                <Link href="/showguidelines">
+                                    <a>rules</a>
+                                </Link>
+                                . You can also browse the&nbsp;
+                                <Link href="/shownew">
+                                    <a>newest</a>
+                                </Link>
+                                &nbsp;Show submissions.
                             </span>
                         </div>
                         <ItemsList

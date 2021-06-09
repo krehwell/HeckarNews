@@ -193,7 +193,9 @@ export default function EditComment({
                                 onChange={updateCommentInputValue}
                             />
                             <span className="edit-comment-input-box-help">
-                                <a href="/formatdoc">help</a>
+                                <Link href="/formatdoc">
+                                    <a>help</a>
+                                </Link>
                             </span>
                         </div>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Router from "next/router";
+import Link from "next/link";
 
 import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
@@ -82,42 +83,48 @@ export default function DeleteComment({
 
                                             {/* COMMENT BY */}
                                             <span>
-                                                by <a href={`/user?id=${comment.by}`}>{comment.by}</a>&nbsp;
+                                                by&nbsp;
+                                                <Link href={`/user?id=${comment.by}`}>
+                                                    <a>{comment.by}</a>
+                                                </Link>
+                                                &nbsp;
                                             </span>
 
                                             {/* COMMENT CREATED TIME */}
                                             <span>
-                                                <a href={`/comment?id=${comment.id}`}>
-                                                    {renderCreatedTime(comment.created)}
-                                                </a>
+                                                <Link href={`/comment?id=${comment.id}`}>
+                                                    <a>{renderCreatedTime(comment.created)}</a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
 
                                             {/* PARENT */}
                                             <span className="delete-comment-top-section-parent">
-                                                <a
+                                                <Link
                                                     href={
                                                         comment.isParent
                                                             ? `/item?id=${comment.parentItemId}`
                                                             : `/comment?id=${comment.parentCommentId}`
                                                     }>
-                                                    parent
-                                                </a>
+                                                    <a>parent</a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
 
                                             {/* EDIT COMMENT */}
                                             <span>
-                                                <a href={`/edit-comment?id=${comment.id}`}>edit</a>
+                                                <Link href={`/edit-comment?id=${comment.id}`}>
+                                                    <a>edit</a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
 
                                             {/* COMMENT FROM POST/ITEM */}
                                             <span className="delete-comment-top-section-article-title">
                                                 on:&nbsp;
-                                                <a href={`/item?id=${comment.parentItemId}`}>
-                                                    {truncateItemTitle(comment?.parentItemTitle)}
-                                                </a>
+                                                <Link href={`/item?id=${comment.parentItemId}`}>
+                                                    <a>{truncateItemTitle(comment?.parentItemTitle)}</a>
+                                                </Link>
                                             </span>
 
                                             {/* COMMENT CONTENT */}

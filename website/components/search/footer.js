@@ -1,17 +1,25 @@
+import Link from "next/link";
+
 export default function SearchFooter({}) {
     return (
         <div className="search-footer">
             <ul>
                 <li>
-                    <a href="/search/about">About</a>
+                    <Link href="/search/about">
+                        <a>About</a>
+                    </Link>
                 </li>
                 <li>•</li>
                 <li>
-                    <a href="/search/settings">Settings</a>
+                    <Link href="/search/settings">
+                        <a>Settings</a>
+                    </Link>
                 </li>
                 <li>•</li>
                 <li>
-                    <a href="/">Coder News</a>
+                    <Link href="/">
+                        <a>HeckarNews</a>
+                    </Link>
                 </li>
             </ul>
         </div>

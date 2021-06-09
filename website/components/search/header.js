@@ -75,9 +75,11 @@ export default function SearchPageHeader({
                     />
                     <div className="search-header-bar-powered-by">
                         <span className="search-header-bar-powered-by-label">Search by</span>
-                        <a href="https://www.algolia.com">
-                            <AlgoliaLogo />
-                        </a>
+                        <Link href="https://www.algolia.com">
+                            <a>
+                                <AlgoliaLogo />
+                            </a>
+                        </Link>
                     </div>
                 </div>
             ) : null}
@@ -85,10 +87,12 @@ export default function SearchPageHeader({
             {/* SETTINGS BTN */}
             {showSettingsButton ? (
                 <div className="search-header-settings">
-                    <a href="/search/settings">
-                        <SettingsIcon />
-                        <span className="search-header-settings-label">Settings</span>
-                    </a>
+                    <Link href="/search/settings">
+                        <a>
+                            <SettingsIcon />
+                            <span className="search-header-settings-label">Settings</span>
+                        </a>
+                    </Link>
                 </div>
             ) : null}
 
