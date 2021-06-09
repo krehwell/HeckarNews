@@ -18,6 +18,7 @@
         "next": "^10.0.3",
         "nprogress": "^0.2.0",
         "react": "^17.0.1",
+        "react-day-picker": "^7.4.10",
         "react-dom": "^17.0.1"
     },
     "prettier": {
