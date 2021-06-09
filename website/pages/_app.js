@@ -22,6 +22,7 @@ import "../styles/components/search/item.css";
 import "../styles/components/search/comment.css";
 import "../styles/components/search/filters.css";
 import "../styles/components/search/datePicker.css";
+import "../styles/components/search/pageNumbers.css";
 
 /// PAGES STYLES
 import "../styles/pages/_error.css";

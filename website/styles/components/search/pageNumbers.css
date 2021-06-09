@@ -1,0 +1,46 @@
+.search-results-pagination ul {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+    background-color: #f6f6ef;
+    list-style-type: none;
+}
+
+.search-results-pagination li a {
+    text-decoration: none;
+}
+
+.search-results-pagination li button {
+    padding: 0;
+    min-width: 30px;
+    height: 24px;
+    font-size: 12px;
+    margin: 0 2px;
+    color: #9d9d9d;
+    border: 1px solid #9d9d9d;
+    text-align: center;
+    border-radius: 2px;
+    font-weight: 400;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.search-results-pagination li button:focus {
+    outline: 0;
+}
+
+.search-results-pagination li.current button {
+    color: #ff742b;
+    border: 1px solid #ff742b;
+}
+
+.search-results-pagination li svg {
+    height: 14px;
+}
+
+@media only screen and (max-width: 500px) and (min-width: 0px) {
+    .search-results-pagination li button {
+        font-size: 11px;
+        min-width: 26.5px;
+    }
+}
