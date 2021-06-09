@@ -20,6 +20,7 @@ import "../styles/components/search/header.css";
 import "../styles/components/search/footer.css";
 import "../styles/components/search/item.css";
 import "../styles/components/search/comment.css";
+import "../styles/components/search/filters.css";
 
 /// PAGES STYLES
 import "../styles/pages/_error.css";
