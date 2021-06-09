@@ -4,6 +4,7 @@ import SearchPageFooter from "../../components/search/footer.js";
 import Item from "../../components/search/item.js";
 import Comment from "../../components/search/comment.js";
 import Filters from "../../components/search/filters.js";
+import PageNumbers from "../../components/search/pageNumbers.js";
 
 import getAlgoliaData from "../../api/search/getAlgoliaData.js";
 
@@ -87,6 +88,18 @@ export default function Search({
                         </div>
                     ) : null}
                 </div>
+                {!getDataError ? (
+                    <PageNumbers
+                        totalNumOfPages={totalNumOfPages}
+                        currPageNumber={currPageNumber}
+                        searchQuery={searchQuery}
+                        itemType={itemType}
+                        dateRange={dateRange}
+                        startDate={startDate}
+                        endDate={endDate}
+                        sortBy={sortBy}
+                    />
+                ) : null}
             </div>
             <SearchPageFooter />
         </div>
