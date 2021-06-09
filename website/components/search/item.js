@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import renderCreatedTime from "../../utils/renderCreatedTime.js";
 
 export default function SearchItemComponent({ item }) {
@@ -5,32 +7,40 @@ export default function SearchItemComponent({ item }) {
         <div className="search-results-item">
             <div className="search-results-item-data">
                 <div className="search-results-item-title-and-link">
-                    <a className="search-results-item-title" href={`/item?id=${item.objectID}`}>
-                        {item.title}
-                    </a>
+                    <Link href={`/item?id=${item.objectID}`}>
+                        <a className="search-results-item-title">{item.title}</a>
+                    </Link>
                     {item.url ? (
-                        <a className="search-results-item-link" href={item.url}>
-                            ({item.url})
-                        </a>
+                        <Link href={item.url}>
+                            <a className="search-results-item-link">({item.url})</a>
+                        </Link>
                     ) : null}
                 </div>
                 <div className="search-results-item-details">
                     <span>
-                        <a href={`/item?id=${item.objectID}`}>
-                            {item.points.toLocaleString()} {item.points === 1 ? "point" : "points"}
-                        </a>
+                        <Link href={`/item?id=${item.objectID}`}>
+                            <a>
+                                {item.points.toLocaleString()} {item.points === 1 ? "point" : "points"}
+                            </a>
+                        </Link>
                     </span>
                     <span className="search-results-item-details-separator">|</span>
                     <span>
-                        <a href={`/user?id=${item.by}`}>{item.by}</a>
+                        <Link href={`/user?id=${item.by}`}>
+                            <a>{item.by}</a>
+                        </Link>
                     </span>
                     <span className="search-results-item-details-separator">|</span>
                     <span>
-                        <a href={`/item?id=${item.objectID}`}>{renderCreatedTime(item.created)}</a>
+                        <Link href={`/item?id=${item.objectID}`}>
+                            <a>{renderCreatedTime(item.created)}</a>
+                        </Link>
                     </span>
                     <span className="search-results-item-details-separator">|</span>
                     <span>
-                        <a href={`/item?id=${item.objectID}`}>{item.commentCount.toLocaleString()} comments</a>
+                        <Link href={`/item?id=${item.objectID}`}>
+                            <a>{item.commentCount.toLocaleString()} comments</a>
+                        </Link>
                     </span>
                 </div>
                 {item.text ? (

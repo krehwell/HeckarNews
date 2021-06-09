@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import renderCreatedTime from "../../utils/renderCreatedTime.js";
 import truncateItemTitle from "../../utils/truncateItemTitle.js";
 
@@ -6,19 +8,26 @@ export default function SearchCommentComponent({ comment }) {
         <div className="search-results-comment">
             <div className="search-results-comment-details">
                 <span>
-                    <a href={`/user?id=${comment.by}`}>{comment.by}</a>
+                    <Link href={`/user?id=${comment.by}`}>
+                        <a>{comment.by}</a>
+                    </Link>
                 </span>
                 <span className="search-results-comment-details-separator">|</span>
                 <span>
-                    <a href={`/comment?id=${comment.objectID}`}>{renderCreatedTime(comment.created)}</a>
+                    <Link href={`/comment?id=${comment.objectID}`}>
+                        <a>{renderCreatedTime(comment.created)}</a>
+                    </Link>
                 </span>
                 <span className="search-results-comment-details-separator">|</span>
-                <a href={comment.isParent ? `/item?id=${comment.parentItemId}` : `/comment?id=${comment.objectID}`}>
-                    parent
-                </a>
+                <Link href={comment.isParent ? `/item?id=${comment.parentItemId}` : `/comment?id=${comment.objectID}`}>
+                    <a>parent</a>
+                </Link>
                 <span className="search-results-comment-details-separator">|</span>
                 <span>
-                    on: <a href={`/item?id=${comment.parentItemId}`}>{truncateItemTitle(comment.parentItemTitle)}</a>
+                    on:&nbsp;
+                    <Link href={`/item?id=${comment.parentItemId}`}>
+                        <a>{truncateItemTitle(comment.parentItemTitle)}</a>
+                    </Link>
                 </span>
             </div>
             <div className="search-results-comment-text">

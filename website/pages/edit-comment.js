@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Router from "next/router";
+import Link from "next/link";
 
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
@@ -88,7 +89,7 @@ export default function EditComment({
                     });
                 } else {
                     // location.href = `/comment?id=${comment.id}`;
-                    Router.push(`/comment?id=${comment.id}`)
+                    Router.push(`/comment?id=${comment.id}`);
                 }
                 setLoading(false);
             });
@@ -127,42 +128,48 @@ export default function EditComment({
 
                                             {/* COMMENT BY */}
                                             <span>
-                                                by <a href={`/user?id=${comment.by}`}>{comment.by}</a>&nbsp;
+                                                by{" "}
+                                                <Link href={`/user?id=${comment.by}`}>
+                                                    <a>{comment.by}</a>
+                                                </Link>
+                                                &nbsp;
                                             </span>
 
                                             {/* COMMENT CREATED */}
                                             <span>
-                                                <a href={`/comment?id=${comment.id}`}>
-                                                    {renderCreatedTime(comment.created)}
-                                                </a>
+                                                <Link href={`/comment?id=${comment.id}`}>
+                                                    <a>{renderCreatedTime(comment.created)}</a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
 
                                             {/* PARENT COMMENT */}
                                             <span className="edit-comment-top-section-parent">
-                                                <a
+                                                <Link
                                                     href={
                                                         comment.isParent
                                                             ? `/item?id=${comment.parentItemId}`
                                                             : `/comment?id=${comment.parentCommentId}`
                                                     }>
-                                                    parent
-                                                </a>
+                                                    <a>parent</a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
 
                                             {/* DELETE COMMENT */}
                                             <span>
-                                                <a href={`/delete-comment?id=${comment.id}`}>delete</a>
+                                                <Link href={`/delete-comment?id=${comment.id}`}>
+                                                    <a>delete</a>
+                                                </Link>
                                             </span>
                                             <span> | </span>
 
                                             {/* COMMENT FROM/FOR ITEM */}
                                             <span className="edit-comment-top-section-article-title">
                                                 on:&nbsp;
-                                                <a href={`/item?id=${comment.parentItemId}`}>
-                                                    {truncateItemTitle(comment.parentItemTitle)}
-                                                </a>
+                                                <Link href={`/item?id=${comment.parentItemId}`}>
+                                                    <a>{truncateItemTitle(comment.parentItemTitle)}</a>
+                                                </Link>
                                             </span>
 
                                             {/* COMMENT CONTENT */}
