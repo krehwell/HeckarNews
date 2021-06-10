@@ -59,9 +59,9 @@ export default function Search({
                                           borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
                                       }}>
                                       {hit.type === "item" ? (
-                                          <Item item={hit} key={hit.objectID} />
+                                          <Item item={hit} key={hit.objectID} searchQuery={searchQuery} />
                                       ) : (
-                                          <Comment comment={hit} key={hit.objectID} />
+                                          <Comment comment={hit} key={hit.objectID} searchQuery={searchQuery}/>
                                       )}
                                   </div>
                               );
