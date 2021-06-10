@@ -86,7 +86,7 @@ export default function SearchPageHeader({
 
             {/* SETTINGS BTN */}
             {showSettingsButton ? (
-                <div className="search-header-settings">
+                <div className="search-header-settings" style={{ cursor: "not-allowed", pointerEvents: "none" }}>
                     <Link href="/search/settings">
                         <a>
                             <SettingsIcon />
