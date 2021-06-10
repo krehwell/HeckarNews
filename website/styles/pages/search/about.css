@@ -1,0 +1,44 @@
+.search-about-wrapper {
+    width: 85%;
+    max-width: 1400px;
+    margin: auto;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.search-about-content {
+    padding: 10px 24px;
+    background-color: #f6f6ef;
+    min-height: calc(100vh - 200px);
+    color: #5c5c5c;
+    font-size: 14px;
+}
+
+.search-about-page-label {
+    font-size: 16px;
+    height: 42px;
+}
+
+.search-about-content h3 {
+    font-size: 17px;
+    margin: 16px 0 12px;
+}
+
+.search-about-content p {
+    color: #5c5c5c;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.search-about-content a {
+    color: #477dca;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 1200px) {
+    .search-about-wrapper {
+        width: 100%;
+        margin: 0;
+    }
+}

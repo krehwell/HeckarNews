@@ -41,6 +41,7 @@ import "../styles/pages/favorites.css";
 import "../styles/pages/comment.css";
 import "../styles/pages/edit-comment.css";
 import "../styles/pages/delete-comment.css";
+import "../styles/pages/search/about.css";
 
 /// SEARCH PAGES
 import "../styles/search/index.css";
