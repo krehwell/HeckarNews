@@ -8,7 +8,15 @@ import getCommentById from "../api/comments/getCommentById.js";
 
 import truncateCommentText from "../utils/truncateCommentText.js";
 
-export default function Comment({ comment, authUserData, notFoundError, getDataError, goToString, page, isMoreChildrenComments }) {
+export default function Comment({
+    comment,
+    authUserData,
+    notFoundError,
+    getDataError,
+    goToString,
+    page,
+    isMoreChildrenComments,
+}) {
     // console.log("COMMENT", comment);
     return (
         <div className="layout-wrapper">
@@ -31,6 +39,7 @@ export default function Comment({ comment, authUserData, notFoundError, getDataE
                             goToString={goToString}
                             showDownvote={authUserData.showDownvote}
                             showFavoriteOption={true}
+                            isModerator={authUserData.isModerator}
                         />
                         <CommentSection
                             comments={comment.children}
@@ -68,7 +77,7 @@ export async function getServerSideProps({ req, query }) {
             getDataError: (apiResult && apiResult.getDataError) || false,
             goToString: `comment?id=${commentId}`,
             page: page,
-            isMoreChildrenComments: apiResult && apiResult.isMoreChildrenComments || false,
+            isMoreChildrenComments: (apiResult && apiResult.isMoreChildrenComments) || false,
         },
     };
 }

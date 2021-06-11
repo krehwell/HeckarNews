@@ -12,6 +12,8 @@ import downvoteComment from "../api/comments/downvoteComment.js";
 import unvoteComment from "../api/comments/unvoteComment.js";
 import favoriteComment from "../api/comments/favoriteComment.js";
 import unfavoriteComment from "../api/comments/unfavoriteComment.js";
+import killComment from "../api/moderation/killComment.js";
+import unkillComment from "../api/moderation/unkillComment.js";
 
 export default function CommentComponent({
     comment,
@@ -20,6 +22,7 @@ export default function CommentComponent({
     goToString,
     userSignedIn,
     showDownvote,
+    isModerator,
 }) {
     const [replyInputValue, setReplyInputValue] = useState("");
     const [loading, setLoading] = useState(false);
@@ -214,6 +217,28 @@ export default function CommentComponent({
         }
     };
 
+    const requestKillComment = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        killComment(comment.id, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestUnkillComment = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        unkillComment(comment.id, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
     return (
         <div className="comment-content">
             <table>
@@ -366,6 +391,26 @@ export default function CommentComponent({
                                         </span>
                                     </>
                                 ) : null}
+                                <span> | </span>
+
+                                {/* KILL COMMENT */}
+                                {isModerator && !comment.dead ? (
+                                    <>
+                                        <span className="comment-content-kill" onClick={() => requestKillComment()}>
+                                            kill
+                                        </span>
+                                    </>
+                                ) : null}
+
+                                {/* UNKILL COMMENT */}
+                                {isModerator && comment.dead ? (
+                                    <>
+                                        <span className="comment-content-kill" onClick={() => requestUnkillComment()}>
+                                            un-kill
+                                        </span>
+                                    </>
+                                ) : null}
+
                                 <span> | </span>
 
                                 {/* COMMENT BASED ON POST TITLE */}
