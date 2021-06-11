@@ -33,6 +33,7 @@ export default function Item({
                             currUsername={authUserData.username}
                             userSignedIn={authUserData.userSignedIn}
                             goToString={goToString}
+                            isModerator={authUserData.isModerator}
                         />
                         <CommentSection
                             comments={comments}

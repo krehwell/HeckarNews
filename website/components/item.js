@@ -2,8 +2,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
 
-import renderCreatedTime from "../utils/renderCreatedTime.js";
-
 import upvoteItem from "../api/items/upvoteItem.js";
 import unvoteItem from "../api/items/unvoteItem.js";
 import favoriteItem from "../api/items/favoriteItem.js";
@@ -11,8 +9,12 @@ import unfavoriteItem from "../api/items/unfavoriteItem.js";
 import hideItem from "../api/items/hideItem.js";
 import unhideItem from "../api/items/unhideItem.js";
 import addNewComment from "../api/comments/addNewComment.js";
+import killItem from "../api/moderation/killItem.js";
+import unkillItem from "../api/moderation/unkillItem.js";
 
-export default function ItemComponent({ item, currUsername, goToString, userSignedIn }) {
+import renderCreatedTime from "../utils/renderCreatedTime.js";
+
+export default function ItemComponent({ item, currUsername, goToString, userSignedIn, isModerator }) {
     const [loading, setLoading] = useState(false);
     const [numOfVote, setNumOfVote] = useState(item.points);
     const [commentInputValue, setCommentInputValue] = useState("");
@@ -225,6 +227,28 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
         }
     };
 
+    const requestKillItem = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        killItem(item.id, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestUnkillItem = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        unkillItem(item.id, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
     return (
         <div className="item-details">
             <table>
@@ -349,6 +373,24 @@ export default function ItemComponent({ item, currUsername, goToString, userSign
                                             href={`/delete-item?id=${item.id}&goto=${encodeURIComponent(goToString)}`}>
                                             delete
                                         </Link>
+                                    </span>
+                                </>
+                            ) : null}
+                            {/* MOD? KILL ITEM */}
+                            {isModerator && !item.dead ? (
+                                <>
+                                    <span> | </span>
+                                    <span className="item-kill" onClick={() => requestKillItem()}>
+                                        kill
+                                    </span>
+                                </>
+                            ) : null}
+                            {/* MOD? UNKILL ITEM */}
+                            {isModerator && item.dead ? (
+                                <>
+                                    <span> | </span>
+                                    <span className="item-kill" onClick={() => requestUnkillItem()}>
+                                        un-kill
                                     </span>
                                 </>
                             ) : null}
