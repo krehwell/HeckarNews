@@ -32,4 +32,28 @@ module.exports = {
 
         return { success: true };
     },
+
+    unkillItem: async (itemId, moderator) => {
+        ItemModel.findOneAndUpdate({ id: itemId }, { $set: { dead: false } })
+            .lean()
+            .exec();
+
+        if (!item) {
+            throw { submitError: true };
+        }
+
+        await searchApi.addNewItem(item);
+
+        const newModerationLogDoc = new ModerationLogModel({
+            moderatorUsername: moderator.username,
+            actionType: "unkill-item",
+            itemId: itemId,
+            itemTitle: item.title,
+            itemBy: item.by,
+            created: moment().unix(),
+        });
+
+        await newModerationLogDoc.save();
+        return { success: true };
+    },
 };
