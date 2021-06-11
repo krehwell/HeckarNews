@@ -54,6 +54,11 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+
+    isModerator: {
+        type: Boolean,
+        default: false
+    }
 });
 
 UserSchema.pre("save", function (next) {
