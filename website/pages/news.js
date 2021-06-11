@@ -27,6 +27,7 @@ export default function News({ items, authUserData, page, isMore, getDataError, 
                             showRank={true}
                             isMoreLink={`/news?page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

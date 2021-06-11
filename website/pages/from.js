@@ -28,6 +28,7 @@ export default function From({ items, authUserData, site, page, isMore, getDataE
                             showPastLink={true}
                             isMoreLink={`/from?site=${site}&page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

@@ -31,6 +31,7 @@ export default function Newest({ items, authUserData, page, isMore, getDataError
                             showPastLink={true}
                             isMoreLink={`/newest?page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

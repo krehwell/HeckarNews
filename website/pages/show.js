@@ -43,6 +43,7 @@ export default function Show({ items, authUserData, page, isMore, getDataError, 
                             showRank={true}
                             isMoreLink={`/show?page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

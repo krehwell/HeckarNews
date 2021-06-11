@@ -59,6 +59,7 @@ export default function Favorites({
                                         showRank={true}
                                         isMoreLink={`/favorites?id=${userId}&page=${page + 1}`}
                                         isMore={isMoreItems}
+                                        isModerator={authUserData.isModerator}
                                     />
                                 ) : (
                                     <div className="favorites-none-found-msg items">

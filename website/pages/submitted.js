@@ -28,6 +28,7 @@ export default function Submitted({ items, authUserData, page, userId, isMore, g
                             showWebLink={true}
                             isMoreLink={`/submitted?id=${userId}&page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

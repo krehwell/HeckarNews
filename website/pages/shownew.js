@@ -28,6 +28,7 @@ export default function ShowNew({ items, authUserData, page, isMore, getDataErro
                             showRank={true}
                             isMoreLink={`/shownew?page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

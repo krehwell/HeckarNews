@@ -27,6 +27,7 @@ export default function Ask({ items, authUserData, page, isMore, getDataError, g
                             showRank={true}
                             isMoreLink={`/ask?page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

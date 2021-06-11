@@ -25,6 +25,7 @@ export default function ItemsList({
     showWebLink = false,
     showUnfavoriteOption = false,
     showUnhideOption = false,
+    isModerator,
 }) {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState(itemsData);
@@ -147,24 +148,28 @@ export default function ItemsList({
         }
     };
 
-    const requestKillItem = (itemId) => {
+    const requestKillItem = (itemId, index) => {
         if (loading) return;
 
         setLoading(true);
 
         killItem(itemId, (_response) => {
             Router.push(Router.asPath);
+            items[index].dead = true;
+            setItems(items);
             setLoading(false);
         });
     };
 
-    const requestUnkillItem = (itemId) => {
+    const requestUnkillItem = (itemId, index) => {
         if (loading) return;
 
         setLoading(true);
 
         unkillItem(itemId, (_response) => {
             Router.push(Router.asPath);
+            items[index].dead = false;
+            setItems(items);
             setLoading(false);
         });
     };
@@ -328,7 +333,7 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-kill"
-                                                          onClick={() => requestKillItem(item.id)}>
+                                                          onClick={() => requestKillItem(item.id, index)}>
                                                           kill
                                                       </span>
                                                   </>
@@ -339,7 +344,7 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span
                                                           className="listed-item-kill"
-                                                          onClick={() => requestUnkillItem(item.id)}>
+                                                          onClick={() => requestUnkillItem(item.id, index)}>
                                                           un-kill
                                                       </span>
                                                   </>

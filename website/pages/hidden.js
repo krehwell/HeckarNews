@@ -30,6 +30,7 @@ export default function Hidden({ items, authUserData, page, isMore, getDataError
                             showUnhideOption={true}
                             isMoreLink={`/hidden?page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

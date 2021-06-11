@@ -43,6 +43,7 @@ export default function Upvoted({
                                 showRank={true}
                                 isMoreLink={`/upvoted?id=${userId}&page=${page + 1}`}
                                 isMore={isMoreItems}
+                                isModerator={authUserData.isModerator}
                             />
                         ) : null}
                         {showComments ? (

@@ -26,6 +26,7 @@ export default function Index({ items, authUserData, page, isMore, getDataError,
                         showRank={true}
                         isMoreLink={"/news?page=2"}
                         isMore={isMore}
+                        isModerator={authUserData.isModerator}
                     />
                 ) : (
                     <div className="items-list-error-msg">

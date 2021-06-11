@@ -114,6 +114,7 @@ export default function Past({ items, authUserData, day, page, isMore, getDataEr
                             showRank={true}
                             isMoreLink={`past?day=${day}&page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (
