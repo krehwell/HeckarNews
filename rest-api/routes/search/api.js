@@ -108,4 +108,20 @@ module.exports = {
         await index.deleteObject(id);
         return { success: true };
     },
+
+    addUnkilledComment: async (comment) => {
+        await index.saveObject({
+            objectID: comment.id,
+            type: "comment",
+            by: comment.by,
+            parentItemId: comment.parentItemId,
+            parentItemTitle: comment.parentItemTitle,
+            isParent: comment.isParent,
+            parentCommentId: comment.parentCommentId,
+            text: comment.text,
+            points: comment.points,
+            created: comment.created,
+        });
+        return { success: true };
+    },
 };

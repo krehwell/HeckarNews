@@ -87,4 +87,31 @@ module.exports = {
 
         return { success: true };
     },
+
+    unkillComment: async (commentId, moderator) => {
+        const comment = await CommentModel.findOneAndUpdate(
+            { id: commentId },
+            { $set: { dead: false } }
+        )
+            .lean()
+            .exec();
+
+        if (!comment) {
+            throw { submitError: true };
+        }
+
+        await searchApi.addUnkilledComment(comment);
+
+        const newModerationLogDoc = new ModerationLogModel({
+            moderatorUsername: moderator.username,
+            actionType: "unkill-comment",
+            commentId: commentId,
+            commentBy: comment.by,
+            itemTitle: comment.parentItemTitle,
+            itemId: comment.parentItemId,
+            created: moment().unix(),
+        });
+
+        await newModerationLogDoc.save();
+    },
 };
