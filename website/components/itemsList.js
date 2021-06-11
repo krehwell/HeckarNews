@@ -7,6 +7,8 @@ import unvoteItem from "../api/items/unvoteItem.js";
 import unfavoriteItem from "../api/items/unfavoriteItem.js";
 import hideItem from "../api/items/hideItem.js";
 import unhideItem from "../api/items/unhideItem.js";
+import killItem from "../api/moderation/killItem.js";
+import unkillItem from "../api/moderation/unkillItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
@@ -31,7 +33,6 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
             Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
@@ -44,7 +45,6 @@ export default function ItemsList({
                 setLoading(false);
 
                 if (response.authError) {
-                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                     Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
             });
@@ -55,7 +55,6 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
             Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
@@ -68,7 +67,6 @@ export default function ItemsList({
                 setLoading(false);
 
                 if (response.authError) {
-                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                     Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
             });
@@ -79,15 +77,12 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
             Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             unfavoriteItem(itemId, (response) => {
                 if (response.authError) {
-                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                     Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
-                    // location.href = "";
                     Router.push(Router.asPath);
                 }
             });
@@ -98,7 +93,6 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
             Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
@@ -117,7 +111,6 @@ export default function ItemsList({
             hideItem(itemId, (response) => {
                 setLoading(false);
                 if (response.authError) {
-                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                     Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 }
             });
@@ -128,7 +121,6 @@ export default function ItemsList({
         if (loading) return;
 
         if (!userSignedIn) {
-            // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
             Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
         } else {
             setLoading(true);
@@ -146,10 +138,8 @@ export default function ItemsList({
 
             unhideItem(itemId, (response) => {
                 if (response.authError) {
-                    // location.href = `/login?goto=${encodeURIComponent(goToString)}`;
                     Router.push(`/login?goto=${encodeURIComponent(goToString)}`);
                 } else {
-                    // location.href = "";
                     Router.push(Router.asPath);
                 }
                 setLoading(false);
@@ -157,11 +147,33 @@ export default function ItemsList({
         }
     };
 
+    const requestKillItem = (itemId) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        killItem(itemId, (_response) => {
+            Router.push(Router.asPath);
+            setLoading(false);
+        });
+    };
+
+    const requestUnkillItem = (itemId) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        unkillItem(itemId, (_response) => {
+            Router.push(Router.asPath);
+            setLoading(false);
+        });
+    };
+
     return (
         <>
             {items
                 ? items.map((item, index) => {
-                    item.rank = index + 1;
+                      item.rank = index + 1;
                       return (
                           <div key={item.id} className="listed-item-container">
                               <table>
@@ -306,6 +318,29 @@ export default function ItemsList({
                                                       <span> | </span>
                                                       <span>
                                                           <Link href={`/edit-item?id=${item.id}`}>edit</Link>
+                                                      </span>
+                                                  </>
+                                              ) : null}
+
+                                              {/* MODE? KILL ITEM */}
+                                              {isModerator && !item.dead ? (
+                                                  <>
+                                                      <span> | </span>
+                                                      <span
+                                                          className="listed-item-kill"
+                                                          onClick={() => requestKillItem(item.id)}>
+                                                          kill
+                                                      </span>
+                                                  </>
+                                              ) : null}
+
+                                              {isModerator && item.dead ? (
+                                                  <>
+                                                      <span> | </span>
+                                                      <span
+                                                          className="listed-item-kill"
+                                                          onClick={() => requestUnkillItem(item.id)}>
+                                                          un-kill
                                                       </span>
                                                   </>
                                               ) : null}
