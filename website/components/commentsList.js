@@ -6,6 +6,8 @@ import upvoteComment from "../api/comments/upvoteComment.js";
 import downvoteComment from "../api/comments/downvoteComment.js";
 import unvoteComment from "../api/comments/unvoteComment.js";
 import unfavoriteComment from "../api/comments/unfavoriteComment.js";
+import killComment from "../api/moderation/killComment.js";
+import unkillComment from "../api/moderation/unkillComment.js";
 
 import renderPointsString from "../utils/renderPointsString.js";
 import renderCreatedTime from "../utils/renderCreatedTime.js";
@@ -20,6 +22,7 @@ export default function CommentsList({
     isMore,
     isMoreLink,
     showUnfavoriteOption,
+    isModerator
 }) {
     const [loading, setLoading] = useState(false);
     const [comments, setComments] = useState(commentsData);
@@ -122,6 +125,32 @@ export default function CommentsList({
         });
     };
 
+    const requestKillComment = (commentId, index) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        killComment(commentId, (_response) => {
+            setLoading(false);
+            comments[index].dead = true;
+            setComments(comments);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestUnkillComment = (commentId, index) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        unkillComment(commentId, (_response) => {
+            setLoading(false);
+            comments[index].dead = false;
+            setComments(comments);
+            Router.push(Router.asPath);
+        });
+    };
+
     return (
         <>
             {comments
@@ -203,7 +232,8 @@ export default function CommentsList({
                                                   <span>
                                                       <Link href={`/user?id=${comment.by}`}>
                                                           <a>{comment.by}</a>
-                                                      </Link>&nbsp;
+                                                      </Link>
+                                                      &nbsp;
                                                   </span>
 
                                                   {/* COMMENT CREATED TIME */}
@@ -281,6 +311,30 @@ export default function CommentsList({
                                                           </span>
                                                       </>
                                                   ) : null}
+                                                  <span> | </span>
+
+                                                  {/* KILL COMMENT */}
+                                                  {isModerator && !comment.dead ? (
+                                                      <>
+                                                          <span
+                                                              className="listed-comment-kill"
+                                                              onClick={() => requestKillComment(comment.id, index)}>
+                                                              kill
+                                                          </span>
+                                                      </>
+                                                  ) : null}
+
+                                                  {/* UNKILL COMMENT */}
+                                                  {isModerator && comment.dead ? (
+                                                      <>
+                                                          <span
+                                                              className="listed-comment-kill"
+                                                              onClick={() => requestUnkillComment(comment.id, index)}>
+                                                              un-kill
+                                                          </span>
+                                                      </>
+                                                  ) : null}
+
                                                   <span> | </span>
 
                                                   {/* COMMENT FROM ITEM */}
