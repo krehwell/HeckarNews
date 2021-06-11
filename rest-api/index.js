@@ -54,6 +54,7 @@ app.get("/", (_, res) => res.send("rest-api is working, kel!")); // debugger
 app.use(require("./routes/users/index.js"));
 app.use(require("./routes/items/index.js"));
 app.use(require("./routes/comments/index.js"));
+app.use(require("./routes/moderation/index.js"));
 
 
 /// RUN SERVER
