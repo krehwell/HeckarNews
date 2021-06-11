@@ -56,6 +56,7 @@ export default function Upvoted({
                                         showDownvote={authUserData.showDownvote}
                                         isMoreLink={`/upvoted?id=${userId}&page=${page + 1}&comments=t`}
                                         isMore={isMoreComments}
+                                        isModerator={authUserData.isModerator}
                                     />
                                 ) : null}
                             </>

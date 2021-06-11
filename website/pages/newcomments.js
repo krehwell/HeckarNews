@@ -27,6 +27,7 @@ export default function NewComments({ comments, authUserData, page, isMore, getD
                             showDownvote={authUserData.showDownvote}
                             isMore={isMore}
                             isMoreLink={`/newcomments?page=${page + 1}`}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

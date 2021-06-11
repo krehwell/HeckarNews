@@ -11,6 +11,8 @@ import renderCreatedTime from "../utils/renderCreatedTime.js";
 import sortCommentChildren from "../utils/sortCommentChildren.js";
 import getNumberOfChildrenComments from "../utils/getNumberOfChildrenComments.js";
 import generateCommentTextClassName from "../utils/generateCommentTextClassName.js";
+import killComment from "../api/moderation/killComment.js";
+import unkillComment from "../api/moderation/unkillComment.js";
 
 /**
  * Render each comment item recursively.
@@ -27,6 +29,9 @@ function Comment({
     requestUnvoteComment,
     collapseComment,
     uncollapseComment,
+    isModerator,
+    requestKillComment,
+    requestUnkillComment,
 }) {
     /// EACH COMMENT CHILD
     const NestedComments = () => {
@@ -45,6 +50,9 @@ function Comment({
                     requestUnvoteComment={requestUnvoteComment}
                     collapseComment={collapseComment}
                     uncollapseComment={uncollapseComment}
+                    isModerator={isModerator}
+                    requestKillComment={requestKillComment}
+                    requestUnkillComment={requestUnkillComment}
                 />
             );
         }, []);
@@ -171,6 +179,28 @@ function Comment({
                                                 </span>
                                             </>
                                         ) : null}
+                                        {/* KILL COMMENT */}
+                                        {isModerator && !comment.dead ? (
+                                            <>
+                                                <span> | </span>
+                                                <span
+                                                    className="comment-section-kill"
+                                                    onClick={() => requestKillComment(comment.id)}>
+                                                    kill
+                                                </span>
+                                            </>
+                                        ) : null}
+                                        {/* UNKILL COMMENT */}
+                                        {isModerator && comment.dead ? (
+                                            <>
+                                                <span> | </span>
+                                                <span
+                                                    className="comment-section-kill"
+                                                    onClick={() => requestUnkillComment(comment.id)}>
+                                                    un-kill
+                                                </span>
+                                            </>
+                                        ) : null}
                                         {/* COLLAPSE/EXPAND COMMENT */}
                                         <span
                                             className="comment-section-comment-collapse-btn"
@@ -208,6 +238,8 @@ function Comment({
                             requestUnvoteComment={requestUnvoteComment}
                             collapseComment={collapseComment}
                             uncollapseComment={uncollapseComment}
+                            requestKillComment={requestKillComment}
+                            requestUnkillComment={requestUnkillComment}
                         />
                     </div>
                 ) : (
@@ -247,6 +279,7 @@ export default function CommentSection({
     currUsername,
     showDownvote,
     goToString,
+    isModerator,
 }) {
     const [loading, setLoading] = useState(false);
     const [rerender, setrerender] = useState(false);
@@ -410,6 +443,28 @@ export default function CommentSection({
         setrerender(!rerender);
     };
 
+    const requestKillComment = (commentId) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        killComment(commentId, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestUnkillComment = (commentId) => {
+        if (loading) return;
+
+        setLoading(true);
+
+        unkillComment(commentId, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
     return (
         <>
             {comments
@@ -428,6 +483,9 @@ export default function CommentSection({
                               requestUnvoteComment={requestUnvoteComment}
                               collapseComment={collapseComment}
                               uncollapseComment={uncollapseComment}
+                              isModerator={isModerator}
+                              requestKillComment={requestKillComment}
+                              requestUnkillComment={requestUnkillComment}
                           />
                       );
                   })

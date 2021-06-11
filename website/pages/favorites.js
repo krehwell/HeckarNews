@@ -89,6 +89,7 @@ export default function Favorites({
                                                 showDownvote={authUserData.showDownvote}
                                                 isMoreLink={`/favorites?id=${userId}&page=${page + 1}&comments=t`}
                                                 isMore={isMoreComments}
+                                                isModerator={authUserData.isModerator}
                                             />
                                         ) : (
                                             <div className="favorites-none-found-msg comments">

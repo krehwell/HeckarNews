@@ -50,6 +50,7 @@ export default function Comment({
                             currUsername={authUserData.username}
                             showDownvote={authUserData.showDownvote}
                             goToString={goToString}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (

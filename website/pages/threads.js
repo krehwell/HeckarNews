@@ -41,6 +41,7 @@ export default function Thread({
                             showDownvote={authUserData.showDownvote}
                             isMoreLink={`/threads?id=${userId}&page=${page + 1}`}
                             isMore={isMore}
+                            isModerator={authUserData.isModerator}
                         />
                     </>
                 ) : (
