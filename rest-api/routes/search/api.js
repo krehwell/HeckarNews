@@ -103,4 +103,9 @@ module.exports = {
 
         return { success: true };
     },
+
+    deleteKilledComment: async (id) => {
+        await index.deleteObject(id);
+        return { success: true };
+    },
 };

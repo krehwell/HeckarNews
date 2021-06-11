@@ -2,6 +2,8 @@ const moment = require("moment");
 
 const ModerationLogModel = require("../../models/moderationLog.js");
 const ItemModel = require("../../models/item");
+const CommentModel = require("../../models/comment.js");
+
 const searchApi = require("../../routes/search/api.js");
 
 module.exports = {
@@ -54,6 +56,35 @@ module.exports = {
         });
 
         await newModerationLogDoc.save();
+        return { success: true };
+    },
+
+    killComment: async (commentId, moderator) => {
+        const comment = await CommentModel.findOneAndUpdate(
+            { id: commentId },
+            { $set: { dead: true } }
+        )
+            .lean()
+            .exec();
+
+        if (!comment) {
+            throw { submitError: true };
+        }
+
+        await searchApi.deleteKilledComment(comment.id);
+
+        const newModerationLogDoc = new ModerationLogModel({
+            moderatorUsername: moderator.username,
+            actionType: "kill-comment",
+            commentId: commentId,
+            commentBy: comment.by,
+            itemTitle: comment.parentItemTitle,
+            itemId: comment.parentItemId,
+            created: moment().unix(),
+        });
+
+        await newModerationLogDoc.save();
+
         return { success: true };
     },
 };
