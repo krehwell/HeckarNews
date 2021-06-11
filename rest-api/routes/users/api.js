@@ -109,6 +109,7 @@ module.exports = {
             karma: user.karma,
             containsEmail: user.email ? true : false,
             showDead: user.showDead ? true : false,
+            isModerator: user.isModerator ? true : false
         };
     },
 

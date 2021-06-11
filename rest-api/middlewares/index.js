@@ -45,6 +45,7 @@ module.exports = {
             res.locals.showDead = authResponse.showDead;
             res.locals.showDownvote =
                 authResponse.karma >= config.minimumKarmaToDownvote;
+            res.locals.isModerator = authResponse.isModerator;
 
             next();
         } catch (error) {
