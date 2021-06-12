@@ -73,4 +73,24 @@ app.put("/moderation/unkill-comment", authUser, async (req, res) => {
     }
 });
 
+app.put("/moderation/add-user-shadow-ban", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn || !res.locals.isModerator) {
+            res.json({ authError: true });
+        }
+
+        const response = await api.addUserShadowBan(
+            req.body.username,
+            res.locals
+        );
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ submitError: true });
+        }
+    }
+});
+
 module.exports = app;

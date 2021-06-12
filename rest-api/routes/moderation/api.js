@@ -3,6 +3,7 @@ const moment = require("moment");
 const ModerationLogModel = require("../../models/moderationLog.js");
 const ItemModel = require("../../models/item");
 const CommentModel = require("../../models/comment.js");
+const UserModel = require("../../models/user.js");
 
 const searchApi = require("../../routes/search/api.js");
 
@@ -113,5 +114,29 @@ module.exports = {
         });
 
         await newModerationLogDoc.save();
+    },
+
+    addUserShadowBan: async (username, moderator) => {
+        const user = await UserModel.findOneAndUpdate(
+            { username: username },
+            { $set: { shadowBanned: true } }
+        )
+            .lean()
+            .exec();
+
+        if (!user) {
+            throw { submitError: true };
+        }
+
+        const newModerationLogDoc = new ModerationLogModel({
+            moderatorUsername: moderator.username,
+            actionType: "add-user-shadow-ban",
+            username: username,
+            created: moment().unix(),
+        });
+
+        await newModerationLogDoc.save();
+
+        return { success: true };
     },
 };
