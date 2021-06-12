@@ -206,7 +206,10 @@ app.get("/users/get-user-data", authUser, async (req, res) => {
             !res.locals.userSignedIn ||
             res.locals.username !== req.query.username
         ) {
-            const response = await api.getPublicUserData(req.query.username);
+            const response = await api.getPublicUserData(
+                req.query.username,
+                res.locals
+            );
             response.authUser = res.locals;
             response.showPrivateUserData = false;
 

@@ -57,8 +57,13 @@ const UserSchema = new mongoose.Schema({
 
     isModerator: {
         type: Boolean,
-        default: false
-    }
+        default: false,
+    },
+
+    shadowBanned: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 UserSchema.pre("save", function (next) {
@@ -89,7 +94,7 @@ UserSchema.pre("save", function (next) {
  * @returns true on bcrypt.compareSync(req.password, user.password) is true;
  */
 UserSchema.methods.comparePassword = async function (pw) {
-    const passwordIsMatch = bcrypt.compareSync(pw, this.password)
+    const passwordIsMatch = bcrypt.compareSync(pw, this.password);
 
     if (passwordIsMatch) {
         return true;

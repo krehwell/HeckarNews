@@ -43,6 +43,7 @@ module.exports = {
             text: commentData.text,
             points: 1,
             created: moment().unix(),
+            dead: authUser.shadowBanned ? true : false,
         });
 
         const newCommentDoc = await newComment.save();
@@ -70,11 +71,13 @@ module.exports = {
 
         await Promise.all(promises);
 
-        await searchApi.addNewComment(
-            newCommentDoc,
-            item.id,
-            item.commentCount + 1
-        );
+        if (!authUser.shadowBanned) {
+            await searchApi.addNewComment(
+                newCommentDoc,
+                item.id,
+                item.commentCount + 1
+            );
+        }
 
         return { success: true };
     },

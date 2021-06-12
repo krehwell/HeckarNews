@@ -71,6 +71,7 @@ module.exports = {
             domain: domain,
             text: text,
             created: moment().unix(),
+            dead: authUser.shadowBanned ? true : false,
         });
 
         const newItemDoc = await newItem.save();
@@ -80,7 +81,9 @@ module.exports = {
             { $inc: { karma: 1 } }
         ).exec();
 
-        await searchApi.addNewItem(newItemDoc);
+        if (!authUser.shadowBanned) {
+            await searchApi.addNewItem(newItemDoc);
+        }
 
         return { success: true };
     },

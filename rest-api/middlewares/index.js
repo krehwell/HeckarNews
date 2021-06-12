@@ -46,6 +46,7 @@ module.exports = {
             res.locals.showDownvote =
                 authResponse.karma >= config.minimumKarmaToDownvote;
             res.locals.isModerator = authResponse.isModerator;
+            res.locals.shadowBanned = authResponse.shadowBanned;
 
             next();
         } catch (error) {

@@ -109,7 +109,8 @@ module.exports = {
             karma: user.karma,
             containsEmail: user.email ? true : false,
             showDead: user.showDead ? true : false,
-            isModerator: user.isModerator ? true : false
+            isModerator: user.isModerator ? true : false,
+            shadowBanned: user.shadowBanned ? true : false,
         };
     },
 
@@ -201,11 +202,11 @@ module.exports = {
         user.resetPasswordToken = null;
         user.resetPasswordTokenExpiration = null;
 
-        const saveUser = await user.save();
+        await user.save();
 
         // as long as new pass has been saved then return {success: true}
         if (user.email) {
-            const sendEmailResponse = await emailApi.sendChangePasswordNotificationEmail(
+            await emailApi.sendChangePasswordNotificationEmail(
                 user.username,
                 user.email
             );
@@ -213,7 +214,7 @@ module.exports = {
         return { success: true };
     },
 
-    getPublicUserData: async (username) => {
+    getPublicUserData: async (username, authUserData) => {
         const user = await UserModel.findOne({ username: username })
             .lean()
             .exec();
@@ -229,6 +230,10 @@ module.exports = {
                 created: user.created,
                 karma: user.karma,
                 about: user.about,
+                shadowBanned:
+                    user.shadowBanned && authUserData.isModerator
+                        ? true
+                        : false,
             },
         };
     },
