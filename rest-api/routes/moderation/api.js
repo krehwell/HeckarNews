@@ -139,4 +139,27 @@ module.exports = {
 
         return { success: true };
     },
+
+    removeUserShadowBan: async (username, moderator) => {
+        const user = await UserModel.findOneAndUpdate(
+            { username: username },
+            { $set: { shadowBanned: false } }
+        )
+            .lean()
+            .exec();
+
+        if (!user) {
+            throw { submitError: true };
+        }
+
+        const newModerationLogDoc = new ModerationLogModel({
+            moderatorUsername: moderator.username,
+            actionType: "remove-user-shadow-ban",
+            username: username,
+            created: moment().unix(),
+        });
+
+        await newModerationLogDoc.save();
+        return { success: true };
+    },
 };
