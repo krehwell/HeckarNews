@@ -9,6 +9,8 @@ import HeadMetadata from "../components/headMetadata.js";
 
 import getUserData from "../api/users/getUserData.js";
 import updateUserData from "../api/users/updateUserData.js";
+import addUserShadowBan from "../api/moderation/addUserShadowBan.js";
+import removeUserShadowBan from "../api/moderation/removeUserShadowBan.js";
 
 export default function User({
     username,
@@ -67,6 +69,28 @@ export default function User({
             } else {
                 Router.push(Router.asPath);
             }
+        });
+    };
+
+    const requestAddShadowBan = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        addUserShadowBan(username, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestRemoveShadowBan = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        removeUserShadowBan(username, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
         });
     };
 
@@ -351,6 +375,38 @@ export default function User({
                                             </span>
                                         </div>
                                     </div>
+
+                                    {authUserData.isModerator ? (
+                                        <div className="user-moderator-section">
+                                            {!userData.shadowBanned ? (
+                                                <div className="user-item moderator-section">
+                                                    <div className="user-item-content">
+                                                        <span
+                                                            className="user-item-ban-btn"
+                                                            onClick={() => requestAddShadowBan()}>
+                                                            Shadow-Ban
+                                                        </span>
+                                                        <span>
+                                                            &nbsp; (User item and comment submissions get automatically
+                                                            killed)
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="user-item">
+                                                    <div className="user-item-content">
+                                                        <span>Shadow-Banned (</span>
+                                                        <span
+                                                            className="user-item-ban-btn"
+                                                            onClick={() => requestRemoveShadowBan()}>
+                                                            Remove
+                                                        </span>
+                                                        <span>)</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : null}
                                 </div>
                             )
                         }
