@@ -1,4 +1,5 @@
 const config = {
+    /// SITE CONFIGURATION
     productionWebsiteUrl: "https://news.krehwell.com",
 
     /// SITE CONFIGURATION
@@ -19,6 +20,9 @@ const config = {
 
     /// COMMENT CONFIGURATION
     commentsPerPage: 30,
+
+    /// MODERATION CONFIGURATION
+    shadowBannedUsersPerPage: 250
 };
 
 module.exports = config;
