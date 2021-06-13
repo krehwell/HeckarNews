@@ -1,0 +1,42 @@
+.moderation-banned-users-content-container {
+    padding: 20px 15px 20px 15px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+.moderation-banned-users-table td {
+    padding-bottom: 5px;
+    padding-right: 20px;
+}
+
+.moderation-banned-users-table-header td {
+    padding-bottom: 10px;
+}
+
+.moderation-banned-users-table td a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.moderation-banned-users-table td a:hover {
+    text-decoration: underline;
+}
+
+.moderation-banned-users-more {
+    margin-top: 12.5px;
+}
+
+.moderation-banned-users-more a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.moderation-banned-users-more a:visited {
+    color: #828282;
+    text-decoration: none;
+}
+
+.moderation-banned-users-error-msg {
+    color: #828282;
+}
