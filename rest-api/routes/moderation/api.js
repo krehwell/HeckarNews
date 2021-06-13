@@ -210,4 +210,28 @@ module.exports = {
 
         return { success: true };
     },
+
+    removeUserBan: async (username, moderator) => {
+        const user = await UserModel.findOneAndUpdate(
+            { username: username },
+            { $set: { banned: false } }
+        )
+            .lean()
+            .exec();
+
+        if (!user) {
+            throw { submitError: true };
+        }
+
+        const newModerationLogDoc = new ModerationLogModel({
+            moderatorUsername: moderator.username,
+            actionType: "remove-user-ban",
+            username: username,
+            created: moment().unix(),
+        });
+
+        await newModerationLogDoc.save();
+
+        throw { submitError: true };
+    },
 };
