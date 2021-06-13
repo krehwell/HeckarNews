@@ -46,6 +46,9 @@ import "../styles/pages/search/about.css";
 /// SEARCH PAGES
 import "../styles/search/index.css";
 
+/// MODERATION PAGES
+import "../styles/pages/moderation/shadow-banned-users.css";
+
 /// NProgress CONFIG
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
 Router.events.on("routeChangeStart", () => NProgress.start());
