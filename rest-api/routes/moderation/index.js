@@ -10,7 +10,7 @@ const app = express.Router();
 app.put("/moderation/kill-item", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
         const response = await api.killItem(req.body.id, res.locals);
         res.json(response);
@@ -26,7 +26,7 @@ app.put("/moderation/kill-item", authUser, async (req, res) => {
 app.put("/moderation/unkill-item", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
         const response = await api.unkillItem(req.body.id, res.locals);
         res.json(response);
@@ -42,7 +42,7 @@ app.put("/moderation/unkill-item", authUser, async (req, res) => {
 app.put("/moderation/kill-comment", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
 
         const response = await api.killComment(req.body.id, res.locals);
@@ -59,7 +59,7 @@ app.put("/moderation/kill-comment", authUser, async (req, res) => {
 app.put("/moderation/unkill-comment", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
 
         const response = await api.unkillComment(req.body.id, res.locals);
@@ -76,7 +76,7 @@ app.put("/moderation/unkill-comment", authUser, async (req, res) => {
 app.put("/moderation/add-user-shadow-ban", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
 
         const response = await api.addUserShadowBan(
@@ -96,7 +96,7 @@ app.put("/moderation/add-user-shadow-ban", authUser, async (req, res) => {
 app.put("/moderation/remove-user-shadow-ban", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
         const response = await api.removeUserShadowBan(
             req.body.username,
@@ -118,9 +118,9 @@ app.get(
     async (req, res) => {
         try {
             if (!res.locals.userSignedIn || !res.locals.isModerator) {
-                res.json({ notAllowedError: true });
+                throw { notAllowedError: true };
             } else if (!req.query.page) {
-                res.json({ getDataError: true });
+                throw { getDataError: true };
             }
 
             const response = await api.getShadowBannedUsersByPage(
@@ -140,7 +140,7 @@ app.get(
 app.put("/moderation/add-user-ban", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
 
         const response = await api.addUserBan(req.body.username, res.locals);
@@ -157,7 +157,7 @@ app.put("/moderation/add-user-ban", authUser, async (req, res) => {
 app.put("/moderation/remove-user-ban", authUser, async (req, res) => {
     try {
         if (!res.locals.userSignedIn || !res.locals.isModerator) {
-            res.json({ authError: true });
+            throw { authError: true };
         }
 
         const response = await api.removeUserBan(req.body.username, res.locals);
