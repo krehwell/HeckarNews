@@ -59,6 +59,10 @@ module.exports = {
             throw { credentialError: true };
         }
 
+        if (user.banned) {
+            throw { bannedError: true };
+        }
+
         // renew user token
         const authTokenString = utils.generateUniqueId(40);
         const authTokenExpirationTimestamp =
@@ -101,6 +105,10 @@ module.exports = {
             moment().unix() > user.authTokenExpiration
         ) {
             throw { success: false };
+        }
+
+        if (user.banned) {
+            throw { success: false, banned: true };
         }
 
         return {
@@ -234,6 +242,7 @@ module.exports = {
                     user.shadowBanned && authUserData.isModerator
                         ? true
                         : false,
+                banned: user.banned ? true : false,
             },
         };
     },

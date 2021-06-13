@@ -47,6 +47,7 @@ module.exports = {
                 authResponse.karma >= config.minimumKarmaToDownvote;
             res.locals.isModerator = authResponse.isModerator;
             res.locals.shadowBanned = authResponse.shadowBanned;
+            res.locals.banned = authResponse.banned;
 
             next();
         } catch (error) {
@@ -55,6 +56,7 @@ module.exports = {
             res.locals.karma = null;
             res.locals.showDead = false;
             res.locals.showDownvote = false;
+            res.locals.banned = error.banned || false;
 
             next();
         }

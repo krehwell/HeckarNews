@@ -13,6 +13,8 @@ const bcrypt = require("bcrypt");
  * @property karma: user karma, calculated by number of vote user received
  * @property about: user bio
  * @property showDead: option to show/hide item has been killed by moderator
+ * @property shadowBanned: user next post will be unshown until mod has taken the shadowBanned
+ * @property banned: restrict login attempts for banned users
  */
 const UserSchema = new mongoose.Schema({
     username: {
@@ -64,6 +66,11 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+
+    banned: {
+        type: Boolean,
+        default: false
+    }
 });
 
 UserSchema.pre("save", function (next) {
