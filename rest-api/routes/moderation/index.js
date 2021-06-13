@@ -112,4 +112,29 @@ app.put("/moderation/remove-user-shadow-ban", authUser, async (req, res) => {
     }
 });
 
+app.get(
+    "/moderation/get-shadow-banned-users-by-page",
+    authUser,
+    async (req, res) => {
+        try {
+            if (!res.locals.userSignedIn || !res.locals.isModerator) {
+                res.json({ notAllowedError: true });
+            } else if (!req.query.page) {
+                res.json({ getDataError: true });
+            }
+
+            const response = await api.getShadowBannedUsersByPage(
+                req.query.page
+            );
+            res.json(response);
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                res.json(error);
+            } else {
+                res.json({ getDataError: true });
+            }
+        }
+    }
+);
+
 module.exports = app;

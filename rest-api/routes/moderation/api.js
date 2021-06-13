@@ -7,6 +7,8 @@ const UserModel = require("../../models/user.js");
 
 const searchApi = require("../../routes/search/api.js");
 
+const config = require("../../config.js");
+
 module.exports = {
     killItem: async (itemId, moderator) => {
         const item = await ItemModel.findOneAndUpdate(
@@ -161,5 +163,27 @@ module.exports = {
 
         await newModerationLogDoc.save();
         return { success: true };
+    },
+
+    getShadowBannedUsersByPage: async (page) => {
+        const [users, totalNumOfUsers] = await Promise.all([
+            UserModel.find({ shadowBanned: true }, "username")
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.shadowBannedUsersPerPage)
+                .limit(config.shadowBannedUsersPerPage)
+                .lean(),
+            UserModel.countDocuments({ shadowBanned: true }).lean(),
+        ]);
+
+        return {
+            success: true,
+            users: users,
+            isMore:
+                totalNumOfUsers >
+                (page - 1) * config.shadowBannedUsersPerPage +
+                    config.shadowBannedUsersPerPage
+                    ? true
+                    : false,
+        };
     },
 };
