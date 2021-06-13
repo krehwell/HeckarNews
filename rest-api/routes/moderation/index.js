@@ -171,4 +171,23 @@ app.put("/moderation/remove-user-ban", authUser, async (req, res) => {
     }
 });
 
+app.get("/moderation/get-banned-users-by-page", authUser, async (req, res) => {
+    try {
+        if (!res.locals.userSignedIn || !res.locals.isModerator) {
+            throw { notAllowedError: true };
+        } else if (!req.query.page) {
+            throw { getDataError: true };
+        }
+
+        const response = await api.getBannedUsersByPage(req.query.page);
+        res.json(response);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            res.json(error);
+        } else {
+            res.json({ getDataError: true });
+        }
+    }
+});
+
 module.exports = app;

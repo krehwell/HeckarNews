@@ -22,7 +22,8 @@ const config = {
     commentsPerPage: 30,
 
     /// MODERATION CONFIGURATION
-    shadowBannedUsersPerPage: 250
+    shadowBannedUsersPerPage: 250,
+    bannedUsersPerPage: 250
 };
 
 module.exports = config;

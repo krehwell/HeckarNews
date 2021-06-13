@@ -234,4 +234,26 @@ module.exports = {
 
         throw { submitError: true };
     },
+
+    getBannedUsersByPage: async (page) => {
+        const [users, totalNumOfUsers] = await Promise.all([
+            UserModel.find({ banned: true }, "username")
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.bannedUsersPerPage)
+                .limit(config.bannedUsersPerPage)
+                .lean(),
+            UserModel.countDocuments({ shadowBanned: true }).lean(),
+        ]);
+
+        return {
+            success: true,
+            users: users,
+            isMore:
+                totalNumOfUsers >
+                (page - 1) * config.bannedUsersPerPage +
+                    config.bannedUsersPerPage
+                    ? true
+                    : false,
+        };
+    },
 };
