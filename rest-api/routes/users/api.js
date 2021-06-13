@@ -71,7 +71,8 @@ module.exports = {
         user.authToken = authTokenString;
         user.authTokenExpiration = authTokenExpirationTimestamp;
 
-        const saveUser = await user.save();
+        await user.save();
+
         return {
             success: true,
             username: username,
