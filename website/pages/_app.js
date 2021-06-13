@@ -50,7 +50,7 @@ import "../styles/search/index.css";
 import "../styles/pages/moderation/shadow-banned-users.css";
 
 /// NProgress CONFIG
-NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
+NProgress.configure({ easing: "ease", speed: 750, showSpinner: false });
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());

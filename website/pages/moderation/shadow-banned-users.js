@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import AlternateHeader from "../../components/alternateHeader.js";
 import HeadMetadata from "../../components/headMetadata.js";
 
@@ -22,7 +24,9 @@ export default function ShadowBannedUsers({ users, page, isMore, getDataError, n
                                             return (
                                                 <tr key={index}>
                                                     <td>
-                                                        <a href={`/user?id=${user.username}`}>{user.username}</a>
+                                                        <Link href={`/user?id=${user.username}`}>
+                                                            <a>{user.username}</a>
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             );
