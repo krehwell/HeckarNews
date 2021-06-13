@@ -27,6 +27,7 @@ export default function Login({ goto }) {
         createAccountUsernameLengthError: false,
         createAccountPasswordLengthError: false,
         createAccountSubmitError: false,
+        bannedError: false
     });
 
     const [loading, setLoading] = useState(false);
@@ -80,6 +81,13 @@ export default function Login({ goto }) {
                     setError({
                         ...error,
                         loginCredentialError: true,
+                        loginSubmitError: false,
+                    });
+                } else if (response.bannedError) {
+                    setError({
+                        ...error,
+                        bannedError: true,
+                        loginCredentialError: false,
                         loginSubmitError: false,
                     });
                 } else if (response.submitError || !response.success) {
@@ -180,6 +188,12 @@ export default function Login({ goto }) {
                     <span>An error occurred.</span>
                 </div>
             ) : null}
+            {error.bannedError ? (
+                <div className="login-error-msg">
+                    <span>User is banned.</span>
+                </div>
+            ) : null}
+
             <div className="login-header">
                 <span>Login</span>
             </div>

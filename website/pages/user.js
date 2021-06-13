@@ -11,6 +11,8 @@ import getUserData from "../api/users/getUserData.js";
 import updateUserData from "../api/users/updateUserData.js";
 import addUserShadowBan from "../api/moderation/addUserShadowBan.js";
 import removeUserShadowBan from "../api/moderation/removeUserShadowBan.js";
+import addUserBan from "../api/moderation/addUserBan.js";
+import removeUserBan from "../api/moderation/removeUserBan.js";
 
 export default function User({
     username,
@@ -89,6 +91,28 @@ export default function User({
         setLoading(true);
 
         removeUserShadowBan(username, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestAddUserBan = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        addUserBan(username, (_response) => {
+            setLoading(false);
+            Router.push(Router.asPath);
+        });
+    };
+
+    const requestRemoveUserBan = () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        removeUserBan(username, (_response) => {
             setLoading(false);
             Router.push(Router.asPath);
         });
@@ -376,6 +400,7 @@ export default function User({
                                         </div>
                                     </div>
 
+                                    {/* SHADOW BANNED USER */}
                                     {authUserData.isModerator ? (
                                         <div className="user-moderator-section">
                                             {!userData.shadowBanned ? (
@@ -399,6 +424,32 @@ export default function User({
                                                         <span
                                                             className="user-item-ban-btn"
                                                             onClick={() => requestRemoveShadowBan()}>
+                                                            Remove
+                                                        </span>
+                                                        <span>)</span>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* BANNED USER */}
+                                            {!userData.banned ? (
+                                                <div className="user-item moderator-section">
+                                                    <div className="user-item-content">
+                                                        <span
+                                                            className="user-item-ban-btn"
+                                                            onClick={() => requestAddUserBan()}>
+                                                            Ban
+                                                        </span>
+                                                        <span> (User login and authentication will be revoked)</span>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="user-item">
+                                                    <div className="user-item-content">
+                                                        <span>Banned (</span>
+                                                        <span
+                                                            className="user-item-ban-btn"
+                                                            onClick={() => requestRemoveUserBan()}>
                                                             Remove
                                                         </span>
                                                         <span>)</span>

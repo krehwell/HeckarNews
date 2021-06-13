@@ -8,7 +8,7 @@ import getShadowBannedUsersByPage from "../../api/moderation/getShadowBannedUser
 export default function ShadowBannedUsers({ users, page, isMore, getDataError, notAllowedError }) {
     return (
         <div className="layout-wrapper">
-            <HeadMetadata title="Shadow Banned Users | Coder News" />
+            <HeadMetadata title="Shadow Banned Users | HeckarNews" />
             <AlternateHeader displayMessage="Shadow Banned Users" />
             <div className="moderation-shadow-banned-users-content-container">
                 {!getDataError && !notAllowedError ? (
