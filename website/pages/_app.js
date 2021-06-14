@@ -49,6 +49,7 @@ import "../styles/search/index.css";
 /// MODERATION PAGES
 import "../styles/pages/moderation/shadow-banned-users.css";
 import "../styles/pages/moderation/banned-users.css";
+import "../styles/pages/moderation/logs.css";
 
 /// NProgress CONFIG
 NProgress.configure({ easing: "ease", speed: 750, showSpinner: false });

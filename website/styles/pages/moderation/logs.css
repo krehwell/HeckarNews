@@ -1,0 +1,63 @@
+.moderation-logs-content-container {
+    padding: 20px 15px 20px 15px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 13.5px;
+    color: #828282;
+}
+
+.moderation-filters {
+    margin-bottom: 20px;
+}
+
+.moderation-filter-label {
+    margin-right: 10px;
+}
+
+.moderation-filters select {
+    background-color: buttonface;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(169, 169, 169);
+}
+
+.moderation-logs-table td {
+    padding-bottom: 5px;
+    padding-right: 20px;
+}
+
+.moderation-logs-table td a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.moderation-logs-table td a:hover {
+    text-decoration: underline;
+}
+
+.moderation-logs-more {
+    margin-top: 12.5px;
+}
+
+.moderation-logs-more a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.moderation-logs-more a:visited {
+    color: #828282;
+    text-decoration: none;
+}
+
+.moderation-logs-error-msg {
+    color: #828282;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .moderation-logs-content-container {
+        font-size: 12px;
+    }
+
+    .moderation-logs-table td {
+        padding-bottom: 10px;
+    }
+}
