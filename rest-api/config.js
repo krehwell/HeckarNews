@@ -23,7 +23,8 @@ const config = {
 
     /// MODERATION CONFIGURATION
     shadowBannedUsersPerPage: 250,
-    bannedUsersPerPage: 250
+    bannedUsersPerPage: 250,
+    moderationLogsPerPage: 250,
 };
 
 module.exports = config;
