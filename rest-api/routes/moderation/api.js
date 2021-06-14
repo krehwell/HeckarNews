@@ -256,4 +256,60 @@ module.exports = {
                     : false,
         };
     },
+
+    getModerationLogsByPage: async (category, page) => {
+        let dbQuery, categoryString;
+
+        if (category === "users") {
+            categoryString = "users";
+            dbQuery = {
+                $or: [
+                    { actionType: "add-user-shadow-ban" },
+                    { actionType: "remove-user-shadow-ban" },
+                    { actionType: "add-user-ban" },
+                    { actionType: "remove-user-ban" },
+                ],
+            };
+        } else if (category === "items") {
+            categoryString = "items";
+            dbQuery = {
+                $or: [
+                    { actionType: "kill-item" },
+                    { actionType: "unkill-item" },
+                ],
+            };
+        } else if (category === "comments") {
+            categoryString = "comments";
+            dbQuery = {
+                $or: [
+                    { actionType: "kill-comment" },
+                    { actionType: "unkill-comment" },
+                ],
+            };
+        } else {
+            categoryString = "all";
+            dbQuery = {};
+        }
+
+        const [logs, totalNumOfLogs] = await Promise.all([
+            ModerationLogModel.find(dbQuery)
+                .sort({ _id: -1 })
+                .skip((page - 1) * config.moderationLogsPerPage)
+                .limit(config.moderationLogsPerPage)
+                .lean(),
+            ModerationLogModel.countDocuments(dbQuery).lean(),
+        ]);
+
+        return {
+            success: true,
+            logs: logs,
+            categoryString: categoryString,
+            isMore:
+                totalNumOfLogs >
+                (page - 1) * config.moderationLogsPerPage +
+                    config.moderationLogsPerPage
+                    ? true
+                    : false,
+        };
+    },
 };
