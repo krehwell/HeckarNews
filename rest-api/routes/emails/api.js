@@ -63,7 +63,7 @@ module.exports = {
 
     sendChangePasswordNotificationEmail: async (username, email) => {
         const template = handlebars.compile(changePasswordNotificationTemplate);
-        const htmlToSend = template({ username: username });
+        const htmlToSend = template({ username: username, resetUrl: config.productionWebsiteUrl });
 
         const mailOptions = {
             from: "HeckarNews <me@krehwell.com>",
