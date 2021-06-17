@@ -32,6 +32,8 @@ website
   |- components  # Header, Footer, etc.
   |- pages  # routes
   |- utils  # helper functions. apibaseurl.js, etc.
+  |- styles # .css files
+  |- ...
 ```
 
 This directory has `.env.local` which must set up for Algolia API key:
