@@ -1,0 +1,24 @@
+.formatdoc-content-container {
+    padding: 10px 7.5px 25px 7.5px;
+}
+
+.formatdoc-content-text {
+    width: 500px;
+    margin: auto;
+}
+
+.formatdoc-content-text p {
+    font-size: 12px;
+    margin: 10px 0px 10px 0px;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+@media only screen and (max-width: 750px) and (min-width: 0px) {
+    .formatdoc-content-text {
+        width: 100%;
+    }
+
+    .formatdoc-content-text p {
+        font-size: 13.5px;
+    }
+}

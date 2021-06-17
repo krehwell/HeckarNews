@@ -41,10 +41,14 @@ import "../styles/pages/favorites.css";
 import "../styles/pages/comment.css";
 import "../styles/pages/edit-comment.css";
 import "../styles/pages/delete-comment.css";
-import "../styles/pages/search/about.css";
+import "../styles/pages/formatdoc.css";
+import "../styles/pages/newsfaq.css";
+import "../styles/pages/newsguidelines.css";
+import "../styles/pages/showguidelines.css";
 
 /// SEARCH PAGES
 import "../styles/search/index.css";
+import "../styles/pages/search/about.css";
 
 /// MODERATION PAGES
 import "../styles/pages/moderation/shadow-banned-users.css";
