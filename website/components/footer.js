@@ -32,7 +32,7 @@ export default function Footer({}) {
                     <span>|</span>
                 </div>
                 <div className="footer-link-list-item">
-                    <Link href="me@krehwell.com">Contact</Link>
+                    <Link href="https://github.com/krehwell">Contact</Link>
                 </div>
             </div>
 
@@ -45,6 +45,12 @@ export default function Footer({}) {
                     onChange={updateSearchInputValue}
                     onKeyDown={listenForEnterKeyPress}
                 />
+            </div>
+
+            <div className="footer-search">
+                <span style={{ fontSize: "11px" }}>
+                    made by <Link href="https://github.com/krehwell">me</Link> with ❤️
+                </span>
             </div>
         </div>
     );
