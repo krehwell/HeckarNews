@@ -6,7 +6,7 @@ Hacker News Clone. Demo: https://heckarnews.herokuapp.com/
 ## Dependecies
 - [Next.Js](https://nextjs.org/): React framework for building UI
 - [Algolia](https://www.algolia.com/): Search item within app
-- [mongoosejs](https://mongoosejs.com/): MongoDB for database
+- [Mongoosejs](https://mongoosejs.com/): MongoDb for database
 - [Express](https://expressjs.com/): Back-end web framework for server
 - [Node-Cron](https://www.npmjs.com/package/node-cron): Cron Job for automate task 
 - [Node Mailer](https://nodemailer.com/): Send email within app
@@ -25,7 +25,7 @@ HeckarNews
 ```
 
 ### Website
-Next.Js is the main actor for building the UI. The front-end project structure is
+Next.Js is the main actor for building the UI. The front-end project structure:
 ```bash
 website 
   |- api  # all code request from back-end
@@ -35,15 +35,15 @@ website
 ```
 
 This directory has `.env.local` which must set up for Algolia API key:
-```
+``` .env
+# .env.local
 ALGOLIA_APP_ID=...
 ALGOLIA_PUBLIC_API_KEY=...
 ```
 
 #### Front-end Flow
-Each page which needs for authentication or request on each page is done by simply calling any related function from `./api/`.
-ex:  
-getting item on front page
+Each page which needs for authentication or request is done by simply calling any related function from `./api/`.  
+ex. getting item on front page:
 ``` javascript
 // page/index.js
 import getRankedItemsByPage from "../api/items/getRankedItemsByPage.js"; /* GET ITEM API */ 
@@ -65,3 +65,7 @@ export async function getServerSideProps({ req, query }) {
     };
 }
 ```
+Each function on `.api/` is already map with `./utils/apiBaseUrl.js`. So, no need to bother about API URL code when running on development or production. Just change the url on `./next.config.js` for each development environment.
+
+#### Page Styles
+All styles is using pure CSS which can be found at `./styles/`. The directory structure for styles is more or less map to be similar like `./pages/` for ease of use while the importing of all styles is done in `./pages/_app.js`.
