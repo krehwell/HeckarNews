@@ -33,10 +33,19 @@ mongoose.connection.on("open", () => {
 
 
 /// REST-API CONFIG
+app.enable('trust proxy');
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", 'https://heckarnews.herokuapp.com');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
+});
+
 app.use(helmet());
 
 app.use(cors({
-    origin: process.env.NODE_ENV === "development" ? "http://localhost:3000" : /domain\.com$/,
+    origin: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://heckarnews.herokuapp.com",
     credentials: true
 }));
 

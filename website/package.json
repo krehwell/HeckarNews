@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "next",
         "build": "next build",
-        "start": "next start"
+        "start": "next start -p $PORT"
     },
     "keywords": [],
     "author": "krehwell fahrimuham001@gmail.com",
@@ -31,5 +31,8 @@
     },
     "devDependencies": {
         "prettier": "2.3.0"
+    },
+    "engines": {
+        "node": "16.3.0"
     }
 }

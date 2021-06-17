@@ -18,6 +18,7 @@ module.exports = {
 
         const parsed = psl.parse(hostname);
 
+        console.log("DOMAIN PARSED: ", parsed);
         return parsed ? parsed.domain : null;
     },
 

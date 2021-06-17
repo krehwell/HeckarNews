@@ -31,11 +31,12 @@ app.post("/users/create-new-user", async (req, res) => {
             expires: new Date(response.authTokenExpirationTimestamp * 1000),
             httpOnly: true,
             encode: String,
-            secure: process.env.NODE_ENV === "production",
+            secure: req.secure || req.headers["x-forwarded-proto"] === "https",
             domain:
                 process.env.NODE_ENV === "development"
                     ? ""
                     : utils.getDomainFromUrl(config.productionWebsiteURL),
+            sameSite: "none",
         };
 
         /**
@@ -49,6 +50,7 @@ app.post("/users/create-new-user", async (req, res) => {
 
         res.json({ success: true });
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
@@ -78,7 +80,7 @@ app.put("/users/login", async (req, res) => {
             domain:
                 process.env.NODE_ENV === "development"
                     ? ""
-                    : utils.getDomainFromUrl(config.productionWebsiteURL),
+                    : utils.getDomainFromUrl(config.productionWebsiteUrl),
         };
 
         res.cookie(
@@ -89,6 +91,7 @@ app.put("/users/login", async (req, res) => {
 
         res.json({ success: true });
     } catch (error) {
+        console.log(error);
         if (!(error instanceof Error)) {
             res.json(error);
         } else {
