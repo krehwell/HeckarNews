@@ -9,9 +9,9 @@ import submitNewItem from "../api/items/submitNewItem.js";
 
 export default function Submit({}) {
     const [loading, setLoading] = useState(false);
-    const [ titleInputValue, setTitleInputValue ] = useState("");
-    const [ urlInputValue, setUrlInputValue] = useState("");
-    const [ textInputValue, setTextInputValue] = useState("");
+    const [titleInputValue, setTitleInputValue] = useState("");
+    const [urlInputValue, setUrlInputValue] = useState("");
+    const [textInputValue, setTextInputValue] = useState("");
 
     const [error, setError] = useState({
         titleRequiredError: false,
@@ -20,7 +20,7 @@ export default function Submit({}) {
         urlAndTextError: false,
         textTooLongError: false,
         submitError: false,
-    })
+    });
 
     const updateTitleInputValue = (event) => {
         setTitleInputValue(event.target.value);
@@ -31,7 +31,7 @@ export default function Submit({}) {
     };
 
     const updateTextInputValue = (event) => {
-        setTextInputValue( event.target.value);
+        setTextInputValue(event.target.value);
     };
 
     const submitRequest = () => {
@@ -237,11 +237,12 @@ export async function getServerSideProps({ req, res, query }) {
     const authResult = await authUser(req);
 
     if (!authResult.success) {
-        res.writeHead(302, {
-            Location: "/login?goto=submit",
-        });
-
-        res.end();
+        return {
+            redirect: {
+                destination: "/login?goto=submit",
+                permanent: false,
+            },
+        };
     }
 
     return {
