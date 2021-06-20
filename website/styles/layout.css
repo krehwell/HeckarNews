@@ -14,8 +14,6 @@
 
 body {
     zoom: 1.35;
-    -moz-transform: scale(1.35);
-    -moz-transform-origin: 0 0;
 }
 
 table {
