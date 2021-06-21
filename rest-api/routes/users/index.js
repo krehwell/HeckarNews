@@ -80,7 +80,7 @@ app.put("/users/login", async (req, res) => {
             domain:
                 process.env.NODE_ENV === "development"
                     ? ""
-                    : utils.getDomainFromUrl(config.productionWebsiteUrl),
+                    : "forum.krehwell.com",
         };
 
         res.cookie(
