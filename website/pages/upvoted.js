@@ -4,8 +4,8 @@ import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
 import CommentsList from "../components/commentsList.js";
 
-import getUserUpvotedItemsByPage from "../api/items/getUserUpvotedItemsByPage.js";
-import getUserUpvotedCommentsByPage from "../api/comments/getUserUpvotedCommentsByPage.js";
+import getUserUpvotedItemsByPage from "../apix/items/getUserUpvotedItemsByPage.js";
+import getUserUpvotedCommentsByPage from "../apix/comments/getUserUpvotedCommentsByPage.js";
 
 export default function Upvoted({
     items,

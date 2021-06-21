@@ -2,7 +2,7 @@ import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
 import Comment from "../components/comment.js";
 
-import getReplyPageData from "../api/comments/getReplyPageData.js";
+import getReplyPageData from "../apix/comments/getReplyPageData.js";
 
 export default function Reply({ comment, authUserData, getDataError, notFoundError, goToString }) {
     return (

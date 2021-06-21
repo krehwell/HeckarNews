@@ -6,8 +6,8 @@ import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 
-import getEditItemPageData from "../api/items/getEditItemPageData.js";
-import editItem from "../api/items/editItem.js";
+import getEditItemPageData from "../apix/comments/unfavoriteComment.js";
+import editItem from "../apix/items/editItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 

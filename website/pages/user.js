@@ -7,12 +7,12 @@ import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 
-import getUserData from "../api/users/getUserData.js";
-import updateUserData from "../api/users/updateUserData.js";
-import addUserShadowBan from "../api/moderation/addUserShadowBan.js";
-import removeUserShadowBan from "../api/moderation/removeUserShadowBan.js";
-import addUserBan from "../api/moderation/addUserBan.js";
-import removeUserBan from "../api/moderation/removeUserBan.js";
+import getUserData from "../apix/users/getUserData.js";
+import updateUserData from "../apix/users/updateUserData.js";
+import addUserShadowBan from "../apix/moderation/addUserShadowBan.js";
+import removeUserShadowBan from "../apix/moderation/removeUserShadowBan.js";
+import addUserBan from "../apix/moderation/addUserBan.js";
+import removeUserBan from "../apix/users/updateUserData.js";
 
 export default function User({
     username,

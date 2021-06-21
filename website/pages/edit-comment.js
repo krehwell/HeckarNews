@@ -10,8 +10,8 @@ import renderPointsString from "../utils/renderPointsString.js";
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 import truncateItemTitle from "../utils/truncateItemTitle.js";
 
-import getEditCommentPageData from "../api/comments/getEditCommentPageData.js";
-import editComment from "../api/comments/editComment.js";
+import getEditCommentPageData from "../apix/comments/getEditCommentPageData.js";
+import editComment from "../apix/comments/editComment.js";
 
 export default function EditComment({
     comment,

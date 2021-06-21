@@ -3,7 +3,7 @@ import { useState } from "react";
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
 
-import requestPasswordResetLink from "../api/users/requestPasswordResetLink.js";
+import requestPasswordResetLink from "../apix/users/requestPasswordResetLink.js";
 
 export default function Forgot() {
     const [usernameInputValue, setUsernameInputValue] = useState("");

@@ -9,8 +9,8 @@ import renderPointsString from "../utils/renderPointsString.js";
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 import truncateItemTitle from "../utils/truncateItemTitle.js";
 
-import getDeleteCommentPageData from "../api/comments/getDeleteCommentPageData.js";
-import deleteComment from "../api/comments/deleteComment.js";
+import getDeleteCommentPageData from "../apix/comments/getDeleteCommentPageData.js";
+import deleteComment from "../apix/comments/deleteComment.js";
 
 export default function DeleteComment({
     comment,

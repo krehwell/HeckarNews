@@ -6,7 +6,7 @@ import Comment from "../../components/search/comment.js";
 import Filters from "../../components/search/filters.js";
 import PageNumbers from "../../components/search/pageNumbers.js";
 
-import getAlgoliaData from "../../api/search/getAlgoliaData.js";
+import getAlgoliaData from "../../apix/search/getAlgoliaData.js";
 
 export default function Search({
     searchQuery,

@@ -3,7 +3,7 @@ import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
 
-import getRankedAskItemsByPage from "../api/items/getRankedAskItemsByPage.js";
+import getRankedAskItemsByPage from "../apix/items/getRankedAskItemsByPage.js";
 
 export default function Ask({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (

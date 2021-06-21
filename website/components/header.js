@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Router from "next/router";
 
-import logoutUser from "../api/users/logoutUser";
+import logoutUser from "../apix/users/logoutUser";
 
 export default function Header({ userSignedIn, username, karma, goto, pageName, label }) {
     const requestLogout = () => {
