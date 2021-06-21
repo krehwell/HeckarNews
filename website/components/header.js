@@ -17,7 +17,7 @@ export default function Header({ userSignedIn, username, karma, goto, pageName, 
                     <td className="header-logo">
                         <Link href="/">
                             <a>
-                                <img src="/android-chrome-512x512.png" />
+                                <img src="/android-chrome-512x512.png" alt="heckarnews-logo"/>
                             </a>
                         </Link>
                     </td>

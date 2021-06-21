@@ -9,7 +9,7 @@ export default function ShowGuidelines() {
             <div className="show-guidelines-top-image">
                 <Link href="/">
                     <a>
-                        <img src="/favicon.png" />
+                        <img src="/favicon.png" alt="heckarnews-logo"/>
                     </a>
                 </Link>
                 <h1>HeckarNews</h1>
