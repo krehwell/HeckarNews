@@ -1,6 +1,6 @@
 const config = {
     /// SITE CONFIGURATION
-    productionWebsiteUrl: "https://heckarnews.herokuapp.com",
+    productionWebsiteUrl: "https://forum.krehwell.com",
 
     /// SITE CONFIGURATION
     userCookieExpirationLengthInDays: 365,
