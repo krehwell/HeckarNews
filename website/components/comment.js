@@ -6,14 +6,14 @@ import renderPointsString from "../utils/renderPointsString.js";
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 import truncateItemTitle from "../utils/truncateItemTitle.js";
 
-import addNewComment from "../api/comments/addNewComment.js";
-import upvoteComment from "../api/comments/upvoteComment.js";
-import downvoteComment from "../api/comments/downvoteComment.js";
-import unvoteComment from "../api/comments/unvoteComment.js";
-import favoriteComment from "../api/comments/favoriteComment.js";
-import unfavoriteComment from "../api/comments/unfavoriteComment.js";
-import killComment from "../api/moderation/killComment.js";
-import unkillComment from "../api/moderation/unkillComment.js";
+import addNewComment from "../apix/comments/addNewComment.js";
+import upvoteComment from "../apix/comments/upvoteComment.js";
+import downvoteComment from "../apix/comments/downvoteComment.js";
+import unvoteComment from "../apix/comments/unvoteComment.js";
+import favoriteComment from "../apix/comments/favoriteComment.js";
+import unfavoriteComment from "../apix/comments/unfavoriteComment.js";
+import killComment from "../apix/moderation/killComment.js";
+import unkillComment from "../apix/moderation/unkillComment.js";
 
 export default function CommentComponent({
     comment,

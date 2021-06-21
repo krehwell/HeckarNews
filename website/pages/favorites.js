@@ -6,8 +6,8 @@ import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
 import CommentsList from "../components/commentsList.js";
 
-import getUserFavoritedItemsByPage from "../api/items/getUserFavoritedItemsByPage.js";
-import getUserFavoritedCommentsByPage from "../api/comments/getUserFavoritedCommentsByPage.js";
+import getUserFavoritedItemsByPage from "../apix/items/getUserFavoritedItemsByPage.js";
+import getUserFavoritedCommentsByPage from "../apix/comments/getUserFavoritedCommentsByPage.js";
 
 export default function Favorites({
     items,

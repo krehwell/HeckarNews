@@ -3,7 +3,7 @@ import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 import ItemsList from "../components/itemsList.js";
 
-import getRankedItemsByPage from "../api/items/getRankedItemsByPage.js";
+import getRankedItemsByPage from "../apix/items/getRankedItemsByPage.js";
 
 export default function Index({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (

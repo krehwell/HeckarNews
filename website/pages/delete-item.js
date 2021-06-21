@@ -5,8 +5,8 @@ import Router from "next/router";
 import AlternateHeader from "../components/alternateHeader.js";
 import HeadMetadata from "../components/headMetadata.js";
 
-import getDeleteItemPageData from "../api/items/getDeleteItemPageData.js";
-import deleteItem from "../api/items/deleteItem.js";
+import getDeleteItemPageData from "../apix/items/getDeleteItemPageData.js";
+import deleteItem from "../apix/items/deleteItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 

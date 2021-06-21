@@ -4,8 +4,8 @@ import Router from "next/router";
 import HeadMetadata from "../components/headMetadata.js";
 import AlternateHeader from "../components/alternateHeader.js";
 
-import authUser from "../api/users/authUser.js";
-import submitNewItem from "../api/items/submitNewItem.js";
+import authUser from "../apix/users/authUser.js";
+import submitNewItem from "../apix/items/submitNewItem.js";
 
 export default function Submit({}) {
     const [loading, setLoading] = useState(false);

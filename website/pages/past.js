@@ -6,7 +6,7 @@ import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
 
-import getRankedItemsByDay from "../api/items/getRankedItemsByDay.js";
+import getRankedItemsByDay from "../apix/items/getRankedItemsByDay.js";
 
 export default function Past({ items, authUserData, day, page, isMore, getDataError, invalidDateError, goToString }) {
     const renderGoBackwardLinks = () => {
