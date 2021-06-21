@@ -36,7 +36,6 @@ app.post("/users/create-new-user", async (req, res) => {
                 process.env.NODE_ENV === "development"
                     ? ""
                     : utils.getDomainFromUrl(config.productionWebsiteUrl),
-            sameSite: "none",
         };
 
         /**
@@ -121,7 +120,7 @@ app.put("/users/logout", authUser, async (req, res) => {
             domain:
                 process.env.NODE_ENV === "development"
                     ? ""
-                    : utils.getDomainFromUrl(config.productionWebsiteURL),
+                    : utils.getDomainFromUrl(config.productionWebsiteUrl),
         };
 
         res.clearCookie("user", cookieSettings);
@@ -148,7 +147,7 @@ app.put("/users/remove-user-cookie-data", (req, res) => {
         domain:
             process.env.NODE_ENV === "development"
                 ? ""
-                : utils.getDomainFromUrl(config.productionWebsiteURL),
+                : utils.getDomainFromUrl(config.productionWebsiteUrl),
     };
 
     res.cookieSettings("user", cookieSettings);
@@ -278,7 +277,7 @@ app.put("/users/change-password", authUser, async (req, res) => {
                 domain:
                     process.env.NODE_ENV === "development"
                         ? ""
-                        : utils.getDomainFromUrl(config.productionWebsiteURL),
+                        : utils.getDomainFromUrl(config.productionWebsiteUrl),
             };
 
             res.clearCookie("user", cookieSettings);
