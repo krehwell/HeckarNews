@@ -1,6 +1,6 @@
 const config = {
     /// SITE CONFIGURATION
-    productionWebsiteUrl: "https://heckarnews.vercel.app",
+    productionWebsiteUrl: "https://forum.krehwell.com",
 
     /// SITE CONFIGURATION
     userCookieExpirationLengthInDays: 365,
