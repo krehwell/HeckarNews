@@ -1,5 +1,5 @@
 # HeckarNews
-Hacker News Clone. Demo: https://heckarnews.herokuapp.com/
+Hacker News Clone. Demo: https://forum.krehwell.com/
 
 ![image of frontpage heckarnews](https://i.imgur.com/MuXTuTa.png)
 
