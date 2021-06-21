@@ -2,7 +2,7 @@ import HeadMetadata from "../components/headMetadata.js";
 import Header from "../components/header.js";
 import Footer from "../components/footer.js";
 
-import getNewestItemsByPage from "../apix/comments/unfavoriteComment.js";
+import getNewestItemsByPage from "../apix/items/getNewestItemsByPage.js";
 
 import ItemsList from "../components/itemsList.js";
 
