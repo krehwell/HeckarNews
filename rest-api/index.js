@@ -59,7 +59,7 @@ app.use(cookieParser());
 
 
 /// ROUTES
-app.get("/", (_, res) => res.send("rest-api is working great, kel!")); // debugger
+app.get("/", (_, res) => res.send("vercel: rest-api is working, kel!")); // debugger
 
 app.use(require("./routes/users/index.js"));
 app.use(require("./routes/items/index.js"));
