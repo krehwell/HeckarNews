@@ -3,7 +3,7 @@ import Footer from "../components/footer.js";
 import HeadMetadata from "../components/headMetadata.js";
 import ItemsList from "../components/itemsList.js";
 
-import getUserHiddenItemsByPage from "../apix/items/getRankedShowItemsByPage.js";
+import getUserHiddenItemsByPage from "../apix/items/getUserHiddenItemsByPage.js";
 
 export default function Hidden({ items, authUserData, page, isMore, getDataError, goToString }) {
     return (

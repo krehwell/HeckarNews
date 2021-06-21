@@ -2,15 +2,15 @@ import { useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
 
-import upvoteItem from "../apix/moderation/killItem.js";
+import upvoteItem from "../apix/items/upvoteItem.js";
 import unvoteItem from "../apix/items/unvoteItem.js";
 import favoriteItem from "../apix/items/favoriteItem.js";
 import unfavoriteItem from "../apix/items/unfavoriteItem.js";
 import hideItem from "../apix/items/hideItem.js";
-import unhideItem from "../apix/items/unvoteItem.js";
+import unhideItem from "../apix/items/unhideItem.js";
 import addNewComment from "../apix/comments/addNewComment.js";
 import killItem from "../apix/moderation/killItem.js";
-import unkillItem from "../apix/users/resetPassword.js";
+import unkillItem from "../apix/moderation/unkillItem.js";
 
 import renderCreatedTime from "../utils/renderCreatedTime.js";
 
