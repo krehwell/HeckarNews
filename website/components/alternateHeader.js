@@ -7,7 +7,7 @@ export default class AlternateHeader extends Component {
             <div className="alternate-header">
                 <Link href="/">
                     <a>
-                        <img src="/favicon.ico" />
+                        <img src="/favicon.ico" alt="heckarnews-logo"/>
                     </a>
                 </Link>
                 <span className="alternate-header-label">{this.props.displayMessage}</span>

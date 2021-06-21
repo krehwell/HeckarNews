@@ -48,7 +48,7 @@ export default function SearchPageHeader({
         <div className="search-header">
             <Link href="/">
                 <a className="search-header-logo">
-                    <img src="/android-chrome-512x512.png" />
+                    <img src="/android-chrome-512x512.png" alt="heckarnews-logo"/>
                     <div className="search-header-logo-label">
                         <span>
                             <b>
