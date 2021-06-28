@@ -15,7 +15,7 @@ Hacker News Clone. Demo: https://forum.krehwell.com/
 - [React-Day-Picker](https://react-day-picker.js.org/): Select range day UI for react
 - etc.
 
-# Run & Installation
+## Run & Installation
 - `cd` to `website/` and `rest-api/` 
 - `npm run dev` on both dir to run in on localhost  
 
