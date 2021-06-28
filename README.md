@@ -17,7 +17,7 @@ Hacker News Clone. Demo: https://forum.krehwell.com/
 
 ## Run & Installation
 - `cd` to `website/` and `rest-api/` 
-- `npm run dev` on both dir to run in on localhost  
+- `npm run dev` on both dir to run on localhost  
 
 Website served at :3000 and Server served at :5000
 
